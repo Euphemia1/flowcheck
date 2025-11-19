@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "flowcheck/flowcheck-api",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "FlowCheck API - A workflow approval system.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {

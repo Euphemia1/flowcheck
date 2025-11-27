@@ -13,13 +13,26 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Bell, Settings, LogOut, User, Workflow } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/auth-context"
 
 export function DashboardHeader() {
   const router = useRouter()
+  const { user, logout } = useAuth()
 
   const handleLogout = () => {
-    // Handle logout logic here
-    router.push("/")
+    logout()
+    router.push("/auth/login")
+  }
+
+  // Get user initials for avatar fallback
+  const getUserInitials = () => {
+    if (!user?.name) return "U"
+    return user.name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2)
   }
 
   return (
@@ -67,16 +80,16 @@ export function DashboardHeader() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="/avatars/01.png" alt="@johndoe" />
-                  <AvatarFallback>JD</AvatarFallback>
+                  <AvatarImage src={user?.avatar || "/avatars/01.png"} alt={user?.name || "User"} />
+                  <AvatarFallback>{getUserInitials()}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">John Doe</p>
-                  <p className="text-xs leading-none text-muted-foreground">john@company.com</p>
+                  <p className="text-sm font-medium leading-none">{user?.name || "User"}</p>
+                  <p className="text-xs leading-none text-muted-foreground">{user?.email || "user@example.com"}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />

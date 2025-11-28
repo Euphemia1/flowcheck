@@ -1,4 +1,3 @@
-"use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -10,6 +9,13 @@ import { useAuth } from "@/contexts/auth-context"
 
 export default function DashboardPage() {
   const { user } = useAuth()
+  
+  // Extract first name from full name
+  const getFirstName = (name: string | undefined) => {
+    if (!name) return "there"
+    return name.split(" ")[0]
+  }
+  
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -19,7 +25,7 @@ export default function DashboardPage() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {user?.name || "there"}
+            Welcome back, {getFirstName(user?.name)}
           </h1>
           <p className="text-gray-600">Here's what's happening with your approval workflows today.</p>
         </div>

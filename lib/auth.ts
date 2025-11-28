@@ -29,100 +29,48 @@ export interface AuthState {
   isAuthenticated: boolean
 }
 
-// Mock data for demonstration (replace with real API calls)
-const MOCK_ORGANIZATIONS: Organization[] = [
-  {
-    id: "org-1",
-    name: "Acme Corporation",
-    domain: "acme.com",
-    settings: {
-      allowSelfRegistration: true,
-      defaultRole: "employee",
-      requireEmailVerification: false,
-    },
-    createdAt: "2024-01-01T00:00:00Z",
-  },
-]
-
-const MOCK_USERS: User[] = [
-  {
-    id: "user-1",
-    email: "admin@acme.com",
-    name: "John Admin",
-    role: "admin",
-    organizationId: "org-1",
-    organizationName: "Acme Corporation",
-    createdAt: "2024-01-01T00:00:00Z",
-  },
-]
-
 export class AuthService {
+  // 🔵 LOGIN (real API)
   static async login(email: string, password: string): Promise<{ user: User; organization: Organization }> {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    })
 
-    const user = MOCK_USERS.find((u) => u.email === email)
-    if (!user || password !== "password") {
-      throw new Error("Invalid credentials")
+    if (!res.ok) {
+      const error = await res.json()
+      throw new Error(error.message || "Invalid credentials")
     }
 
-    const organization = MOCK_ORGANIZATIONS.find((o) => o.id === user.organizationId)
-    if (!organization) {
-      throw new Error("Organization not found")
-    }
+    const { user, organization } = await res.json()
 
-    // Store in localStorage for persistence
     localStorage.setItem("auth_user", JSON.stringify(user))
     localStorage.setItem("auth_organization", JSON.stringify(organization))
 
     return { user, organization }
   }
 
+  // 🟢 REGISTER (real API)
   static async register(data: {
     email: string
     password: string
     name: string
     organizationName?: string
   }): Promise<{ user: User; organization: Organization }> {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
 
-    // Check if user already exists
-    if (MOCK_USERS.find((u) => u.email === data.email)) {
-      throw new Error("User already exists")
+    if (!res.ok) {
+      const error = await res.json()
+      throw new Error(error.message || "Registration failed")
     }
 
-    // Create new organization if provided
-    let organization = MOCK_ORGANIZATIONS[0] // Default to first org for demo
-    if (data.organizationName) {
-      organization = {
-        id: `org-${Date.now()}`,
-        name: data.organizationName,
-        domain: data.email.split("@")[1],
-        settings: {
-          allowSelfRegistration: true,
-          defaultRole: "employee",
-          requireEmailVerification: false,
-        },
-        createdAt: new Date().toISOString(),
-      }
-      MOCK_ORGANIZATIONS.push(organization)
-    }
+    const { user, organization } = await res.json()
 
-    // Create new user
-    const user: User = {
-      id: `user-${Date.now()}`,
-      email: data.email,
-      name: data.name,
-      role: data.organizationName ? "admin" : "employee", // First user in new org is admin
-      organizationId: organization.id,
-      organizationName: organization.name,
-      createdAt: new Date().toISOString(),
-    }
-
-    MOCK_USERS.push(user)
-
-    // Store in localStorage
     localStorage.setItem("auth_user", JSON.stringify(user))
     localStorage.setItem("auth_organization", JSON.stringify(organization))
 

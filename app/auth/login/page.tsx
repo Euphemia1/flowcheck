@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label"
 import { Workflow, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/auth-context"
+import { toast } from "sonner"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -17,16 +19,22 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { login } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulate login - replace with actual authentication
-    setTimeout(() => {
-      setIsLoading(false)
+    try {
+      await login(email, password)
+      toast.success("Logged in successfully!")
       router.push("/dashboard")
-    }, 1000)
+    } catch (error) {
+      toast.error("Invalid credentials. Please try again.")
+      console.error("Login error:", error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

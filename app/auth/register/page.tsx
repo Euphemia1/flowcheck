@@ -11,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Workflow, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/auth-context"
+import { toast } from "sonner"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -26,16 +28,35 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { register } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match")
+      return
+    }
+    
     setIsLoading(true)
 
-    // Simulate registration - replace with actual authentication
-    setTimeout(() => {
-      setIsLoading(false)
+    try {
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim()
+      await register({
+        email: formData.email,
+        password: formData.password,
+        name: fullName,
+        organizationName: formData.organizationName || undefined
+      })
+      toast.success("Account created successfully!")
       router.push("/dashboard")
-    }, 1000)
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create account")
+      console.error("Registration error:", error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleInputChange = (field: string, value: string) => {
@@ -102,7 +123,6 @@ export default function RegisterPage() {
                   placeholder="Your Company"
                   value={formData.organizationName}
                   onChange={(e) => handleInputChange("organizationName", e.target.value)}
-                  required
                 />
               </div>
 

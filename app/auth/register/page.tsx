@@ -33,6 +33,9 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
+    // Prevent double submission
+    if (isLoading) return
+    
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match")
@@ -49,10 +52,12 @@ export default function RegisterPage() {
         name: fullName,
         organizationName: formData.organizationName || undefined
       })
-      toast.success("Account created successfully!")
-      router.push("/dashboard")
+      toast.success("Account created successfully! Please log in to continue.")
+      router.push("/auth/login")
     } catch (error: any) {
-      toast.error(error.message || "Failed to create account")
+      // Show user-friendly error message
+      const errorMessage = error.message || "Failed to create account. Please try again."
+      toast.error(errorMessage)
       console.error("Registration error:", error)
     } finally {
       setIsLoading(false)

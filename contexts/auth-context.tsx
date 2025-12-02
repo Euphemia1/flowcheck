@@ -38,10 +38,8 @@ interface AuthContextType extends AuthState {
   logout: () => void
 }
 
-// Create the context with a default value
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// Provider component
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
@@ -50,62 +48,102 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isAuthenticated: false,
   })
 
-  // Check for existing session on mount
   useEffect(() => {
-    const currentUser = AuthService.getCurrentUser()
-    if (currentUser) {
-      setAuthState({
-        user: currentUser.user,
-        organization: currentUser.organization,
-        isLoading: false,
-        isAuthenticated: true,
-      })
-    } else {
-      setAuthState(prev => ({
-        ...prev,
-        isLoading: false,
-      }))
-    }
+    checkAuth()
   }, [])
 
-  const login = async (email: string, password: string) => {
+  const checkAuth = () => {
     try {
-      const { user, organization } = await AuthService.login(email, password)
-      setAuthState({
-        user,
-        organization,
-        isLoading: false,
-        isAuthenticated: true,
-      })
+      const userStr = typeof window !== 'undefined' ? localStorage.getItem("auth_user") : null
+      const orgStr = typeof window !== 'undefined' ? localStorage.getItem("auth_organization") : null
+
+      if (userStr && orgStr) {
+        const user = JSON.parse(userStr)
+        const organization = JSON.parse(orgStr)
+        
+        setAuthState({
+          user,
+          organization,
+          isLoading: false,
+          isAuthenticated: true,
+        })
+      } else {
+        setAuthState({
+          user: null,
+          organization: null,
+          isLoading: false,
+          isAuthenticated: false,
+        })
+      }
     } catch (error) {
-      setAuthState(prev => ({
-        ...prev,
+      console.error("Auth check error:", error)
+      setAuthState({
+        user: null,
+        organization: null,
+        isLoading: false,
         isAuthenticated: false,
-      }))
-      throw error
+      })
     }
+  }
+
+  const login = async (email: string, password: string) => {
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    })
+
+    if (!res.ok) {
+      const error = await res.json()
+      throw new Error(error.message || "Invalid credentials")
+    }
+
+    const { user, organization } = await res.json()
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("auth_user", JSON.stringify(user))
+      localStorage.setItem("auth_organization", JSON.stringify(organization))
+    }
+
+    setAuthState({
+      user,
+      organization,
+      isLoading: false,
+      isAuthenticated: true,
+    })
   }
 
   const register = async (data: { email: string; password: string; name: string; organizationName?: string }) => {
-    try {
-      const { user, organization } = await AuthService.register(data)
-      setAuthState({
-        user,
-        organization,
-        isLoading: false,
-        isAuthenticated: true,
-      })
-    } catch (error) {
-      setAuthState(prev => ({
-        ...prev,
-        isAuthenticated: false,
-      }))
-      throw error
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
+
+    if (!res.ok) {
+      const error = await res.json()
+      
+      // Handle rate limiting error specifically
+      if (res.status === 429 || error.error === "rate_limit") {
+        throw new Error("Too many registration attempts. Please wait a moment and try again.")
+      }
+      
+      throw new Error(error.message || "Registration failed")
     }
+
+    // Just verify registration was successful - don't log the user in automatically
+    // User will need to log in separately after registration
+    await res.json()
+    
+    // Don't set auth state - user must log in manually
   }
 
   const logout = () => {
-    AuthService.logout()
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("auth_user")
+      localStorage.removeItem("auth_organization")
+    }
+    
     setAuthState({
       user: null,
       organization: null,
@@ -128,133 +166,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 }
 
-// Hook to use the auth context
 export function useAuth() {
   const context = useContext(AuthContext)
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider")
   }
   return context
-}
-
-// Mock data for demonstration (replace with real API calls)
-const MOCK_ORGANIZATIONS: Organization[] = [
-  {
-    id: "org-1",
-    name: "Acme Corporation",
-    domain: "acme.com",
-    settings: {
-      allowSelfRegistration: true,
-      defaultRole: "employee",
-      requireEmailVerification: false,
-    },
-    createdAt: "2024-01-01T00:00:00Z",
-  },
-]
-
-const MOCK_USERS: User[] = [
-  {
-    id: "user-1",
-    email: "admin@acme.com",
-    name: "John Admin",
-    role: "admin",
-    organizationId: "org-1",
-    organizationName: "Acme Corporation",
-    createdAt: "2024-01-01T00:00:00Z",
-  },
-]
-
-class AuthService {
-  static async login(email: string, password: string): Promise<{ user: User; organization: Organization }> {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    const user = MOCK_USERS.find((u) => u.email === email)
-    if (!user || password !== "password") {
-      throw new Error("Invalid credentials")
-    }
-
-    const organization = MOCK_ORGANIZATIONS.find((o) => o.id === user.organizationId)
-    if (!organization) {
-      throw new Error("Organization not found")
-    }
-
-    // Store in localStorage for persistence
-    localStorage.setItem("auth_user", JSON.stringify(user))
-    localStorage.setItem("auth_organization", JSON.stringify(organization))
-
-    return { user, organization }
-  }
-
-  static async register(data: {
-    email: string
-    password: string
-    name: string
-    organizationName?: string
-  }): Promise<{ user: User; organization: Organization }> {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    // Check if user already exists
-    if (MOCK_USERS.find((u) => u.email === data.email)) {
-      throw new Error("User already exists")
-    }
-
-    // Create new organization if provided
-    let organization = MOCK_ORGANIZATIONS[0] // Default to first org for demo
-    if (data.organizationName) {
-      organization = {
-        id: `org-${Date.now()}`,
-        name: data.organizationName,
-        domain: data.email.split("@")[1],
-        settings: {
-          allowSelfRegistration: true,
-          defaultRole: "employee",
-          requireEmailVerification: false,
-        },
-        createdAt: new Date().toISOString(),
-      }
-      MOCK_ORGANIZATIONS.push(organization)
-    }
-
-    // Create new user
-    const user: User = {
-      id: `user-${Date.now()}`,
-      email: data.email,
-      name: data.name,
-      role: data.organizationName ? "admin" : "employee", // First user in new org is admin
-      organizationId: organization.id,
-      organizationName: organization.name,
-      createdAt: new Date().toISOString(),
-    }
-
-    MOCK_USERS.push(user)
-
-    // Store in localStorage
-    localStorage.setItem("auth_user", JSON.stringify(user))
-    localStorage.setItem("auth_organization", JSON.stringify(organization))
-
-    return { user, organization }
-  }
-
-  static logout(): void {
-    localStorage.removeItem("auth_user")
-    localStorage.removeItem("auth_organization")
-  }
-
-  static getCurrentUser(): { user: User; organization: Organization } | null {
-    try {
-      const userStr = localStorage.getItem("auth_user")
-      const orgStr = localStorage.getItem("auth_organization")
-
-      if (!userStr || !orgStr) return null
-
-      const user = JSON.parse(userStr)
-      const organization = JSON.parse(orgStr)
-
-      return { user, organization }
-    } catch {
-      return null
-    }
-  }
 }

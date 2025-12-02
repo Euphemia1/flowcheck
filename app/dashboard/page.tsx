@@ -1,14 +1,24 @@
-
+"use client"
+import { useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Clock, Users, FileText, TrendingUp, Plus } from "lucide-react"
+import { CheckCircle, Clock, Users, FileText, TrendingUp, Plus, Workflow } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { useAuth } from "@/contexts/auth-context"
 
 export default function DashboardPage() {
-  const { user } = useAuth()
+  const { user, isAuthenticated, isLoading } = useAuth()
+  const router = useRouter()
+  
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push("/auth/login")
+    }
+  }, [isAuthenticated, isLoading, router])
   
   // Extract first name from full name
   const getFirstName = (name: string | undefined) => {
@@ -16,6 +26,24 @@ export default function DashboardPage() {
     return name.split(" ")[0]
   }
   
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <Workflow className="w-6 h-6 text-white animate-pulse" />
+          </div>
+          <p className="text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render if not authenticated (will redirect)
+  if (!isAuthenticated || !user) {
+    return null
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -120,7 +148,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
               ))}
-              <Button variant="outline" className="w-full bg-transparent">
+              <Button variant="outline" className="w-full">
                 View All Approvals
               </Button>
             </CardContent>
@@ -134,28 +162,28 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <Link href="/workflows/new">
-                <Button className="w-full justify-start bg-transparent" variant="outline">
+                <Button className="w-full justify-start" variant="outline">
                   <Plus className="mr-2 h-4 w-4" />
                   Create New Workflow
                 </Button>
               </Link>
 
               <Link href="/approvals">
-                <Button className="w-full justify-start bg-transparent" variant="outline">
+                <Button className="w-full justify-start" variant="outline">
                   <Clock className="mr-2 h-4 w-4" />
                   Review Pending Approvals
                 </Button>
               </Link>
 
               <Link href="/team">
-                <Button className="w-full justify-start bg-transparent" variant="outline">
+                <Button className="w-full justify-start" variant="outline">
                   <Users className="mr-2 h-4 w-4" />
                   Manage Team Members
                 </Button>
               </Link>
 
               <Link href="/analytics">
-                <Button className="w-full justify-start bg-transparent" variant="outline">
+                <Button className="w-full justify-start" variant="outline">
                   <TrendingUp className="mr-2 h-4 w-4" />
                   View Analytics
                 </Button>

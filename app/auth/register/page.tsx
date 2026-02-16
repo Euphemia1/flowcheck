@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
 import { toast } from "sonner"
 
+
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
     firstName: "",

@@ -66,8 +66,8 @@ export default function DashboardPage() {
               <Clock className="h-4 w-4 text-orange-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">12</div>
-              <p className="text-xs text-muted-foreground">+2 from yesterday</p>
+              <div className="text-2xl font-bold"></div>
+              <p className="text-xs text-muted-foreground"></p>
             </CardContent>
           </Card>
 
@@ -77,8 +77,8 @@ export default function DashboardPage() {
               <CheckCircle className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">8</div>
-              <p className="text-xs text-muted-foreground">+12% from yesterday</p>
+              <div className="text-2xl font-bold"></div>
+              <p className="text-xs text-muted-foreground"></p>
             </CardContent>
           </Card>
 
@@ -88,7 +88,7 @@ export default function DashboardPage() {
               <FileText className="h-4 w-4 text-blue-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">24</div>
+              <div className="text-2xl font-bold"></div>
               <p className="text-xs text-muted-foreground">Across 5 departments</p>
             </CardContent>
           </Card>
@@ -99,7 +99,7 @@ export default function DashboardPage() {
               <Users className="h-4 w-4 text-purple-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">156</div>
+              <div className="text-2xl font-bold"></div>
               <p className="text-xs text-muted-foreground">+3 new this week</p>
             </CardContent>
           </Card>
@@ -115,25 +115,25 @@ export default function DashboardPage() {
             <CardContent className="space-y-4">
               {[
                 {
-                  title: "Marketing Campaign Budget",
-                  requester: "Sarah Johnson",
-                  amount: "$15,000",
-                  status: "pending",
-                  time: "2 hours ago",
+                  title: "",
+                  requester: "",
+                  amount: "",
+                  status: "",
+                  time: "",
                 },
                 {
-                  title: "New Employee Onboarding",
-                  requester: "Mike Chen",
-                  amount: "HR Process",
-                  status: "approved",
-                  time: "4 hours ago",
+                  title: "",
+                  requester: "",
+                  amount: "",
+                  status: "",
+                  time: "",
                 },
                 {
-                  title: "Software License Renewal",
-                  requester: "IT Department",
-                  amount: "$2,400",
-                  status: "pending",
-                  time: "1 day ago",
+                  title: "",
+                  requester: "",
+                  amount: "",
+                  status: "",
+                  time: "",
                 },
               ].map((item, index) => (
                 <div key={index} className="flex items-center justify-between p-4 border rounded-lg">

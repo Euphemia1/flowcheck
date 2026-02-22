@@ -323,20 +323,28 @@ export default function WorkflowsPage() {
 
         {/* Empty State */}
         {filteredWorkflows.length === 0 && (
-          <div className="text-center py-12">
-            <CheckCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No workflows found</h3>
-            <p className="text-gray-600 mb-4">
-              {searchQuery ? "Try adjusting your search criteria" : "Get started by creating your first workflow"}
+          <div className="text-center py-20 px-4 animate-in fade-in slide-in-from-bottom-8 duration-700">
+            <div className="w-24 h-24 bg-gradient-to-br from-indigo-100 to-blue-50 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-indigo-100/50">
+              <Workflow className="w-12 h-12 text-indigo-600" />
+            </div>
+            <h3 className="text-3xl font-extrabold text-gray-900 mb-4 tracking-tight">
+              {searchQuery ? "No workflows match your search" : "Your workflow journey starts here"}
+            </h3>
+            <p className="text-gray-600 mb-10 max-w-lg mx-auto text-lg leading-relaxed">
+              {searchQuery
+                ? "Try adjusting your filters or search terms to find what you're looking for."
+                : "It looks like you haven't created any workflows yet. Start by exploring our templates or building one from scratch."}
             </p>
-            <div className="flex justify-center gap-2">
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link href="/workflows/templates">
-                <Button variant="outline">Browse Templates</Button>
+                <Button variant="outline" size="lg" className="h-14 px-8 rounded-2xl border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition-all">
+                  Browse Templates
+                </Button>
               </Link>
-              <Link href="/workflows/designer">
-                <Button>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create Workflow
+              <Link href="/workflows/new">
+                <Button size="lg" className="h-14 px-8 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-xl shadow-indigo-100 transition-all hover:-translate-y-1">
+                  <Plus className="w-5 h-5 mr-3" />
+                  Create Your First Workflow
                 </Button>
               </Link>
             </div>

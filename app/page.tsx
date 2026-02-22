@@ -340,7 +340,7 @@ export default function HomePage() {
             <span className="text-xl font-bold">ApprovalFlow</span>
           </div>
           <div className="text-center text-gray-400">
-            <p>&copy; 2024 ApprovalFlow. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} ApprovalFlow. All rights reserved.</p>
           </div>
         </div>
       </footer>

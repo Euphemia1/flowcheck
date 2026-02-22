@@ -432,9 +432,9 @@ export default function WorkflowDesignerPage() {
                             size="sm"
                             variant="outline"
                             onClick={() => {
-                              const newApprovers = [
+                              const newApprovers: ApproverConfig[] = [
                                 ...(selectedNode.data.approvers || []),
-                                { type: "role", value: "", required: true },
+                                { type: "role" as const, value: "", required: true },
                               ]
                               updateNode(selectedNode.id, {
                                 data: { ...selectedNode.data, approvers: newApprovers },
@@ -508,9 +508,9 @@ export default function WorkflowDesignerPage() {
                             size="sm"
                             className="w-full h-10 border-dashed rounded-lg"
                             onClick={() => {
-                              const newConditions = [
+                              const newConditions: ConditionConfig[] = [
                                 ...(selectedNode.data.conditions || []),
-                                { field: "", operator: "equals", value: "" },
+                                { field: "", operator: "equals" as const, value: "" },
                               ]
                               updateNode(selectedNode.id, {
                                 data: { ...selectedNode.data, conditions: newConditions },

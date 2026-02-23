@@ -33,12 +33,10 @@ export default function HomePage() {
       <section className="container mx-auto px-4 py-20 text-center">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-5xl font-bold text-gray-900 mb-6 text-balance">
-            Streamline Your Organization's
-            <span className="text-blue-600"> Approval Process</span>
+            Simple Approval Automation for Growing Teams
           </h1>
           <p className="text-xl text-gray-600 mb-8 text-pretty max-w-2xl mx-auto">
-            Eliminate bottlenecks, reduce delays, and bring transparency to every approval workflow in your
-            organization.
+            Automate leave requests, expense approvals, and internal workflows in one simple system.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/auth/register">
@@ -48,23 +46,65 @@ export default function HomePage() {
             </Link>
             <Link href="/demo">
               <Button variant="outline" size="lg" className="px-8 bg-transparent">
-                Request Demo
+                Book a Demo
               </Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Features Grid */}
+      {/* Problem Section */}
       <section className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Everything You Need for Efficient Approvals</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Our comprehensive platform provides all the tools your organization needs to manage approval processes
-            effectively.
-          </p>
+        <div className="max-w-3xl mx-auto text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Stop Managing Approvals in Email & Excel</h2>
+          <p className="text-xl text-gray-600">Still using email, WhatsApp, or Excel to manage approvals?</p>
         </div>
+        <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm">
+            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 className="font-medium text-gray-900 mb-2">Email Threads</h3>
+            <p className="text-sm text-gray-600">Lost in endless email chains, no visibility</p>
+          </div>
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm">
+            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+            </div>
+            <h3 className="font-medium text-gray-900 mb-2">WhatsApp Messages</h3>
+            <p className="text-sm text-gray-600">Informal, hard to track, no audit trail</p>
+          </div>
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm">
+            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 className="font-medium text-gray-900 mb-2">Paper Forms</h3>
+            <p className="text-sm text-gray-600">Physical paperwork gets lost, slow processing</p>
+          </div>
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm">
+            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 className="font-medium text-gray-900 mb-2">Spreadsheets</h3>
+            <p className="text-sm text-gray-600">Manual updates, version chaos, no alerts</p>
+          </div>
+        </div>
+        <div className="text-center mt-8">
+          <p className="text-lg text-gray-700 font-medium">Things get lost. Delays happen. Accountability disappears.</p>
+          <p className="text-gray-600 mt-2">FlowCheck fixes that.</p>
+        </div>
+      </section>
 
+      {/* Features Grid */}
+      <section className="container mx-auto px-4 py-16 bg-gray-50">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <Card className="border-0 shadow-lg">
             <CardHeader>
@@ -128,13 +168,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Pricing Section */}
+      {/* Solution Section */}
       <section className="container mx-auto px-4 py-16 bg-white">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Choose Your Plan</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Create workflows. Assign approvers. Track in real time.</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Flexible pricing options to match your organization's size and needs. All plans include our core approval
-            workflow features.
+            Everything you need to replace messy manual processes with clean, automated approval workflows.
           </p>
         </div>
 
@@ -272,9 +311,57 @@ export default function HomePage() {
           </Card>
         </div>
 
-        {/* Pricing FAQ */}
-        <div className="mt-16 text-center">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Frequently Asked Questions</h3>
+        <div className="max-w-3xl mx-auto">
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Who is FlowCheck for?</h3>
+          <div className="grid md:grid-cols-3 gap-6 mb-12">
+            <div className="p-6 bg-gray-50 rounded-lg">
+              <h4 className="font-semibold text-gray-900 mb-2">Growing SMEs</h4>
+              <p className="text-sm text-gray-600">Teams of 10-100 people who have outgrown email and spreadsheets</p>
+            </div>
+            <div className="p-6 bg-gray-50 rounded-lg">
+              <h4 className="font-semibold text-gray-900 mb-2">Operations Managers</h4>
+              <p className="text-sm text-gray-600">Need visibility and control over internal processes</p>
+            </div>
+            <div className="p-6 bg-gray-50 rounded-lg">
+              <h4 className="font-semibold text-gray-900 mb-2">HR & Finance Teams</h4>
+              <p className="text-sm text-gray-600">Processing leave, expenses, and purchase requests daily</p>
+            </div>
+          </div>
+          
+          <div className="bg-blue-50 p-8 rounded-xl mb-12">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">What problem does it solve?</h3>
+            <p className="text-gray-700 mb-4">
+              Every growing team faces the same chaos: requests scattered across email, WhatsApp, and paper. 
+              Someone asks "Did my leave get approved?" and nobody knows. Expense reports sit in inboxes for weeks. 
+              Purchase approvals get lost in the shuffle.
+            </p>
+            <p className="text-gray-700">
+              FlowCheck brings order to this chaos. One place for all approvals, automatic routing, real-time tracking, 
+              and a complete audit trail.
+            </p>
+          </div>
+          
+          <div className="text-center">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Why is it better than doing it manually?</h3>
+            <div className="grid md:grid-cols-3 gap-4 text-center">
+              <div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">10x</div>
+                <p className="text-sm text-gray-600">Faster approval processing</p>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">Zero</div>
+                <p className="text-sm text-gray-600">Lost requests</p>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">100%</div>
+                <p className="text-sm text-gray-600">Visibility & accountability</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-16 text-center border-t pt-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Simple Pricing</h2>
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto text-left">
             <div>
               <h4 className="font-medium text-gray-900 mb-2">Can I change plans anytime?</h4>
@@ -307,14 +394,14 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="bg-blue-600 text-white py-16">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Approval Process?</h2>
+          <h2 className="text-3xl font-bold mb-4">Ready to Stop the Approval Chaos?</h2>
           <p className="text-xl mb-8 text-blue-100">
-            Join thousands of organizations already using ApprovalFlow to streamline their workflows.
+            Join teams who have replaced email threads and spreadsheets with simple, automated workflows.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/auth/register">
               <Button size="lg" variant="secondary" className="px-8">
-                Get Started Today
+                Start Free Trial
               </Button>
             </Link>
             <Link href="/demo">
@@ -323,7 +410,7 @@ export default function HomePage() {
                 variant="outline"
                 className="px-8 border-white text-white hover:bg-white hover:text-blue-600 bg-transparent"
               >
-                Schedule a Demo
+                Book a Demo
               </Button>
             </Link>
           </div>

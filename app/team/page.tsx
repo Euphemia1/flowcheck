@@ -155,6 +155,7 @@ export default function TeamPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null)
   const [deletingMember, setDeletingMember] = useState<TeamMember | null>(null)
+  const [viewingMember, setViewingMember] = useState<TeamMember | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   // Load team from localStorage on mount
@@ -572,6 +573,10 @@ export default function TeamPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => setViewingMember(member)}>
+                          <User className="w-4 h-4 mr-2" />
+                          View Profile
+                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => openEditDialog(member)}>
                           <Edit className="w-4 h-4 mr-2" />
                           Edit
@@ -713,6 +718,54 @@ export default function TeamPage() {
         </AlertDialog>
 
         <Toaster />
+
+        {/* View Profile Dialog */}
+        <Dialog open={!!viewingMember} onOpenChange={(open) => !open && setViewingMember(null)}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Team Member Profile</DialogTitle>
+            </DialogHeader>
+            {viewingMember && (
+              <div className="space-y-6 py-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-xl font-semibold text-gray-600">
+                    {viewingMember.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">{viewingMember.name}</h3>
+                    <p className="text-gray-500">{viewingMember.email}</p>
+                  </div>
+                </div>
+                <div className="space-y-3 border-t pt-4">
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Role</span>
+                    <span className="font-medium text-gray-900">{getRoleLabel(viewingMember.role)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Department</span>
+                    <span className="font-medium text-gray-900">{viewingMember.department}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Status</span>
+                    <span>{getStatusBadge(viewingMember.status)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Joined Date</span>
+                    <span className="font-medium text-gray-900">{new Date(viewingMember.joinedDate).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setViewingMember(null)}>Close</Button>
+              <Button onClick={() => {
+                const member = viewingMember
+                setViewingMember(null)
+                if (member) openEditDialog(member)
+              }}>Edit Member</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </main>
     </div>
   )

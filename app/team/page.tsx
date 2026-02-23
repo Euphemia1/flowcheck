@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -17,11 +17,23 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useToast } from "@/components/ui/use-toast"
+import { Toaster } from "@/components/ui/toaster"
 import {
   Users,
   Plus,
@@ -136,11 +148,34 @@ const MOCK_TEAM: TeamMember[] = [
 ]
 
 export default function TeamPage() {
-  const [team, setTeam] = useState<TeamMember[]>(MOCK_TEAM)
+  const { toast } = useToast()
+  const [team, setTeam] = useState<TeamMember[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedDepartment, setSelectedDepartment] = useState("All Departments")
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null)
+  const [deletingMember, setDeletingMember] = useState<TeamMember | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Load team from localStorage on mount
+  useEffect(() => {
+    const savedTeam = localStorage.getItem("team_members")
+    if (savedTeam) {
+      setTeam(JSON.parse(savedTeam))
+    } else {
+      // Initialize with mock data if no saved team
+      setTeam(MOCK_TEAM)
+      localStorage.setItem("team_members", JSON.stringify(MOCK_TEAM))
+    }
+    setIsLoading(false)
+  }, [])
+
+  // Save team to localStorage whenever it changes
+  useEffect(() => {
+    if (!isLoading) {
+      localStorage.setItem("team_members", JSON.stringify(team))
+    }
+  }, [team, isLoading])
 
   // Form state for add/edit
   const [formData, setFormData] = useState({
@@ -149,6 +184,30 @@ export default function TeamPage() {
     role: "viewer",
     department: "Engineering",
   })
+  const [formErrors, setFormErrors] = useState<{name?: string; email?: string}>({})
+
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
+
+  const validateForm = () => {
+    const errors: {name?: string; email?: string} = {}
+    if (!formData.name.trim()) {
+      errors.name = "Name is required"
+    }
+    if (!formData.email.trim()) {
+      errors.email = "Email is required"
+    } else if (!validateEmail(formData.email)) {
+      errors.email = "Please enter a valid email"
+    }
+    setFormErrors(errors)
+    return Object.keys(errors).length === 0
+  }
+
+  const resetForm = () => {
+    setFormData({ name: "", email: "", role: "viewer", department: "Engineering" })
+    setFormErrors({})
+  }
 
   const filteredTeam = team.filter((member) => {
     const matchesSearch =
@@ -190,29 +249,49 @@ export default function TeamPage() {
   }
 
   const handleAddMember = () => {
+    if (!validateForm()) return
+
+    // Check for duplicate email
+    if (team.some((m) => m.email.toLowerCase() === formData.email.toLowerCase())) {
+      setFormErrors({ ...formErrors, email: "This email is already registered" })
+      return
+    }
+
     const newMember: TeamMember = {
       id: Date.now().toString(),
-      name: formData.name,
-      email: formData.email,
+      name: formData.name.trim(),
+      email: formData.email.trim().toLowerCase(),
       role: formData.role,
       department: formData.department,
       status: "pending",
       joinedDate: new Date().toISOString().split("T")[0],
     }
     setTeam([...team, newMember])
-    setFormData({ name: "", email: "", role: "viewer", department: "Engineering" })
+    resetForm()
     setIsAddDialogOpen(false)
+    toast({
+      title: "Member added",
+      description: `${newMember.name} has been invited and will receive an email.`,
+    })
   }
 
   const handleEditMember = () => {
     if (!editingMember) return
+    if (!validateForm()) return
+
+    // Check for duplicate email (excluding current member)
+    if (team.some((m) => m.id !== editingMember.id && m.email.toLowerCase() === formData.email.toLowerCase())) {
+      setFormErrors({ ...formErrors, email: "This email is already registered" })
+      return
+    }
+
     setTeam(
       team.map((m) =>
         m.id === editingMember.id
           ? {
               ...m,
-              name: formData.name,
-              email: formData.email,
+              name: formData.name.trim(),
+              email: formData.email.trim().toLowerCase(),
               role: formData.role,
               department: formData.department,
             }
@@ -220,11 +299,35 @@ export default function TeamPage() {
       )
     )
     setEditingMember(null)
-    setFormData({ name: "", email: "", role: "viewer", department: "Engineering" })
+    resetForm()
+    toast({
+      title: "Member updated",
+      description: "Changes have been saved.",
+    })
   }
 
-  const handleDeleteMember = (id: string) => {
-    setTeam(team.filter((m) => m.id !== id))
+  const handleDeleteMember = () => {
+    if (!deletingMember) return
+    setTeam(team.filter((m) => m.id !== deletingMember.id))
+    setDeletingMember(null)
+    toast({
+      title: "Member removed",
+      description: `${deletingMember.name} has been removed from the team.`,
+      variant: "destructive",
+    })
+  }
+
+  const handleToggleStatus = (member: TeamMember) => {
+    const newStatus = member.status === "active" ? "inactive" : "active"
+    setTeam(
+      team.map((m) =>
+        m.id === member.id ? { ...m, status: newStatus } : m
+      )
+    )
+    toast({
+      title: member.status === "active" ? "Member deactivated" : "Member activated",
+      description: `${member.name} is now ${newStatus}.`,
+    })
   }
 
   const openEditDialog = (member: TeamMember) => {
@@ -235,6 +338,17 @@ export default function TeamPage() {
       role: member.role,
       department: member.department,
     })
+    setFormErrors({})
+  }
+
+  const handleCancelAdd = () => {
+    setIsAddDialogOpen(false)
+    resetForm()
+  }
+
+  const handleCancelEdit = () => {
+    setEditingMember(null)
+    resetForm()
   }
 
   const stats = {
@@ -277,7 +391,11 @@ export default function TeamPage() {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="John Doe"
+                    className={formErrors.name ? "border-red-500" : ""}
                   />
+                  {formErrors.name && (
+                    <p className="text-xs text-red-500">{formErrors.name}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
@@ -287,7 +405,11 @@ export default function TeamPage() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="john@company.com"
+                    className={formErrors.email ? "border-red-500" : ""}
                   />
+                  {formErrors.email && (
+                    <p className="text-xs text-red-500">{formErrors.email}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="role">Role</Label>
@@ -327,7 +449,7 @@ export default function TeamPage() {
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                <Button variant="outline" onClick={handleCancelAdd}>
                   Cancel
                 </Button>
                 <Button onClick={handleAddMember} disabled={!formData.name || !formData.email}>
@@ -455,25 +577,14 @@ export default function TeamPage() {
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() =>
-                            setTeam(
-                              team.map((m) =>
-                                m.id === member.id
-                                  ? {
-                                      ...m,
-                                      status: m.status === "active" ? "inactive" : "active",
-                                    }
-                                  : m
-                              )
-                            )
-                          }
+                          onClick={() => handleToggleStatus(member)}
                         >
                           <Shield className="w-4 h-4 mr-2" />
                           {member.status === "active" ? "Deactivate" : "Activate"}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-red-600"
-                          onClick={() => handleDeleteMember(member.id)}
+                          onClick={() => setDeletingMember(member)}
                         >
                           <Trash2 className="w-4 h-4 mr-2" />
                           Remove
@@ -502,7 +613,9 @@ export default function TeamPage() {
         {/* Edit Dialog */}
         <Dialog
           open={!!editingMember}
-          onOpenChange={(open) => !open && setEditingMember(null)}
+          onOpenChange={(open) => {
+            if (!open) handleCancelEdit()
+          }}
         >
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -516,7 +629,11 @@ export default function TeamPage() {
                   id="edit-name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className={formErrors.name ? "border-red-500" : ""}
                 />
+                {formErrors.name && (
+                  <p className="text-xs text-red-500">{formErrors.name}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="edit-email">Email</Label>
@@ -525,7 +642,11 @@ export default function TeamPage() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className={formErrors.email ? "border-red-500" : ""}
                 />
+                {formErrors.email && (
+                  <p className="text-xs text-red-500">{formErrors.email}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="edit-role">Role</Label>
@@ -565,13 +686,33 @@ export default function TeamPage() {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setEditingMember(null)}>
+              <Button variant="outline" onClick={handleCancelEdit}>
                 Cancel
               </Button>
               <Button onClick={handleEditMember}>Save Changes</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={!!deletingMember} onOpenChange={(open) => !open && setDeletingMember(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Remove Team Member</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to remove {deletingMember?.name}? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setDeletingMember(null)}>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteMember} className="bg-red-600 hover:bg-red-700">
+                Remove
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <Toaster />
       </main>
     </div>
   )

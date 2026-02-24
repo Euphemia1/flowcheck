@@ -43,7 +43,7 @@ export function DashboardHeader() {
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <Workflow className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl font-bold text-gray-900">ApprovalFlow</span>
+          <span className="text-xl font-bold font-bold"><span className="text-blue-600">Flow</span><span className="text-gray-900">Check</span></span>
         </Link>
 
         {/* Navigation */}

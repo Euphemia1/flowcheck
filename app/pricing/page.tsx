@@ -13,7 +13,7 @@ export default function PricingPage() {
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <Workflow className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900">ApprovalFlow</span>
+            <span className="text-xl font-bold"><span className="text-blue-600">Flow</span><span className="text-gray-900">Check</span></span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/demo">
@@ -328,7 +328,7 @@ export default function PricingPage() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="text-xl mb-8 text-blue-100">
-            Join thousands of organizations streamlining their approval processes with ApprovalFlow.
+            Join thousands of organizations streamlining their approval processes with FlowCheck.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/auth/register">
@@ -356,10 +356,10 @@ export default function PricingPage() {
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <Workflow className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold">ApprovalFlow</span>
+            <span className="text-xl font-bold"><span className="text-blue-600">Flow</span><span className="text-white">Check</span></span>
           </div>
           <div className="text-center text-gray-400">
-            <p>&copy; 2024 ApprovalFlow. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} <span className="font-bold text-blue-600">Flow</span><span className="font-bold text-white">Check</span>. All rights reserved.</p>
           </div>
         </div>
       </footer>

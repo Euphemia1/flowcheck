@@ -58,7 +58,7 @@ export default function DemoRequestPage() {
             </div>
             <CardTitle className="text-2xl">Demo Request Submitted!</CardTitle>
             <CardDescription>
-              Thank you for your interest in ApprovalFlow. Our team will contact you within 24 hours to schedule your
+              Thank you for your interest in FlowCheck. Our team will contact you within 24 hours to schedule your
               personalized demo.
             </CardDescription>
           </CardHeader>
@@ -88,7 +88,7 @@ export default function DemoRequestPage() {
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <Workflow className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900">ApprovalFlow</span>
+              <span className="text-xl font-bold"><span className="text-blue-600">Flow</span><span className="text-gray-900">Check</span></span>
             </div>
           </Link>
         </div>
@@ -100,7 +100,7 @@ export default function DemoRequestPage() {
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">Request a Personalized Demo</h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              See how ApprovalFlow can transform your organization's approval processes. Schedule a 30-minute demo
+              See how FlowCheck can transform your organization's approval processes. Schedule a 30-minute demo
               tailored to your specific needs.
             </p>
           </div>
@@ -163,7 +163,7 @@ export default function DemoRequestPage() {
               <div className="bg-blue-50 p-6 rounded-lg">
                 <h3 className="font-semibold text-blue-900 mb-2">Demo Duration: 30 minutes</h3>
                 <p className="text-blue-700 text-sm">
-                  Our product specialists will walk you through ApprovalFlow's features and answer any questions about
+                  Our product specialists will walk you through FlowCheck's features and answer any questions about
                   implementation in your organization.
                 </p>
               </div>

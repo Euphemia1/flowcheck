@@ -126,7 +126,7 @@ export default function OrganizationSetupPage() {
             <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
               <Workflow className="w-7 h-7 text-white" />
             </div>
-            <span className="text-3xl font-bold text-gray-900">ApprovalFlow</span>
+            <span className="text-3xl font-bold"><span className="text-blue-600">Flow</span><span className="text-gray-900">Check</span></span>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Organization Setup</h1>
           <p className="text-gray-600">Let's configure your approval workflows to match your organization's needs</p>
@@ -166,11 +166,10 @@ export default function OrganizationSetupPage() {
                       {ORGANIZATION_TYPES.map((type) => (
                         <div
                           key={type.value}
-                          className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                            setupData.organizationType === type.value
+                          className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${setupData.organizationType === type.value
                               ? "border-blue-600 bg-blue-50"
                               : "border-gray-200 hover:border-gray-300"
-                          }`}
+                            }`}
                           onClick={() => setSetupData((prev) => ({ ...prev, organizationType: type.value }))}
                         >
                           <h3 className="font-medium text-gray-900">{type.label}</h3>
@@ -230,11 +229,10 @@ export default function OrganizationSetupPage() {
                   {WORKFLOW_TEMPLATES.map((template) => (
                     <div
                       key={template.id}
-                      className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                        setupData.workflowTemplates.includes(template.id)
+                      className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${setupData.workflowTemplates.includes(template.id)
                           ? "border-blue-600 bg-blue-50"
                           : "border-gray-200 hover:border-gray-300"
-                      }`}
+                        }`}
                       onClick={() => toggleWorkflowTemplate(template.id)}
                     >
                       <div className="flex items-start justify-between">

@@ -3,20 +3,43 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle, Users, Workflow, BarChart3, Shield, Clock, ArrowRight, Star, Zap, Lock, MessageSquare, FileText, Calendar, DollarSign, ChevronRight, PlayCircle, Check, Layers, TrendingUp, UserCheck, Bell } from "lucide-react"
 import Link from "next/link"
+import { motion, useScroll, useTransform, useInView } from "framer-motion"
 
 export default function HomePage() {
+  const { scrollY } = useScroll()
+  const heroY = useTransform(scrollY, [0, 300], [0, -50])
+  
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-hidden">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <motion.header 
+        className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+          <motion.div 
+            className="flex items-center gap-2"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <motion.div 
+              className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
+              whileHover={{ rotate: 360, scale: 1.1 }}
+              transition={{ duration: 0.6 }}
+            >
               <Workflow className="w-5 h-5 text-white" />
-            </div>
+            </motion.div>
             <span className="text-xl font-bold"><span className="text-blue-600">Flow</span><span className="text-gray-900">Check</span></span>
-          </div>
-          <div className="flex items-center gap-4">
+          </motion.div>
+          <motion.div 
+            className="flex items-center gap-4"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
             <Link href="/demo">
               <Button variant="ghost">Book a Demo</Button>
             </Link>
@@ -24,176 +47,306 @@ export default function HomePage() {
               <Button variant="ghost">Sign In</Button>
             </Link>
             <Link href="/auth/register">
-              <Button>Start Free Trial</Button>
+              <Button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>Start Free Trial</Button>
             </Link>
-          </div>
+          </motion.div>
         </div>
-      </header>
+      </motion.header>
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 lg:py-28">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-100">Free 14-Day Trial • No Credit Card Required</Badge>
-              <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            <motion.div 
+              style={{ y: heroY }}
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <motion.div 
+                className="mb-4"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+              >
+                <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Free 14-Day Trial • No Credit Card Required</Badge>
+              </motion.div>
+              <motion.h1 
+                className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+              >
                 Approval Bottlenecks Are Slowing Your Team Down.
-              </h1>
-              <h2 className="text-2xl lg:text-3xl font-bold text-blue-600 mb-6 leading-tight">
+              </motion.h1>
+              <motion.h2 
+                className="text-2xl lg:text-3xl font-bold text-blue-600 mb-6 leading-tight"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1 }}
+              >
                 FlowCheck Automates Every Approval — So Work Keeps Moving.
-              </h2>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+              </motion.h2>
+              <motion.p 
+                className="text-xl text-gray-600 mb-8 leading-relaxed"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+              >
                 Stop chasing emails. Stop losing requests.
                 Create structured workflows for leave, expenses, purchasing, and internal approvals — all in one system.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
+              </motion.p>
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-4 mb-8"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.4 }}
+              >
                 <Link href="/auth/register">
-                  <Button size="lg" className="px-8 w-full sm:w-auto">
-                    Start Free Trial <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button size="lg" className="px-8 w-full sm:w-auto">
+                      Start Free Trial <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </motion.div>
                 </Link>
                 <Link href="/demo">
-                  <Button variant="outline" size="lg" className="px-8 w-full sm:w-auto">
-                    <PlayCircle className="mr-2 w-4 h-4" /> Book a Demo
-                  </Button>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button variant="outline" size="lg" className="px-8 w-full sm:w-auto">
+                      <PlayCircle className="mr-2 w-4 h-4" /> Book a Demo
+                    </Button>
+                  </motion.div>
                 </Link>
-              </div>
-              <p className="text-gray-600 mb-4">Move faster. Stay organized. Scale without chaos.</p>
-              <div className="flex flex-col sm:flex-row items-center gap-6 text-sm text-gray-600">
-                <div className="flex items-center gap-2">
+              </motion.div>
+              <motion.p 
+                className="text-gray-600 mb-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 1.6 }}
+              >
+                Move faster. Stay organized. Scale without chaos.
+              </motion.p>
+              <motion.div 
+                className="flex flex-col sm:flex-row items-center gap-6 text-sm text-gray-600"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.8 }}
+              >
+                <motion.div 
+                  className="flex items-center gap-2"
+                  whileHover={{ scale: 1.1 }}
+                >
                   <Check className="w-4 h-4 text-green-600" /> No contracts
-                </div>
-                <div className="flex items-center gap-2">
+                </motion.div>
+                <motion.div 
+                  className="flex items-center gap-2"
+                  whileHover={{ scale: 1.1 }}
+                >
                   <Check className="w-4 h-4 text-green-600" /> Cancel anytime
-                </div>
-                <div className="flex items-center gap-2">
+                </motion.div>
+                <motion.div 
+                  className="flex items-center gap-2"
+                  whileHover={{ scale: 1.1 }}
+                >
                   <Check className="w-4 h-4 text-green-600" /> Your data stays yours
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-8 border border-blue-100">
-                <div className="bg-white rounded-xl shadow-lg p-6 space-y-4">
+                </motion.div>
+              </motion.div>
+            </motion.div>
+            <motion.div 
+              className="relative"
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 1 }}
+            >
+              <motion.div 
+                className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-8 border border-blue-100"
+                whileHover={{ scale: 1.02, rotateY: 5 }}
+                transition={{ duration: 0.6 }}
+              >
+                <motion.div 
+                  className="bg-white rounded-xl shadow-lg p-6 space-y-4"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 1.4 }}
+                >
                   <div className="flex items-center justify-between pb-4 border-b">
                     <div>
                       <h3 className="font-semibold text-gray-900">Leave Request</h3>
                       <p className="text-sm text-gray-500">From: Sarah Johnson</p>
                     </div>
-                    <Badge className="bg-yellow-100 text-yellow-700">Pending</Badge>
+                    <motion.div
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                    >
+                      <Badge className="bg-yellow-100 text-yellow-700">Pending</Badge>
+                    </motion.div>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-semibold text-blue-600">SJ</div>
                     <div className="flex-1">
                       <div className="h-2 bg-gray-100 rounded-full">
-                        <div className="h-2 bg-blue-600 rounded-full w-1/3"></div>
+                        <motion.div 
+                          className="h-2 bg-blue-600 rounded-full"
+                          initial={{ width: 0 }}
+                          animate={{ width: "33.33%" }}
+                          transition={{ duration: 2, delay: 2 }}
+                        />
                       </div>
                       <p className="text-xs text-gray-500 mt-1">Step 1 of 3: Manager Review</p>
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button size="sm" variant="outline" className="flex-1">Reject</Button>
-                    <Button size="sm" className="flex-1">Approve</Button>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button size="sm" variant="outline" className="flex-1">Reject</Button>
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button size="sm" className="flex-1">Approve</Button>
+                    </motion.div>
                   </div>
-                </div>
-              </div>
-            </div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </section>
 
 
       {/* Problem Section */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="max-w-3xl mx-auto text-center mb-16">
+      <motion.section 
+        className="container mx-auto px-4 py-20"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+      >
+        <motion.div 
+          className="max-w-3xl mx-auto text-center mb-16"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+        >
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">As Your Team Grows, So Does the Chaos</h2>
           <p className="text-xl text-gray-600">What worked when you had 5 people breaks at 25… and completely fails at 100.</p>
-        </div>
-        <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-6xl mx-auto mb-12">
-          <div className="text-center p-6 bg-red-50 rounded-xl border border-red-100">
-            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <MessageSquare className="w-6 h-6 text-red-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Endless Email Chains</h3>
-            <p className="text-sm text-gray-600">Requests buried in threads, no visibility</p>
-          </div>
-          <div className="text-center p-6 bg-orange-50 rounded-xl border border-orange-100">
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <Clock className="w-6 h-6 text-orange-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Slack/WhatsApp Buried</h3>
-            <p className="text-sm text-gray-600">Messages getting lost in constant chat</p>
-          </div>
-          <div className="text-center p-6 bg-yellow-50 rounded-xl border border-yellow-100">
-            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <FileText className="w-6 h-6 text-yellow-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Manual Spreadsheets</h3>
-            <p className="text-sm text-gray-600">Version chaos, manual updates, errors</p>
-          </div>
-          <div className="text-center p-6 bg-blue-50 rounded-xl border border-blue-100">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <Users className="w-6 h-6 text-blue-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Verbal Approvals</h3>
-            <p className="text-sm text-gray-600">No tracking, no proof, confusion</p>
-          </div>
-          <div className="text-center p-6 bg-purple-50 rounded-xl border border-purple-100">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <Shield className="w-6 h-6 text-purple-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">No Visibility</h3>
-            <p className="text-sm text-gray-600">No idea where requests stand</p>
-          </div>
-        </div>
-        <div className="text-center max-w-2xl mx-auto">
+        </motion.div>
+        <motion.div 
+          className="grid md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-6xl mx-auto mb-12"
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          viewport={{ once: true }}
+        >
+          {[
+            { icon: MessageSquare, bgColor: "bg-red-50", borderColor: "border-red-100", iconBg: "bg-red-100", iconColor: "text-red-600", title: "Endless Email Chains", desc: "Requests buried in threads, no visibility" },
+            { icon: Clock, bgColor: "bg-orange-50", borderColor: "border-orange-100", iconBg: "bg-orange-100", iconColor: "text-orange-600", title: "Slack/WhatsApp Buried", desc: "Messages getting lost in constant chat" },
+            { icon: FileText, bgColor: "bg-yellow-50", borderColor: "border-yellow-100", iconBg: "bg-yellow-100", iconColor: "text-yellow-600", title: "Manual Spreadsheets", desc: "Version chaos, manual updates, errors" },
+            { icon: Users, bgColor: "bg-blue-50", borderColor: "border-blue-100", iconBg: "bg-blue-100", iconColor: "text-blue-600", title: "Verbal Approvals", desc: "No tracking, no proof, confusion" },
+            { icon: Shield, bgColor: "bg-purple-50", borderColor: "border-purple-100", iconBg: "bg-purple-100", iconColor: "text-purple-600", title: "No Visibility", desc: "No idea where requests stand" }
+          ].map((item, index) => (
+            <motion.div
+              key={index}
+              className={`text-center p-6 ${item.bgColor} rounded-xl border ${item.borderColor}`}
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.05, y: -5 }}
+            >
+              <motion.div 
+                className={`w-12 h-12 ${item.iconBg} rounded-lg flex items-center justify-center mx-auto mb-4`}
+                whileHover={{ rotate: 360, scale: 1.1 }}
+                transition={{ duration: 0.6 }}
+              >
+                <item.icon className={`w-6 h-6 ${item.iconColor}`} />
+              </motion.div>
+              <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
+              <p className="text-sm text-gray-600">{item.desc}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+        <motion.div 
+          className="text-center max-w-2xl mx-auto"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+          viewport={{ once: true }}
+        >
           <p className="text-lg text-gray-700 font-medium mb-2">Delays increase. Accountability drops. Operations slow down.</p>
-          <p className="text-xl"><span className="font-bold text-blue-600">Flow</span><span className="font-bold text-gray-900">Check</span> brings structured workflows to growing teams.</p>
-        </div>
-      </section>
+          <motion.p 
+            className="text-xl"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+          >
+            <span className="font-bold text-blue-600">Flow</span><span className="font-bold text-gray-900">Check</span> brings structured workflows to growing teams.
+          </motion.p>
+        </motion.div>
+      </motion.section>
 
 
 
       {/* Emotional Bridge */}
-      <section className="bg-gradient-to-br from-blue-50 to-indigo-50 py-20">
+      <motion.section 
+        className="bg-gradient-to-br from-blue-50 to-indigo-50 py-20"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+      >
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
+          <motion.div 
+            className="max-w-4xl mx-auto text-center"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-8">Imagine This Instead</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4">
-                  <Workflow className="w-8 h-8" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Every request follows a clear path</h3>
-                <p className="text-sm text-gray-600">No more confusion, no more lost items</p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Managers approve in one click</h3>
-                <p className="text-sm text-gray-600">Fast, informed decisions</p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4">
-                  <BarChart3 className="w-8 h-8" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Finance sees everything instantly</h3>
-                <p className="text-sm text-gray-600">Complete visibility, no surprises</p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-orange-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4">
-                  <TrendingUp className="w-8 h-8" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Nothing gets lost. Nothing gets delayed.</h3>
-                <p className="text-sm text-gray-600">Work keeps moving forward</p>
-              </div>
-            </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
+            <motion.div 
+              className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12"
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              {[
+                { icon: Workflow, color: "blue", title: "Every request follows a clear path", desc: "No more confusion, no more lost items" },
+                { icon: CheckCircle, color: "green", title: "Managers approve in one click", desc: "Fast, informed decisions" },
+                { icon: BarChart3, color: "purple", title: "Finance sees everything instantly", desc: "Complete visibility, no surprises" },
+                { icon: TrendingUp, color: "orange", title: "Nothing gets lost. Nothing gets delayed.", desc: "Work keeps moving forward" }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  className="text-center"
+                  initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.1, y: -10 }}
+                >
+                  <motion.div 
+                    className={`w-16 h-16 bg-${item.color}-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4`}
+                    whileHover={{ rotate: 360, scale: 1.2 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <item.icon className="w-8 h-8" />
+                  </motion.div>
+                  <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
+                  <p className="text-sm text-gray-600">{item.desc}</p>
+                </motion.div>
+              ))}
+            </motion.div>
+            <motion.div 
+              className="bg-white rounded-2xl p-8 shadow-lg"
+              initial={{ opacity: 0, scale: 0.9, y: 50 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1 }}
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.02, y: -5 }}
+            >
               <p className="text-xl text-gray-700 font-medium">That's what structured approvals look like.</p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Solution Section */}
       <section className="bg-gray-900 text-white py-20">

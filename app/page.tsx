@@ -8,24 +8,24 @@ import { motion, useScroll, useTransform, useInView } from "framer-motion"
 export default function HomePage() {
   const { scrollY } = useScroll()
   const heroY = useTransform(scrollY, [0, 300], [0, -50])
-  
+
   return (
     <div className="min-h-screen bg-white overflow-hidden">
       {/* Header */}
-      <motion.header 
+      <motion.header
         className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <motion.div 
+          <motion.div
             className="flex items-center gap-2"
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <motion.div 
+            <motion.div
               className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
               whileHover={{ rotate: 360, scale: 1.1 }}
               transition={{ duration: 0.6 }}
@@ -34,7 +34,7 @@ export default function HomePage() {
             </motion.div>
             <span className="text-xl font-bold"><span className="text-blue-600">Flow</span><span className="text-gray-900">Check</span></span>
           </motion.div>
-          <motion.div 
+          <motion.div
             className="flex items-center gap-4"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -47,7 +47,9 @@ export default function HomePage() {
               <Button variant="ghost">Sign In</Button>
             </Link>
             <Link href="/auth/register">
-              <Button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>Start Free Trial</Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button>Start Free Trial</Button>
+              </motion.div>
             </Link>
           </motion.div>
         </div>
@@ -57,13 +59,13 @@ export default function HomePage() {
       <section className="container mx-auto px-4 py-20 lg:py-28">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div 
+            <motion.div
               style={{ y: heroY }}
               initial={{ opacity: 0, x: -100 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <motion.div 
+              <motion.div
                 className="mb-4"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -71,7 +73,7 @@ export default function HomePage() {
               >
                 <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Free 14-Day Trial • No Credit Card Required</Badge>
               </motion.div>
-              <motion.h1 
+              <motion.h1
                 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -79,7 +81,7 @@ export default function HomePage() {
               >
                 Approval Bottlenecks Are Slowing Your Team Down.
               </motion.h1>
-              <motion.h2 
+              <motion.h2
                 className="text-2xl lg:text-3xl font-bold text-blue-600 mb-6 leading-tight"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -87,7 +89,7 @@ export default function HomePage() {
               >
                 FlowCheck Automates Every Approval — So Work Keeps Moving.
               </motion.h2>
-              <motion.p 
+              <motion.p
                 className="text-xl text-gray-600 mb-8 leading-relaxed"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -96,7 +98,7 @@ export default function HomePage() {
                 Stop chasing emails. Stop losing requests.
                 Create structured workflows for leave, expenses, purchasing, and internal approvals — all in one system.
               </motion.p>
-              <motion.div 
+              <motion.div
                 className="flex flex-col sm:flex-row gap-4 mb-8"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -117,7 +119,7 @@ export default function HomePage() {
                   </motion.div>
                 </Link>
               </motion.div>
-              <motion.p 
+              <motion.p
                 className="text-gray-600 mb-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -125,25 +127,25 @@ export default function HomePage() {
               >
                 Move faster. Stay organized. Scale without chaos.
               </motion.p>
-              <motion.div 
+              <motion.div
                 className="flex flex-col sm:flex-row items-center gap-6 text-sm text-gray-600"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.8 }}
               >
-                <motion.div 
+                <motion.div
                   className="flex items-center gap-2"
                   whileHover={{ scale: 1.1 }}
                 >
                   <Check className="w-4 h-4 text-green-600" /> No contracts
                 </motion.div>
-                <motion.div 
+                <motion.div
                   className="flex items-center gap-2"
                   whileHover={{ scale: 1.1 }}
                 >
                   <Check className="w-4 h-4 text-green-600" /> Cancel anytime
                 </motion.div>
-                <motion.div 
+                <motion.div
                   className="flex items-center gap-2"
                   whileHover={{ scale: 1.1 }}
                 >
@@ -151,18 +153,18 @@ export default function HomePage() {
                 </motion.div>
               </motion.div>
             </motion.div>
-            <motion.div 
+            <motion.div
               className="relative"
               initial={{ opacity: 0, x: 100 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 1 }}
             >
-              <motion.div 
+              <motion.div
                 className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-8 border border-blue-100"
                 whileHover={{ scale: 1.02, rotateY: 5 }}
                 transition={{ duration: 0.6 }}
               >
-                <motion.div 
+                <motion.div
                   className="bg-white rounded-xl shadow-lg p-6 space-y-4"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -184,7 +186,7 @@ export default function HomePage() {
                     <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-semibold text-blue-600">SJ</div>
                     <div className="flex-1">
                       <div className="h-2 bg-gray-100 rounded-full">
-                        <motion.div 
+                        <motion.div
                           className="h-2 bg-blue-600 rounded-full"
                           initial={{ width: 0 }}
                           animate={{ width: "33.33%" }}
@@ -211,14 +213,14 @@ export default function HomePage() {
 
 
       {/* Problem Section */}
-      <motion.section 
+      <motion.section
         className="container mx-auto px-4 py-20"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
       >
-        <motion.div 
+        <motion.div
           className="max-w-3xl mx-auto text-center mb-16"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -228,7 +230,7 @@ export default function HomePage() {
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">As Your Team Grows, So Does the Chaos</h2>
           <p className="text-xl text-gray-600">What worked when you had 5 people breaks at 25… and completely fails at 100.</p>
         </motion.div>
-        <motion.div 
+        <motion.div
           className="grid md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-6xl mx-auto mb-12"
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -251,7 +253,7 @@ export default function HomePage() {
               viewport={{ once: true }}
               whileHover={{ scale: 1.05, y: -5 }}
             >
-              <motion.div 
+              <motion.div
                 className={`w-12 h-12 ${item.iconBg} rounded-lg flex items-center justify-center mx-auto mb-4`}
                 whileHover={{ rotate: 360, scale: 1.1 }}
                 transition={{ duration: 0.6 }}
@@ -263,7 +265,7 @@ export default function HomePage() {
             </motion.div>
           ))}
         </motion.div>
-        <motion.div 
+        <motion.div
           className="text-center max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -271,7 +273,7 @@ export default function HomePage() {
           viewport={{ once: true }}
         >
           <p className="text-lg text-gray-700 font-medium mb-2">Delays increase. Accountability drops. Operations slow down.</p>
-          <motion.p 
+          <motion.p
             className="text-xl"
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
@@ -284,7 +286,7 @@ export default function HomePage() {
 
 
       {/* Emotional Bridge */}
-      <motion.section 
+      <motion.section
         className="bg-gradient-to-br from-blue-50 to-indigo-50 py-20"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -292,7 +294,7 @@ export default function HomePage() {
         viewport={{ once: true }}
       >
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             className="max-w-4xl mx-auto text-center"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -300,7 +302,7 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-8">Imagine This Instead</h2>
-            <motion.div 
+            <motion.div
               className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12"
               initial={{ opacity: 0, y: 100 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -322,7 +324,7 @@ export default function HomePage() {
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.1, y: -10 }}
                 >
-                  <motion.div 
+                  <motion.div
                     className={`w-16 h-16 bg-${item.color}-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4`}
                     whileHover={{ rotate: 360, scale: 1.2 }}
                     transition={{ duration: 0.6 }}
@@ -334,7 +336,7 @@ export default function HomePage() {
                 </motion.div>
               ))}
             </motion.div>
-            <motion.div 
+            <motion.div
               className="bg-white rounded-2xl p-8 shadow-lg"
               initial={{ opacity: 0, scale: 0.9, y: 50 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}

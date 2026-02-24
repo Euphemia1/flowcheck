@@ -37,10 +37,14 @@ export default function HomePage() {
             <div>
               <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-100">Free 14-Day Trial • No Credit Card Required</Badge>
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                Approval Automation for Growing Teams
+                Approval Bottlenecks Are Slowing Your Team Down.
               </h1>
+              <h2 className="text-2xl lg:text-3xl font-bold text-blue-600 mb-6 leading-tight">
+                FlowCheck Automates Every Approval — So Work Keeps Moving.
+              </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Stop chasing approvals in email threads and spreadsheets. FlowCheck helps growing teams automate leave, expense, purchase, and internal approvals — all in one streamlined system.
+                Stop chasing emails. Stop losing requests.
+                Create structured workflows for leave, expenses, purchasing, and internal approvals — all in one system.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Link href="/auth/register">
@@ -55,15 +59,15 @@ export default function HomePage() {
                 </Link>
               </div>
               <p className="text-gray-600 mb-4">Move faster. Stay organized. Scale without chaos.</p>
-              <div className="flex items-center gap-6 text-sm text-gray-600">
+              <div className="flex flex-col sm:flex-row items-center gap-6 text-sm text-gray-600">
                 <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-green-600" /> Free setup
+                  <Check className="w-4 h-4 text-green-600" /> No contracts
                 </div>
                 <div className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-green-600" /> Cancel anytime
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-green-600" /> 24/7 support
+                  <Check className="w-4 h-4 text-green-600" /> Your data stays yours
                 </div>
               </div>
             </div>
@@ -97,19 +101,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Trust Badges */}
-      <section className="border-y bg-gray-50 py-8">
-        <div className="container mx-auto px-4">
-          <p className="text-center text-sm text-gray-500 mb-6">Trusted by growing teams at</p>
-          <div className="flex flex-wrap justify-center gap-8 items-center opacity-50">
-            <div className="text-lg font-semibold text-gray-700">TechCorp</div>
-            <div className="text-lg font-semibold text-gray-700">GrowthLabs</div>
-            <div className="text-lg font-semibold text-gray-700">Innovate Inc</div>
-            <div className="text-lg font-semibold text-gray-700">FutureScale</div>
-            <div className="text-lg font-semibold text-gray-700">NextGen Ops</div>
-          </div>
-        </div>
-      </section>
 
       {/* Problem Section */}
       <section className="container mx-auto px-4 py-20">
@@ -157,6 +148,50 @@ export default function HomePage() {
         <div className="text-center max-w-2xl mx-auto">
           <p className="text-lg text-gray-700 font-medium mb-2">Delays increase. Accountability drops. Operations slow down.</p>
           <p className="text-xl"><span className="font-bold text-blue-600">Flow</span><span className="font-bold text-gray-900">Check</span> brings structured workflows to growing teams.</p>
+        </div>
+      </section>
+
+
+
+      {/* Emotional Bridge */}
+      <section className="bg-gradient-to-br from-blue-50 to-indigo-50 py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-8">Imagine This Instead</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4">
+                  <Workflow className="w-8 h-8" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Every request follows a clear path</h3>
+                <p className="text-sm text-gray-600">No more confusion, no more lost items</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Managers approve in one click</h3>
+                <p className="text-sm text-gray-600">Fast, informed decisions</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4">
+                  <BarChart3 className="w-8 h-8" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Finance sees everything instantly</h3>
+                <p className="text-sm text-gray-600">Complete visibility, no surprises</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-orange-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4">
+                  <TrendingUp className="w-8 h-8" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Nothing gets lost. Nothing gets delayed.</h3>
+                <p className="text-sm text-gray-600">Work keeps moving forward</p>
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl p-8 shadow-lg">
+              <p className="text-xl text-gray-700 font-medium">That's what structured approvals look like.</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -391,19 +426,19 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
             <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm">
               <CheckCircle className="w-6 h-6 text-green-600 shrink-0" />
-              <span className="text-gray-700">Faster approval turnaround times</span>
+              <span className="text-gray-700">Approvals completed in hours instead of days</span>
             </div>
             <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm">
               <CheckCircle className="w-6 h-6 text-green-600 shrink-0" />
-              <span className="text-gray-700">Improved accountability across departments</span>
+              <span className="text-gray-700">Managers stop chasing follow-ups</span>
             </div>
             <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm">
               <CheckCircle className="w-6 h-6 text-green-600 shrink-0" />
-              <span className="text-gray-700">Clear visibility into every request</span>
+              <span className="text-gray-700">Finance gains full visibility</span>
             </div>
             <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm">
               <CheckCircle className="w-6 h-6 text-green-600 shrink-0" />
-              <span className="text-gray-700">Reduced operational delays</span>
+              <span className="text-gray-700">Teams operate with clear accountability</span>
             </div>
             <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm">
               <CheckCircle className="w-6 h-6 text-green-600 shrink-0" />
@@ -479,7 +514,10 @@ export default function HomePage() {
       <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Simple, Transparent Pricing</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">Flexible plans designed for growing teams of different sizes. Upgrade anytime as your needs grow.</p>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">Flexible plans designed for growing teams of different sizes. Upgrade anytime as your needs grow.</p>
+          <div className="inline-flex items-center px-4 py-2 bg-green-50 text-green-700 rounded-full text-sm font-semibold border border-green-100">
+            <Zap className="w-4 h-4 mr-2" /> Save 20% with annual billing
+          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -491,7 +529,7 @@ export default function HomePage() {
                 <span className="text-4xl font-bold text-gray-900">$29</span>
                 <span className="text-gray-600">/month</span>
               </div>
-              <CardDescription className="mt-2">For small teams building structure</CardDescription>
+              <CardDescription className="mt-2">Perfect for small teams replacing email approvals</CardDescription>
             </CardHeader>
             <div className="px-6 pb-6">
               <ul className="space-y-3 mb-6">
@@ -531,7 +569,7 @@ export default function HomePage() {
                 <span className="text-4xl font-bold text-gray-900">$79</span>
                 <span className="text-gray-600">/month</span>
               </div>
-              <CardDescription className="mt-2">For scaling teams needing advanced workflows</CardDescription>
+              <CardDescription className="mt-2">⭐ Best for teams scaling past 10 people</CardDescription>
             </CardHeader>
             <div className="px-6 pb-6">
               <ul className="space-y-3 mb-6">
@@ -566,7 +604,7 @@ export default function HomePage() {
                 <span className="text-4xl font-bold text-gray-900">$199</span>
                 <span className="text-gray-600">/month</span>
               </div>
-              <CardDescription className="mt-2">For large teams with complex approval hierarchies</CardDescription>
+              <CardDescription className="mt-2">For organizations with complex hierarchies & compliance needs</CardDescription>
             </CardHeader>
             <div className="px-6 pb-6">
               <ul className="space-y-3 mb-6">
@@ -597,6 +635,42 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <section className="bg-gray-50 py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+            <p className="text-xl text-gray-600">Everything you need to know about FlowCheck</p>
+          </div>
+          <div className="max-w-3xl mx-auto space-y-6">
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="font-semibold text-gray-900 mb-2">How long does setup take?</h3>
+              <p className="text-gray-600">Most teams are up and running in under 30 minutes. No technical skills required.</p>
+            </div>
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="font-semibold text-gray-900 mb-2">Do we need technical skills?</h3>
+              <p className="text-gray-600">No. FlowCheck is designed for operations teams, not developers. If you can use email, you can use FlowCheck.</p>
+            </div>
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="font-semibold text-gray-900 mb-2">Can we customize workflows?</h3>
+              <p className="text-gray-600">Yes. Create unlimited custom workflows for any approval process your team needs.</p>
+            </div>
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="font-semibold text-gray-900 mb-2">Is our data secure?</h3>
+              <p className="text-gray-600">Absolutely. Bank-level encryption, role-based access, and complete audit trails keep your data safe.</p>
+            </div>
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="font-semibold text-gray-900 mb-2">Can we upgrade later?</h3>
+              <p className="text-gray-600">Yes. Upgrade or downgrade anytime. Changes take effect immediately.</p>
+            </div>
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="font-semibold text-gray-900 mb-2">Do you integrate with other tools?</h3>
+              <p className="text-gray-600">FlowCheck integrates with Slack, Microsoft Teams, and email. More integrations coming soon.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Final CTA */}
       <section className="bg-gray-900 text-white py-20">
         <div className="container mx-auto px-4 text-center max-w-3xl">
@@ -608,6 +682,11 @@ export default function HomePage() {
             Automate approvals. Improve accountability. Scale with confidence.
           </p>
           <p className="text-gray-500 mb-8">Start your free trial today — or schedule a personalized demo.</p>
+          <div className="bg-gray-800 rounded-xl p-6 mb-8">
+            <p className="text-gray-300 text-center">
+              <span className="text-green-400 font-semibold">No contracts.</span> Cancel anytime. Your data stays yours.
+            </p>
+          </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/auth/register">
               <Button size="lg" className="px-8">

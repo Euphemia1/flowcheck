@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle, Users, Workflow, BarChart3, Shield, Clock } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { CheckCircle, Users, Workflow, BarChart3, Shield, Clock, ArrowRight, Star, Zap, Lock, MessageSquare, FileText, Calendar, DollarSign, ChevronRight, PlayCircle, Check } from "lucide-react"
 import Link from "next/link"
 
 export default function HomePage() {
@@ -13,7 +14,7 @@ export default function HomePage() {
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <Workflow className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900">ApprovalFlow</span>
+            <span className="text-xl font-bold"><span className="text-blue-600">Flow</span><span className="text-gray-900">Check</span></span>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/demo">
@@ -424,10 +425,10 @@ export default function HomePage() {
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <Workflow className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold">ApprovalFlow</span>
+            <span className="text-xl font-bold"><span className="text-blue-600">Flow</span><span className="text-white">Check</span></span>
           </div>
           <div className="text-center text-gray-400">
-            <p>&copy; {new Date().getFullYear()} ApprovalFlow. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} <span className="font-bold text-blue-600">Flow</span><span className="font-bold text-white">Check</span>. All rights reserved.</p>
           </div>
         </div>
       </footer>

@@ -99,7 +99,7 @@ export default function HomePage() {
         </div>
         <div className="text-center mt-8">
           <p className="text-lg text-gray-700 font-medium">Things get lost. Delays happen. Accountability disappears.</p>
-          <p className="text-gray-600 mt-2">FlowCheck fixes that.</p>
+          <p className="text-gray-600 mt-2"><span className="font-bold text-blue-600">FlowCheck</span> fixes that.</p>
         </div>
       </section>
 

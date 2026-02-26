@@ -63,6 +63,9 @@ export function DashboardHeader() {
           <Link href="/analytics" className="text-gray-700 hover:text-gray-900 font-medium">
             Analytics
           </Link>
+          <Link href="/audit" className="text-gray-700 hover:text-gray-900 font-medium">
+            Audit Log
+          </Link>
         </nav>
 
         {/* Right side actions */}

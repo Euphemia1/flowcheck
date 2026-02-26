@@ -32,6 +32,22 @@ interface Template {
 
 const QUICK_TEMPLATES: Template[] = [
   {
+    id: "leave",
+    name: "Leave Request",
+    description: "Standard vacation, sick leave, and PTO approval process",
+    icon: Clock,
+    category: "HR",
+    steps: 3,
+  },
+  {
+    id: "audit-access",
+    name: "Audit Log Access",
+    description: "Request for secure access to historical organizational logs",
+    icon: FileText,
+    category: "Compliance",
+    steps: 4,
+  },
+  {
     id: "expense",
     name: "Expense Approval",
     description: "Standard employee expense reimbursement with manager approval",
@@ -40,27 +56,11 @@ const QUICK_TEMPLATES: Template[] = [
     steps: 3,
   },
   {
-    id: "purchase",
-    name: "Purchase Order",
-    description: "Multi-level approval for equipment and service purchases",
+    id: "inventory",
+    name: "Inventory Request",
+    description: "Request for hardware, supplies or equipment",
     icon: FileCheck,
-    category: "Procurement",
-    steps: 4,
-  },
-  {
-    id: "timeoff",
-    name: "Time Off Request",
-    description: "Vacation, sick leave, and PTO approval process",
-    icon: Clock,
-    category: "HR",
-    steps: 2,
-  },
-  {
-    id: "hiring",
-    name: "New Hire Approval",
-    description: "Job requisition and candidate approval workflow",
-    icon: Users,
-    category: "HR",
+    category: "Operations",
     steps: 3,
   },
 ]

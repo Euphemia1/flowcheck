@@ -28,11 +28,13 @@ interface RequestForm {
 }
 
 const WORKFLOWS = [
-  { id: "expense", name: "Expense Approval", category: "Finance", fields: ["amount", "receipt"] },
-  { id: "purchase", name: "Purchase Order", category: "Procurement", fields: ["amount", "vendor", "justification"] },
-  { id: "timeoff", name: "Time Off Request", category: "HR", fields: ["startDate", "endDate", "type"] },
-  { id: "marketing", name: "Marketing Campaign", category: "Marketing", fields: ["budget", "duration", "audience"] },
-  { id: "contract", name: "Contract Review", category: "Legal", fields: ["vendor", "value", "term"] },
+  { id: "expense", name: "Expense Approval", category: "Finance", fields: ["amount", "receipt", "department"] },
+  { id: "purchase", name: "Purchase Order", category: "Procurement", fields: ["amount", "vendor", "budgetLine"] },
+  { id: "leave", name: "Leave Request", category: "HR", fields: ["startDate", "endDate", "leaveType", "handoverNotes"] },
+  { id: "audit", name: "Finance Audit Access", category: "Finance", fields: ["recordType", "reason", "timePeriod"] },
+  { id: "inventory", name: "Inventory/Equipment", category: "Operations", fields: ["itemDescription", "quantity", "deliveryAddress"] },
+  { id: "performance", name: "Performance Review", category: "HR", fields: ["period", "reviewer", "selfRating"] },
+  { id: "contract", name: "Contract Review", category: "Legal", fields: ["vendor", "value", "legalTerm"] },
 ]
 
 export default function NewRequestPage() {
@@ -133,11 +135,10 @@ export default function NewRequestPage() {
                     {WORKFLOWS.map((workflow) => (
                       <div
                         key={workflow.id}
-                        className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                          form.workflow === workflow.id
+                        className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${form.workflow === workflow.id
                             ? "border-blue-600 bg-blue-50"
                             : "border-gray-200 hover:border-gray-300"
-                        }`}
+                          }`}
                         onClick={() =>
                           setForm((prev) => ({
                             ...prev,

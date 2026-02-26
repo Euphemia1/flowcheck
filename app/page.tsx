@@ -71,32 +71,24 @@ export default function HomePage() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
               >
-                <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Free 14-Day Trial • No Credit Card Required</Badge>
+                <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Simple. Digital. Paperless.</Badge>
               </motion.div>
               <motion.h1
-                className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight"
+                className="text-4xl lg:text-6xl font-black text-slate-900 mb-6 leading-tight tracking-tight"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
               >
-                Approval Bottlenecks Are Slowing Your Team Down.
+                Stop Chasing Approvals. <br /><span className="text-blue-600">Start Getting Work Done.</span>
               </motion.h1>
-              <motion.h2
-                className="text-2xl lg:text-3xl font-bold text-blue-600 mb-6 leading-tight"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1 }}
-              >
-                FlowCheck Automates Every Approval — So Work Keeps Moving.
-              </motion.h2>
               <motion.p
-                className="text-xl text-gray-600 mb-8 leading-relaxed"
+                className="text-xl text-slate-600 mb-8 leading-relaxed max-w-xl"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.2 }}
               >
-                Stop chasing emails. Stop losing requests.
-                Create structured workflows for leave, expenses, purchasing, and internal approvals — all in one system.
+                Automate your internal approval workflows in minutes.
+                FlowCheck helps growing teams move faster by bringing structure to every request, decision, and sign-off.
               </motion.p>
               <motion.div
                 className="flex flex-col sm:flex-row gap-4 mb-8"
@@ -212,213 +204,61 @@ export default function HomePage() {
       </section>
 
 
-      {/* Problem Section */}
-      <motion.section
-        className="container mx-auto px-4 py-20"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-      >
-        <motion.div
-          className="max-w-3xl mx-auto text-center mb-16"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">As Your Team Grows, So Does the Chaos</h2>
-          <p className="text-xl text-gray-600">What worked when you had 5 people breaks at 25… and completely fails at 100.</p>
-        </motion.div>
-        <motion.div
-          className="grid md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-6xl mx-auto mb-12"
-          initial={{ opacity: 0, y: 100 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          {[
-            { icon: MessageSquare, bgColor: "bg-red-50", borderColor: "border-red-100", iconBg: "bg-red-100", iconColor: "text-red-600", title: "Endless Email Chains", desc: "Requests buried in threads, no visibility" },
-            { icon: Clock, bgColor: "bg-orange-50", borderColor: "border-orange-100", iconBg: "bg-orange-100", iconColor: "text-orange-600", title: "Slack/WhatsApp Buried", desc: "Messages getting lost in constant chat" },
-            { icon: FileText, bgColor: "bg-yellow-50", borderColor: "border-yellow-100", iconBg: "bg-yellow-100", iconColor: "text-yellow-600", title: "Manual Spreadsheets", desc: "Version chaos, manual updates, errors" },
-            { icon: Users, bgColor: "bg-blue-50", borderColor: "border-blue-100", iconBg: "bg-blue-100", iconColor: "text-blue-600", title: "Verbal Approvals", desc: "No tracking, no proof, confusion" },
-            { icon: Shield, bgColor: "bg-purple-50", borderColor: "border-purple-100", iconBg: "bg-purple-100", iconColor: "text-purple-600", title: "No Visibility", desc: "No idea where requests stand" }
-          ].map((item, index) => (
-            <motion.div
-              key={index}
-              className={`text-center p-6 ${item.bgColor} rounded-xl border ${item.borderColor}`}
-              initial={{ opacity: 0, scale: 0.8, y: 50 }}
-              whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.05, y: -5 }}
-            >
-              <motion.div
-                className={`w-12 h-12 ${item.iconBg} rounded-lg flex items-center justify-center mx-auto mb-4`}
-                whileHover={{ rotate: 360, scale: 1.1 }}
-                transition={{ duration: 0.6 }}
-              >
-                <item.icon className={`w-6 h-6 ${item.iconColor}`} />
-              </motion.div>
-              <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
-              <p className="text-sm text-gray-600">{item.desc}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-        <motion.div
-          className="text-center max-w-2xl mx-auto"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
-          viewport={{ once: true }}
-        >
-          <p className="text-lg text-gray-700 font-medium mb-2">Delays increase. Accountability drops. Operations slow down.</p>
-          <motion.p
-            className="text-xl"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          >
-            <span className="font-bold text-blue-600">Flow</span><span className="font-bold text-gray-900">Check</span> brings structured workflows to growing teams.
-          </motion.p>
-        </motion.div>
-      </motion.section>
-
-
-
-      {/* Emotional Bridge */}
-      <motion.section
-        className="bg-gradient-to-br from-blue-50 to-indigo-50 py-20"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-      >
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="max-w-4xl mx-auto text-center"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-8">Imagine This Instead</h2>
-            <motion.div
-              className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12"
-              initial={{ opacity: 0, y: 100 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              viewport={{ once: true }}
-            >
-              {[
-                { icon: Workflow, color: "blue", title: "Every request follows a clear path", desc: "No more confusion, no more lost items" },
-                { icon: CheckCircle, color: "green", title: "Managers approve in one click", desc: "Fast, informed decisions" },
-                { icon: BarChart3, color: "purple", title: "Finance sees everything instantly", desc: "Complete visibility, no surprises" },
-                { icon: TrendingUp, color: "orange", title: "Nothing gets lost. Nothing gets delayed.", desc: "Work keeps moving forward" }
-              ].map((item, index) => (
-                <motion.div
-                  key={index}
-                  className="text-center"
-                  initial={{ opacity: 0, scale: 0.8, y: 50 }}
-                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.1, y: -10 }}
-                >
-                  <motion.div
-                    className={`w-16 h-16 bg-${item.color}-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4`}
-                    whileHover={{ rotate: 360, scale: 1.2 }}
-                    transition={{ duration: 0.6 }}
-                  >
-                    <item.icon className="w-8 h-8" />
-                  </motion.div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
-                  <p className="text-sm text-gray-600">{item.desc}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-            <motion.div
-              className="bg-white rounded-2xl p-8 shadow-lg"
-              initial={{ opacity: 0, scale: 0.9, y: 50 }}
-              whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.02, y: -5 }}
-            >
-              <p className="text-xl text-gray-700 font-medium">That's what structured approvals look like.</p>
-            </motion.div>
-          </motion.div>
-        </div>
-      </motion.section>
-
       {/* Solution Section */}
-      <section className="bg-gray-900 text-white py-20">
+      <section className="bg-slate-50 border-y border-slate-100 py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">One Central Hub for All Your Approvals</h2>
-            <p className="text-xl text-gray-400">FlowCheck replaces scattered approvals with a clear, automated system.</p>
+            <h2 className="text-3xl lg:text-5xl font-black text-slate-900 mb-4 tracking-tight">Structured Flows for Every Team</h2>
+            <p className="text-xl text-slate-600">The simplest way for growing organizations to manage internal approvals.</p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
-            <div className="flex items-start gap-4 p-6 bg-gray-800 rounded-xl">
-              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
-                <Calendar className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="font-semibold mb-1">Leave & Time-Off Requests</h3>
-                <p className="text-gray-400 text-sm">Streamlined PTO, sick leave, and vacation approvals</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4 p-6 bg-gray-800 rounded-xl">
-              <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center shrink-0">
-                <DollarSign className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="font-semibold mb-1">Expense Approvals</h3>
-                <p className="text-gray-400 text-sm">Receipts, reimbursements, spending controls</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4 p-6 bg-gray-800 rounded-xl">
-              <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center shrink-0">
-                <FileText className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="font-semibold mb-1">Purchase Requests</h3>
-                <p className="text-gray-400 text-sm">Procurement, vendor approvals, PO workflow</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4 p-6 bg-gray-800 rounded-xl">
-              <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center shrink-0">
-                <BarChart3 className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="font-semibold mb-1">Budget Approvals</h3>
-                <p className="text-gray-400 text-sm">Department budgets, project spend, forecasts</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4 p-6 bg-gray-800 rounded-xl">
-              <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center shrink-0">
-                <CheckCircle className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="font-semibold mb-1">Document Sign-Off</h3>
-                <p className="text-gray-400 text-sm">Contracts, policies, compliance approvals</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4 p-6 bg-gray-800 rounded-xl">
-              <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center shrink-0">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 transition-all">
+              <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center mb-6">
                 <Layers className="w-6 h-6 text-white" />
               </div>
-              <div>
-                <h3 className="font-semibold mb-1">Custom Workflows</h3>
-                <p className="text-gray-400 text-sm">Any internal process your team needs</p>
-              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Team Requests</h3>
+              <p className="text-slate-600">Equip your team with a simple portal for any recurring request type.</p>
             </div>
-          </div>
-          <div className="text-center">
-            <p className="text-xl text-gray-300">Everything is submitted, tracked, approved, and recorded in one place.</p>
-            <p className="text-lg text-blue-400 mt-2">No more guessing. No more lost requests.</p>
+            <div className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 transition-all">
+              <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+                <CheckCircle className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Manager Sign-offs</h3>
+              <p className="text-slate-600">Give managers a clear, one-click dashboard to keep work moving.</p>
+            </div>
+            <div className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 transition-all">
+              <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Organization Audit</h3>
+              <p className="text-slate-600">Maintain a complete, transparent history of every decision made.</p>
+            </div>
+            <div className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 transition-all">
+              <div className="w-12 h-12 bg-orange-600 rounded-2xl flex items-center justify-center mb-6">
+                <Workflow className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Operations</h3>
+              <p className="text-slate-600">Inventory requests, access logs, and equipment.</p>
+            </div>
+            <div className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 transition-all">
+              <div className="w-12 h-12 bg-purple-600 rounded-2xl flex items-center justify-center mb-6">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Legal/Audit</h3>
+              <p className="text-slate-600">Compliance sign-offs and audit log access.</p>
+            </div>
+            <div className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 transition-all">
+              <div className="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center mb-6">
+                <Layers className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Custom Flows</h3>
+              <p className="text-slate-600">Any process your organization needs to automate.</p>
+            </div>
           </div>
         </div>
       </section>
+
+
 
       {/* Features Section */}
       <section className="container mx-auto px-4 py-20">
@@ -426,244 +266,42 @@ export default function HomePage() {
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Powerful Workflow Automation — Made Simple</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">Everything you need to streamline approvals</p>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-            <CardHeader>
-              <Workflow className="w-10 h-10 text-blue-600 mb-4" />
-              <CardTitle className="text-xl">Custom Workflow Builder</CardTitle>
-              <CardDescription className="text-base">
-                Design approval flows that match your team's structure. Add multiple approval levels, conditions, and roles — no coding required.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-            <CardHeader>
-              <UserCheck className="w-10 h-10 text-green-600 mb-4" />
-              <CardTitle className="text-xl">Role-Based Access Control</CardTitle>
-              <CardDescription className="text-base">
-                Assign managers, finance leads, and department heads with clear approval authority.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-            <CardHeader>
-              <BarChart3 className="w-10 h-10 text-orange-600 mb-4" />
-              <CardTitle className="text-xl">Real-Time Tracking Dashboard</CardTitle>
-              <CardDescription className="text-base">
-                See every request's status instantly — pending, approved, rejected, or escalated.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-            <CardHeader>
-              <Bell className="w-10 h-10 text-purple-600 mb-4" />
-              <CardTitle className="text-xl">Smart Notifications & Reminders</CardTitle>
-              <CardDescription className="text-base">
-                Automatic alerts ensure approvals don't get stuck. Escalate to managers when needed.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-            <CardHeader>
-              <Shield className="w-10 h-10 text-red-600 mb-4" />
-              <CardTitle className="text-xl">Complete Audit Trails</CardTitle>
-              <CardDescription className="text-base">
-                Every action is logged, timestamped, and recorded for transparency and accountability.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-            <CardHeader>
-              <TrendingUp className="w-10 h-10 text-teal-600 mb-4" />
-              <CardTitle className="text-xl">Analytics & Insights</CardTitle>
-              <CardDescription className="text-base">
-                Track approval times, identify bottlenecks, and improve operational efficiency.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="bg-blue-50 py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Get Up and Running in Minutes</h2>
-            <p className="text-xl text-gray-600">No complex onboarding. No technical team required.</p>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+          <div className="p-6">
+            <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6">
+              <Workflow className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold mb-2">Visual Designer</h3>
+            <p className="text-slate-600 text-sm">Build flows with drag-and-drop. No code required.</p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-            <div className="relative">
-              <div className="bg-white rounded-xl p-8 shadow-lg text-center">
-                <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-6">1</div>
-                <h3 className="text-xl font-semibold mb-3">Create Your Workflow</h3>
-                <p className="text-gray-600">Set up approval steps tailored to your team structure.</p>
-              </div>
+
+          <div className="p-6">
+            <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-6">
+              <Shield className="w-6 h-6" />
             </div>
-            <div className="relative">
-              <div className="bg-white rounded-xl p-8 shadow-lg text-center">
-                <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-6">2</div>
-                <h3 className="text-xl font-semibold mb-3">Assign Approvers</h3>
-                <p className="text-gray-600">Define who reviews and approves each request type.</p>
-              </div>
+            <h3 className="text-lg font-bold mb-2">Audit Trails</h3>
+            <p className="text-slate-600 text-sm">Every action is logged and timestamped for compliance.</p>
+          </div>
+
+          <div className="p-6">
+            <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-6">
+              <Bell className="w-6 h-6" />
             </div>
-            <div className="relative">
-              <div className="bg-white rounded-xl p-8 shadow-lg text-center">
-                <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-6">3</div>
-                <h3 className="text-xl font-semibold mb-3">Submit & Track</h3>
-                <p className="text-gray-600">Team members submit requests. Approvers get notified.</p>
-              </div>
+            <h3 className="text-lg font-bold mb-2">Smart Alerts</h3>
+            <p className="text-slate-600 text-sm">Automatic follow-ups so requests never get stuck.</p>
+          </div>
+
+          <div className="p-6">
+            <div className="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center mb-6">
+              <TrendingUp className="w-6 h-6" />
             </div>
-            <div className="bg-white rounded-xl p-8 shadow-lg text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-6">4</div>
-              <h3 className="text-xl font-semibold mb-3">Monitor & Optimize</h3>
-              <p className="text-gray-600">Use insights to reduce delays and improve turnaround.</p>
-            </div>
+            <h3 className="text-lg font-bold mb-2">Real-time Analytics</h3>
+            <p className="text-slate-600 text-sm">Identify bottlenecks and improve processing times.</p>
           </div>
         </div>
       </section>
 
-      {/* Who It's For */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Designed for Growing Teams That Need Structure</h2>
-            <p className="text-xl text-gray-600">FlowCheck is ideal for:</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <div className="p-6 bg-blue-50 rounded-xl text-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Users className="w-6 h-6 text-blue-600" />
-              </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Operations Teams</h4>
-              <p className="text-sm text-gray-600">Streamline internal processes and approvals</p>
-            </div>
-            <div className="p-6 bg-green-50 rounded-xl text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <UserCheck className="w-6 h-6 text-green-600" />
-              </div>
-              <h4 className="font-semibold text-gray-900 mb-2">HR Departments</h4>
-              <p className="text-sm text-gray-600">Manage leave, hiring, and policy approvals</p>
-            </div>
-            <div className="p-6 bg-purple-50 rounded-xl text-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <DollarSign className="w-6 h-6 text-purple-600" />
-              </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Finance Teams</h4>
-              <p className="text-sm text-gray-600">Control expenses, budgets, and purchasing</p>
-            </div>
-            <div className="p-6 bg-orange-50 rounded-xl text-center">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Layers className="w-6 h-6 text-orange-600" />
-              </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Department Managers</h4>
-              <p className="text-sm text-gray-600">Oversee team requests and approvals</p>
-            </div>
-          </div>
-          <div className="bg-gray-900 text-white p-8 rounded-xl text-center">
-            <h3 className="text-xl font-bold mb-2">Scaling Companies Adding New Layers of Management</h3>
-            <p className="text-gray-400">If your team handles recurring approvals, FlowCheck brings clarity and control.</p>
-          </div>
-        </div>
-      </section>
 
-      {/* Benefits Section */}
-      <section className="bg-gray-50 py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Why Growing Teams Choose FlowCheck</h2>
-            <p className="text-xl text-gray-600">When approvals move faster, your entire organization moves faster.</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
-            <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm">
-              <CheckCircle className="w-6 h-6 text-green-600 shrink-0" />
-              <span className="text-gray-700">Approvals completed in hours instead of days</span>
-            </div>
-            <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm">
-              <CheckCircle className="w-6 h-6 text-green-600 shrink-0" />
-              <span className="text-gray-700">Managers stop chasing follow-ups</span>
-            </div>
-            <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm">
-              <CheckCircle className="w-6 h-6 text-green-600 shrink-0" />
-              <span className="text-gray-700">Finance gains full visibility</span>
-            </div>
-            <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm">
-              <CheckCircle className="w-6 h-6 text-green-600 shrink-0" />
-              <span className="text-gray-700">Teams operate with clear accountability</span>
-            </div>
-            <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm">
-              <CheckCircle className="w-6 h-6 text-green-600 shrink-0" />
-              <span className="text-gray-700">Structured processes as you scale</span>
-            </div>
-            <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm">
-              <CheckCircle className="w-6 h-6 text-green-600 shrink-0" />
-              <span className="text-gray-700">Less manual follow-up and chasing</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Security & Control */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-8">Secure, Controlled, and Scalable</h2>
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
-            <div className="p-6 bg-blue-50 rounded-xl">
-              <Lock className="w-10 h-10 text-blue-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-gray-900 mb-2">Role-Based Access</h3>
-              <p className="text-gray-600 text-sm">Granular permissions ensure only authorized users can approve</p>
-            </div>
-            <div className="p-6 bg-green-50 rounded-xl">
-              <Shield className="w-10 h-10 text-green-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-gray-900 mb-2">Secure Data Handling</h3>
-              <p className="text-gray-600 text-sm">Bank-level encryption protects sensitive approval data</p>
-            </div>
-            <div className="p-6 bg-purple-50 rounded-xl">
-              <FileText className="w-10 h-10 text-purple-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-gray-900 mb-2">Full Action History</h3>
-              <p className="text-gray-600 text-sm">Complete audit logs for compliance and accountability</p>
-            </div>
-          </div>
-          <p className="text-gray-600">Your processes remain organized and protected as you expand.</p>
-        </div>
-      </section>
-
-      {/* Scalability Section */}
-      <section className="bg-blue-600 text-white py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-8">Built to Scale With You</h2>
-            <p className="text-xl text-blue-100 mb-12">As your team grows, FlowCheck grows with you:</p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="p-6 bg-blue-700 rounded-xl">
-                <Users className="w-8 h-8 mx-auto mb-3" />
-                <h3 className="font-semibold mb-1">Add New Departments</h3>
-                <p className="text-blue-200 text-sm">Easily onboard new teams</p>
-              </div>
-              <div className="p-6 bg-blue-700 rounded-xl">
-                <Layers className="w-8 h-8 mx-auto mb-3" />
-                <h3 className="font-semibold mb-1">More Approval Layers</h3>
-                <p className="text-blue-200 text-sm">Complex hierarchies supported</p>
-              </div>
-              <div className="p-6 bg-blue-700 rounded-xl">
-                <Workflow className="w-8 h-8 mx-auto mb-3" />
-                <h3 className="font-semibold mb-1">New Workflow Types</h3>
-                <p className="text-blue-200 text-sm">Unlimited custom processes</p>
-              </div>
-              <div className="p-6 bg-blue-700 rounded-xl">
-                <TrendingUp className="w-8 h-8 mx-auto mb-3" />
-                <h3 className="font-semibold mb-1">Higher Volumes</h3>
-                <p className="text-blue-200 text-sm">Handle thousands of requests</p>
-              </div>
-            </div>
-            <p className="text-xl mt-12 text-blue-100">FlowCheck grows with your organization — without adding complexity.</p>
-          </div>
-        </div>
-      </section>
 
       {/* Pricing Section */}
       <section className="container mx-auto px-4 py-20">

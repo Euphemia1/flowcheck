@@ -192,7 +192,13 @@ const MOCK_REQUESTS: ApprovalRequest[] = [
   },
 ]
 
+import { useAuth } from "@/contexts/auth-context"
+
 export default function ApprovalsPage() {
+  const { user } = useAuth()
+  const isAdmin = user?.role === "admin"
+  const isManager = user?.role === "manager"
+
   const [requests] = useState<ApprovalRequest[]>(MOCK_REQUESTS)
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("pending")
@@ -201,6 +207,15 @@ export default function ApprovalsPage() {
   const [showBulkActions, setShowBulkActions] = useState(false)
 
   const filteredRequests = requests.filter((request) => {
+    // Role-based visibility logic
+    const canSee =
+      isAdmin || // Super admins see everything
+      (isManager && (request.assignedTo.includes(user?.name || "") || request.requester.department === user?.department)) || // Managers see assigned or department-wide
+      request.requester.name === user?.name || // Everyone sees their own
+      request.assignedTo.includes(user?.name || "") // Everyone sees what's assigned to them
+
+    if (!canSee) return false
+
     const matchesSearch =
       request.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       request.description.toLowerCase().includes(searchQuery.toLowerCase()) ||

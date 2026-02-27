@@ -50,6 +50,7 @@ import {
   Filter,
 } from "lucide-react"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
+import { useAuth } from "@/contexts/auth-context"
 
 interface TeamMember {
   id: string
@@ -157,6 +158,8 @@ export default function TeamPage() {
   const [deletingMember, setDeletingMember] = useState<TeamMember | null>(null)
   const [viewingMember, setViewingMember] = useState<TeamMember | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const { user: currentUser } = useAuth()
+  const isAdmin = currentUser?.role === "admin"
 
   // Load team from localStorage on mount
   useEffect(() => {
@@ -185,14 +188,14 @@ export default function TeamPage() {
     role: "viewer",
     department: "Engineering",
   })
-  const [formErrors, setFormErrors] = useState<{name?: string; email?: string}>({})
+  const [formErrors, setFormErrors] = useState<{ name?: string; email?: string }>({})
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
 
   const validateForm = () => {
-    const errors: {name?: string; email?: string} = {}
+    const errors: { name?: string; email?: string } = {}
     if (!formData.name.trim()) {
       errors.name = "Name is required"
     }
@@ -290,12 +293,12 @@ export default function TeamPage() {
       team.map((m) =>
         m.id === editingMember.id
           ? {
-              ...m,
-              name: formData.name.trim(),
-              email: formData.email.trim().toLowerCase(),
-              role: formData.role,
-              department: formData.department,
-            }
+            ...m,
+            name: formData.name.trim(),
+            email: formData.email.trim().toLowerCase(),
+            role: formData.role,
+            department: formData.department,
+          }
           : m
       )
     )
@@ -370,95 +373,97 @@ export default function TeamPage() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Team Members</h1>
             <p className="text-gray-600">Manage your organization&apos;s team and their access levels</p>
           </div>
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Member
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Add Team Member</DialogTitle>
-                <DialogDescription>
-                  Invite a new member to your organization
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="John Doe"
-                    className={formErrors.name ? "border-red-500" : ""}
-                  />
-                  {formErrors.name && (
-                    <p className="text-xs text-red-500">{formErrors.name}</p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="john@company.com"
-                    className={formErrors.email ? "border-red-500" : ""}
-                  />
-                  {formErrors.email && (
-                    <p className="text-xs text-red-500">{formErrors.email}</p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="role">Role</Label>
-                  <Select
-                    value={formData.role}
-                    onValueChange={(value) => setFormData({ ...formData, role: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ROLES.map((role) => (
-                        <SelectItem key={role.value} value={role.value}>
-                          {role.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="department">Department</Label>
-                  <Select
-                    value={formData.department}
-                    onValueChange={(value) => setFormData({ ...formData, department: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {DEPARTMENTS.filter((d) => d !== "All Departments").map((dept) => (
-                        <SelectItem key={dept} value={dept}>
-                          {dept}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={handleCancelAdd}>
-                  Cancel
-                </Button>
-                <Button onClick={handleAddMember} disabled={!formData.name || !formData.email}>
+          {isAdmin && (
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
                   Add Member
                 </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Add Team Member</DialogTitle>
+                  <DialogDescription>
+                    Invite a new member to your organization
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="John Doe"
+                      className={formErrors.name ? "border-red-500" : ""}
+                    />
+                    {formErrors.name && (
+                      <p className="text-xs text-red-500">{formErrors.name}</p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="john@company.com"
+                      className={formErrors.email ? "border-red-500" : ""}
+                    />
+                    {formErrors.email && (
+                      <p className="text-xs text-red-500">{formErrors.email}</p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="role">Role</Label>
+                    <Select
+                      value={formData.role}
+                      onValueChange={(value) => setFormData({ ...formData, role: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ROLES.map((role) => (
+                          <SelectItem key={role.value} value={role.value}>
+                            {role.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="department">Department</Label>
+                    <Select
+                      value={formData.department}
+                      onValueChange={(value) => setFormData({ ...formData, department: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DEPARTMENTS.filter((d) => d !== "All Departments").map((dept) => (
+                          <SelectItem key={dept} value={dept}>
+                            {dept}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={handleCancelAdd}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleAddMember} disabled={!formData.name || !formData.email}>
+                    Add Member
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
 
         {/* Stats */}
@@ -528,6 +533,15 @@ export default function TeamPage() {
             </div>
           </CardContent>
         </Card>
+        {/* Admin Warning for Viewers */}
+        {!isAdmin && (
+          <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3 text-amber-800">
+            <Shield className="w-5 h-5" />
+            <p className="text-sm font-medium">
+              You are viewing the team as a member. Only <strong>Administrators</strong> can manage team members, invite new users, or change permissions.
+            </p>
+          </div>
+        )}
 
         {/* Team List */}
         <Card>
@@ -560,42 +574,45 @@ export default function TeamPage() {
                         <Building className="w-4 h-4" />
                         {member.department}
                       </div>
-                      <Badge variant="outline" className="border-gray-300">
-                        {getRoleLabel(member.role)}
+                      <Badge variant="outline" className={member.role === "admin" ? "bg-blue-50 text-blue-700 border-blue-200" : "border-gray-300"}>
+                        {member.role === "admin" ? "Super Admin" : getRoleLabel(member.role)}
                       </Badge>
                       {getStatusBadge(member.status)}
                     </div>
 
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <MoreVertical className="w-4 h-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => setViewingMember(member)}>
-                          <User className="w-4 h-4 mr-2" />
-                          View Profile
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => openEditDialog(member)}>
-                          <Edit className="w-4 h-4 mr-2" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleToggleStatus(member)}
-                        >
-                          <Shield className="w-4 h-4 mr-2" />
-                          {member.status === "active" ? "Deactivate" : "Activate"}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-red-600"
-                          onClick={() => setDeletingMember(member)}
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          Remove
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    {isAdmin && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100 rounded-full">
+                            <MoreVertical className="w-4 h-4 text-gray-500" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48">
+                          <DropdownMenuItem onSelect={() => setViewingMember(member)}>
+                            <User className="w-4 h-4 mr-2" />
+                            View Profile
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onSelect={() => openEditDialog(member)}>
+                            <Edit className="w-4 h-4 mr-2" />
+                            Edit Permissions
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onSelect={() => handleToggleStatus(member)}
+                          >
+                            <Shield className="w-4 h-4 mr-2" />
+                            {member.status === "active" ? "Deactivate User" : "Activate User"}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                            onSelect={() => setDeletingMember(member)}
+                            disabled={member.id === currentUser?.id}
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Remove from Team
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
                   </div>
                 </div>
               ))}

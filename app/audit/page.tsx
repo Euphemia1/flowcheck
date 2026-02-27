@@ -21,6 +21,7 @@ import {
     Building2
 } from "lucide-react"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
+import { useAuth } from "@/contexts/auth-context"
 
 interface AuditEntry {
     id: string
@@ -96,10 +97,38 @@ const MOCK_AUDIT_LOG: AuditEntry[] = [
     }
 ]
 
+
+
 export default function AuditLogPage() {
+    const { user, isLoading } = useAuth()
+    const isAdmin = user?.role === "admin"
     const [entries] = useState<AuditEntry[]>(MOCK_AUDIT_LOG)
     const [searchQuery, setSearchQuery] = useState("")
     const [categoryFilter, setCategoryFilter] = useState("all")
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <Clock className="w-8 h-8 text-blue-600 animate-spin" />
+            </div>
+        )
+    }
+
+    if (!isAdmin) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <DashboardHeader />
+                <main className="container mx-auto px-4 py-20 text-center">
+                    <div className="max-w-md mx-auto p-8 bg-white rounded-2xl shadow-xl border border-slate-100">
+                        <ShieldCheck className="w-16 h-16 text-rose-500 mx-auto mb-4 opacity-20" />
+                        <h1 className="text-2xl font-bold text-slate-900 mb-2">Access Restricted</h1>
+                        <p className="text-slate-600 mb-6">You do not have the necessary permissions to view the Audit Log. Please contact your organization administrator.</p>
+                        <Button variant="outline" onClick={() => window.history.back()}>Go Back</Button>
+                    </div>
+                </main>
+            </div>
+        )
+    }
 
     const filteredEntries = entries.filter(entry => {
         const matchesSearch =

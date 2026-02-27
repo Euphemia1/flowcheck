@@ -7,6 +7,7 @@ interface User {
   email: string
   name: string
   role: "admin" | "manager" | "employee"
+  department?: "HR" | "Finance" | "Operations" | "Procurement" | "Management"
   organizationId: string
   organizationName: string
   avatar?: string
@@ -60,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (userStr && orgStr) {
         const user = JSON.parse(userStr)
         const organization = JSON.parse(orgStr)
-        
+
         setAuthState({
           user,
           organization,
@@ -122,19 +123,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (!res.ok) {
       const error = await res.json()
-      
+
       // Handle rate limiting error specifically
       if (res.status === 429 || error.error === "rate_limit") {
         throw new Error("Too many registration attempts. Please wait a moment and try again.")
       }
-      
+
       throw new Error(error.message || "Registration failed")
     }
 
     // Just verify registration was successful - don't log the user in automatically
     // User will need to log in separately after registration
     await res.json()
-    
+
     // Don't set auth state - user must log in manually
   }
 
@@ -143,7 +144,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.removeItem("auth_user")
       localStorage.removeItem("auth_organization")
     }
-    
+
     setAuthState({
       user: null,
       organization: null,

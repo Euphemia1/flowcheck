@@ -10,7 +10,9 @@ import {
     Activity,
     BarChart3,
     Clock,
-    ArrowRight
+    ArrowRight,
+    UserPlus,
+    Settings
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -64,6 +66,33 @@ export function AdminDashboard() {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Admin Quick Actions */}
+            <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
+                <CardContent className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+                        <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider">Quick Actions</h3>
+                        <div className="flex flex-wrap gap-3">
+                            <Link href="/team">
+                                <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                    <UserPlus className="w-4 h-4" />
+                                    Manage Team
+                                </Button>
+                            </Link>
+                            <Link href="/audit">
+                                <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                    <ShieldCheck className="w-4 h-4" />
+                                    Audit Logs
+                                </Button>
+                            </Link>
+                            <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                <Settings className="w-4 h-4" />
+                                Org Settings
+                            </Button>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Department Efficiency Ranking */}

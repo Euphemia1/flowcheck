@@ -10,7 +10,8 @@ import {
     Download,
     CheckCircle,
     FileText,
-    Clock
+    Clock,
+    UserPlus
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -64,6 +65,31 @@ export function FinanceDashboard() {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Finance Quick Actions */}
+            <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
+                <CardContent className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+                        <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider">Quick Actions</h3>
+                        <div className="flex flex-wrap gap-3">
+                            <Link href="/team">
+                                <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                    <UserPlus className="w-4 h-4" />
+                                    Add/Manage Finance Team
+                                </Button>
+                            </Link>
+                            <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                <DollarSign className="w-4 h-4" />
+                                Budget Summary
+                            </Button>
+                            <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                <PieChart className="w-4 h-4" />
+                                Spend Analysis
+                            </Button>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Expense Management OS */}

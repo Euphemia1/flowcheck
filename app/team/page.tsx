@@ -160,6 +160,8 @@ export default function TeamPage() {
   const [isLoading, setIsLoading] = useState(true)
   const { user: currentUser } = useAuth()
   const isAdmin = currentUser?.role === "admin"
+  const isManager = currentUser?.role === "manager"
+  const canManage = isAdmin || isManager
 
   // Load team from localStorage on mount
   useEffect(() => {
@@ -209,11 +211,20 @@ export default function TeamPage() {
   }
 
   const resetForm = () => {
-    setFormData({ name: "", email: "", role: "viewer", department: "Engineering" })
+    setFormData({
+      name: "",
+      email: "",
+      role: "viewer",
+      department: isManager ? (currentUser?.department || "HR") : "Engineering"
+    })
     setFormErrors({})
   }
 
   const filteredTeam = team.filter((member) => {
+    // Visibility logic: Admins see all, Managers see their department
+    const isVisible = isAdmin || (isManager && member.department === currentUser?.department)
+    if (!isVisible) return false
+
     const matchesSearch =
       member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       member.email.toLowerCase().includes(searchQuery.toLowerCase())
@@ -368,12 +379,18 @@ export default function TeamPage() {
 
       <main className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Team Members</h1>
-            <p className="text-gray-600">Manage your organization&apos;s team and their access levels</p>
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+              {isAdmin ? "Team Management" : `${currentUser?.department} Team`}
+            </h1>
+            <p className="text-slate-500 font-medium">
+              {isAdmin
+                ? "Manage members and permissions across the organization."
+                : `Manage members within the ${currentUser?.department} department.`}
+            </p>
           </div>
-          {isAdmin && (
+          {canManage && (
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
                 <Button>
@@ -439,6 +456,7 @@ export default function TeamPage() {
                     <Select
                       value={formData.department}
                       onValueChange={(value) => setFormData({ ...formData, department: value })}
+                      disabled={isManager && !isAdmin}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -534,11 +552,11 @@ export default function TeamPage() {
           </CardContent>
         </Card>
         {/* Admin Warning for Viewers */}
-        {!isAdmin && (
+        {!canManage && (
           <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3 text-amber-800">
             <Shield className="w-5 h-5" />
             <p className="text-sm font-medium">
-              You are viewing the team as a member. Only <strong>Administrators</strong> can manage team members, invite new users, or change permissions.
+              You are viewing the team as a member. Only <strong>Administrators</strong> or <strong>Department Managers</strong> can manage team members.
             </p>
           </div>
         )}
@@ -580,7 +598,7 @@ export default function TeamPage() {
                       {getStatusBadge(member.status)}
                     </div>
 
-                    {isAdmin && (
+                    {canManage && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100 rounded-full">

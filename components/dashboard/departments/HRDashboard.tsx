@@ -65,6 +65,33 @@ export function HRDashboard() {
                 </Card>
             </div>
 
+            {/* HR Quick Actions */}
+            <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
+                <CardContent className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+                        <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider">Quick Actions</h3>
+                        <div className="flex flex-wrap gap-3">
+                            <Link href="/team">
+                                <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                    <UserPlus className="w-4 h-4" />
+                                    Add/Manage HR Team
+                                </Button>
+                            </Link>
+                            <Link href="/requests/new">
+                                <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                    <FileText className="w-4 h-4" />
+                                    New Policy Flow
+                                </Button>
+                            </Link>
+                            <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                <TrendingUp className="w-4 h-4" />
+                                Hiring Report
+                            </Button>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Leave Requests OS */}
                 <Card className="border-none shadow-2xl shadow-slate-200/40">

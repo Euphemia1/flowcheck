@@ -160,6 +160,7 @@ export default function TeamPage() {
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null)
   const [deletingMember, setDeletingMember] = useState<TeamMember | null>(null)
   const [viewingMember, setViewingMember] = useState<TeamMember | null>(null)
+  const [delegatingMember, setDelegatingMember] = useState<TeamMember | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { user: currentUser } = useAuth()
   const isAdmin = currentUser?.role === "admin"
@@ -194,6 +195,12 @@ export default function TeamPage() {
     department: "Engineering",
   })
   const [formErrors, setFormErrors] = useState<{ name?: string; email?: string }>({})
+  
+  // Form state for delegation
+  const [delegateData, setDelegateData] = useState({
+    department: "",
+    role: "",
+  })
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -351,14 +358,96 @@ export default function TeamPage() {
     })
   }
 
-  const handleDeleteMember = () => {
+  const handleDeleteMember = async () => {
     if (!deletingMember) return
-    setTeam(team.filter((m) => m.id !== deletingMember.id))
-    setDeletingMember(null)
+
+    try {
+      // Call API to delete member
+      const response = await fetch(`/api/team/delete-member/${deletingMember.id}`, {
+        method: "DELETE",
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to delete member")
+      }
+
+      // Update local state
+      setTeam(team.filter((m) => m.id !== deletingMember.id))
+      setDeletingMember(null)
+      
+      toast({
+        title: "Member removed",
+        description: `${deletingMember.name} has been removed from the team.`,
+        variant: "destructive",
+      })
+    } catch (error) {
+      console.error("Error deleting member:", error)
+      toast({
+        title: "Error",
+        description: "Failed to remove member. Please try again.",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const openDelegateDialog = (member: TeamMember) => {
+    setDelegatingMember(member)
+    setDelegateData({
+      department: member.department,
+      role: member.role,
+    })
+  }
+
+  const handleDelegateMember = async () => {
+    if (!delegatingMember) return
+
+    try {
+      // Update local state
+      setTeam(
+        team.map((m) =>
+          m.id === delegatingMember.id
+            ? { ...m, department: delegateData.department, role: delegateData.role }
+            : m
+        )
+      )
+      
+      // Call API to update database
+      const response = await fetch(`/api/team/update-member/${delegatingMember.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          department: delegateData.department,
+          role: delegateData.role,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to update member")
+      }
+
+      setDelegatingMember(null)
+      toast({
+        title: "Member delegated",
+        description: `${delegatingMember.name} has been moved to ${delegateData.department} department.`,
+      })
+    } catch (error) {
+      console.error("Error delegating member:", error)
+      toast({
+        title: "Error",
+        description: "Failed to delegate member. Please try again.",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleClearMockData = () => {
+    setTeam([])
+    localStorage.removeItem("team_members")
     toast({
-      title: "Member removed",
-      description: `${deletingMember.name} has been removed from the team.`,
-      variant: "destructive",
+      title: "Mock data cleared",
+      description: "All mock team members have been removed. You can now add real team members.",
     })
   }
 
@@ -421,20 +510,21 @@ export default function TeamPage() {
             </p>
           </div>
           {canManage && (
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Member
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Add Team Member</DialogTitle>
-                  <DialogDescription>
-                    Invite a new member to your organization
-                  </DialogDescription>
-                </DialogHeader>
+            <div className="flex gap-2">
+              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Member
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Add Team Member</DialogTitle>
+                    <DialogDescription>
+                      Invite a new member to your organization
+                    </DialogDescription>
+                  </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Full Name</Label>
@@ -511,6 +601,11 @@ export default function TeamPage() {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
+              <Button variant="outline" onClick={handleClearMockData}>
+                <Trash2 className="w-4 h-4 mr-2" />
+                Clear Mock Data
+              </Button>
+            </div>
           )}
         </div>
 
@@ -650,6 +745,10 @@ export default function TeamPage() {
                             <Shield className="w-4 h-4 mr-2" />
                             {member.status === "active" ? "Deactivate User" : "Activate User"}
                           </DropdownMenuItem>
+                          <DropdownMenuItem onSelect={() => openDelegateDialog(member)}>
+                            <Building className="w-4 h-4 mr-2" />
+                            Delegate Department
+                          </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-red-600 focus:text-red-600 focus:bg-red-50"
                             onSelect={() => setDeletingMember(member)}
@@ -781,6 +880,64 @@ export default function TeamPage() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* Delegate Department Dialog */}
+        <Dialog open={!!delegatingMember} onOpenChange={(open) => !open && setDelegatingMember(null)}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Delegate Department</DialogTitle>
+              <DialogDescription>
+                Change the department and role for {delegatingMember?.name}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="delegate-department">Department</Label>
+                <Select 
+                  value={delegateData.department} 
+                  onValueChange={(value) => setDelegateData({ ...delegateData, department: value })}
+                >
+                  <SelectTrigger id="delegate-department">
+                    <SelectValue placeholder="Select department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DEPARTMENTS.filter(dept => dept !== "All Departments").map((dept) => (
+                      <SelectItem key={dept} value={dept}>
+                        {dept}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="delegate-role">Role</Label>
+                <Select 
+                  value={delegateData.role} 
+                  onValueChange={(value) => setDelegateData({ ...delegateData, role: value })}
+                >
+                  <SelectTrigger id="delegate-role">
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ROLES.map((role) => (
+                      <SelectItem key={role.value} value={role.value}>
+                        {role.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setDelegatingMember(null)}>
+                Cancel
+              </Button>
+              <Button onClick={handleDelegateMember}>
+                Delegate
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         <Toaster />
 

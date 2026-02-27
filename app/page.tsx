@@ -387,22 +387,41 @@ export default function HomePage() {
               <CardDescription className="mt-2">⭐ Best for teams scaling past 10 people</CardDescription>
             </CardHeader>
             <div className="px-6 pb-6">
+              <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                <p className="text-sm font-semibold text-blue-700">Everything in Starter, plus:</p>
+              </div>
               <ul className="space-y-3 mb-6">
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Up to 25 users</span>
+                  <span className="text-gray-700">Up to 5 users</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Unlimited workflows</span>
+                  <span className="text-gray-700">3 custom workflows</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Advanced analytics</span>
+                  <span className="text-gray-700">Basic reporting</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Priority support</span>
+                  <span className="text-gray-700">Email notifications</span>
+                </li>
+                <li className="flex items-center gap-2 border-t pt-3 mt-3">
+                  <Check className="w-5 h-5 text-blue-600 font-bold" />
+                  <span className="text-gray-700 font-semibold">Up to 25 users</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-blue-600 font-bold" />
+                  <span className="text-gray-700 font-semibold">Unlimited workflows</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-blue-600 font-bold" />
+                  <span className="text-gray-700 font-semibold">Advanced analytics</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-blue-600 font-bold" />
+                  <span className="text-gray-700 font-semibold">Priority support</span>
                 </li>
               </ul>
               <Link href="/auth/register?plan=growth">
@@ -422,22 +441,57 @@ export default function HomePage() {
               <CardDescription className="mt-2">For organizations with complex hierarchies & compliance needs</CardDescription>
             </CardHeader>
             <div className="px-6 pb-6">
+              <div className="mb-4 p-3 bg-purple-50 rounded-lg border border-purple-100">
+                <p className="text-sm font-semibold text-purple-700">Everything in Growth, plus:</p>
+              </div>
               <ul className="space-y-3 mb-6">
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Unlimited users</span>
+                  <span className="text-gray-700">Up to 5 users</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">SSO integration</span>
+                  <span className="text-gray-700">3 custom workflows</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Dedicated support</span>
+                  <span className="text-gray-700">Basic reporting</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Custom development</span>
+                  <span className="text-gray-700">Email notifications</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-blue-600" />
+                  <span className="text-gray-700">Up to 25 users</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-blue-600" />
+                  <span className="text-gray-700">Unlimited workflows</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-blue-600" />
+                  <span className="text-gray-700">Advanced analytics</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-blue-600" />
+                  <span className="text-gray-700">Priority support</span>
+                </li>
+                <li className="flex items-center gap-2 border-t pt-3 mt-3">
+                  <Check className="w-5 h-5 text-purple-600 font-bold" />
+                  <span className="text-gray-700 font-semibold">Unlimited users</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-purple-600 font-bold" />
+                  <span className="text-gray-700 font-semibold">SSO integration</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-purple-600 font-bold" />
+                  <span className="text-gray-700 font-semibold">Dedicated support</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-purple-600 font-bold" />
+                  <span className="text-gray-700 font-semibold">Custom development</span>
                 </li>
               </ul>
               <Link href="/demo?plan=enterprise">

@@ -392,22 +392,6 @@ export default function HomePage() {
               </div>
               <ul className="space-y-3 mb-6">
                 <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Up to 5 users</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">3 custom workflows</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Basic reporting</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Email notifications</span>
-                </li>
-                <li className="flex items-center gap-2 border-t pt-3 mt-3">
                   <Check className="w-5 h-5 text-blue-600 font-bold" />
                   <span className="text-gray-700 font-semibold">Up to 25 users</span>
                 </li>
@@ -446,38 +430,6 @@ export default function HomePage() {
               </div>
               <ul className="space-y-3 mb-6">
                 <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Up to 5 users</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">3 custom workflows</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Basic reporting</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Email notifications</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-600" />
-                  <span className="text-gray-700">Up to 25 users</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-600" />
-                  <span className="text-gray-700">Unlimited workflows</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-600" />
-                  <span className="text-gray-700">Advanced analytics</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-600" />
-                  <span className="text-gray-700">Priority support</span>
-                </li>
-                <li className="flex items-center gap-2 border-t pt-3 mt-3">
                   <Check className="w-5 h-5 text-purple-600 font-bold" />
                   <span className="text-gray-700 font-semibold">Unlimited users</span>
                 </li>

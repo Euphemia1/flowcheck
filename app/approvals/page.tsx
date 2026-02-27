@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   Search,
   Filter,
@@ -19,6 +17,20 @@ import {
 import Link from "next/link"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { useAuth } from "@/contexts/auth-context"
+
+// Simple checkbox component to avoid RovingFocusGroup issues
+const SimpleCheckbox = ({ checked, onCheckedChange }: { checked?: boolean; onCheckedChange?: (checked: boolean) => void }) => (
+  <div 
+    className="w-4 h-4 border-2 border-slate-300 rounded cursor-pointer hover:border-blue-500 transition-colors"
+    onClick={() => onCheckedChange?.(!checked)}
+  >
+    {checked && (
+      <div className="w-full h-full bg-blue-500 rounded flex items-center justify-center">
+        <CheckCircle className="w-2 h-2 text-white" />
+      </div>
+    )}
+  </div>
+)
 
 interface ApprovalRequest {
   id: string
@@ -150,21 +162,26 @@ export default function ApprovalsPage() {
           </Link>
         </div>
 
-        <Tabs value={statusFilter} onValueChange={setStatusFilter} className="space-y-8">
+        <div className="space-y-8">
           <div className="bg-white p-1 rounded-2xl shadow-sm border border-slate-200 overflow-hidden inline-flex">
             {[
               { id: "pending", label: "Pending", icon: Clock },
               { id: "approved", label: "Completed", icon: CheckCircle },
               { id: "all", label: "Historical", icon: FileText }
             ].map(tab => (
-              <TabsTrigger
+              <Button
                 key={tab.id}
-                value={tab.id}
-                className="px-6 py-2.5 rounded-xl font-bold data-[state=active]:bg-slate-900 data-[state=active]:text-white transition-all"
+                variant="ghost"
+                onClick={() => setStatusFilter(tab.id)}
+                className={`px-6 py-2.5 rounded-xl font-bold transition-all ${
+                  statusFilter === tab.id 
+                    ? "bg-slate-900 text-white" 
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
               >
                 <tab.icon className="w-4 h-4 mr-2" />
                 {tab.label}
-              </TabsTrigger>
+              </Button>
             ))}
           </div>
 
@@ -184,10 +201,10 @@ export default function ApprovalsPage() {
             </Button>
           </div>
 
-          <TabsContent value={statusFilter} className="space-y-4">
+          <div className="space-y-4">
             <div className="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 overflow-hidden">
               <div className="grid grid-cols-12 px-8 py-5 bg-slate-50/50 border-b border-slate-100 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
-                <div className="col-span-1 flex items-center"><Checkbox /></div>
+                <div className="col-span-1 flex items-center"><SimpleCheckbox /></div>
                 <div className="col-span-5">Subject & Requester</div>
                 <div className="col-span-2">Value</div>
                 <div className="col-span-2">Progress</div>
@@ -198,7 +215,16 @@ export default function ApprovalsPage() {
                 {filteredRequests.map((request) => (
                   <div key={request.id} className="grid grid-cols-12 px-8 py-6 items-center hover:bg-blue-50/30 transition-colors group">
                     <div className="col-span-1">
-                      <Checkbox />
+                      <SimpleCheckbox 
+                        checked={selectedRequests.includes(request.id)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedRequests([...selectedRequests, request.id])
+                          } else {
+                            setSelectedRequests(selectedRequests.filter(id => id !== request.id))
+                          }
+                        }}
+                      />
                     </div>
                     <div className="col-span-5">
                       <div className="flex items-center gap-4">
@@ -263,8 +289,8 @@ export default function ApprovalsPage() {
                 <span>Print Report</span>
               </div>
             </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </main>
     </div>
   )

@@ -207,60 +207,80 @@ export default function HomePage() {
 
 
       {/* Solution Section */}
-      <section className="bg-slate-50 border-y border-slate-100 py-24">
+      <motion.section 
+        className="bg-gray-900 text-white py-20"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+      >
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-3xl lg:text-5xl font-black text-slate-900 mb-4 tracking-tight">Structured Flows for Every Team</h2>
-            <p className="text-xl text-slate-600">The simplest way for growing organizations to manage internal approvals.</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            <div className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 transition-all">
-              <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center mb-6">
-                <Layers className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Team Requests</h3>
-              <p className="text-slate-600">Equip your team with a simple portal for any recurring request type.</p>
-            </div>
-            <div className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 transition-all">
-              <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center mb-6">
-                <CheckCircle className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Manager Sign-offs</h3>
-              <p className="text-slate-600">Give managers a clear, one-click dashboard to keep work moving.</p>
-            </div>
-            <div className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 transition-all">
-              <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6">
-                <Shield className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Organization Audit</h3>
-              <p className="text-slate-600">Maintain a complete, transparent history of every decision made.</p>
-            </div>
-            <div className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 transition-all">
-              <div className="w-12 h-12 bg-orange-600 rounded-2xl flex items-center justify-center mb-6">
-                <Workflow className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Operations</h3>
-              <p className="text-slate-600">Inventory requests, access logs, and equipment.</p>
-            </div>
-            <div className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 transition-all">
-              <div className="w-12 h-12 bg-purple-600 rounded-2xl flex items-center justify-center mb-6">
-                <Shield className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Legal/Audit</h3>
-              <p className="text-slate-600">Compliance sign-offs and audit log access.</p>
-            </div>
-            <div className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 transition-all">
-              <div className="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center mb-6">
-                <Layers className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Custom Flows</h3>
-              <p className="text-slate-600">Any process your organization needs to automate.</p>
-            </div>
-          </div>
+          <motion.div 
+            className="max-w-3xl mx-auto text-center mb-16"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4">One Central Hub for All Your Approvals</h2>
+            <p className="text-xl text-gray-400">FlowCheck replaces scattered approvals with a clear, automated system.</p>
+          </motion.div>
+          <motion.div 
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12"
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            {[
+              { icon: Calendar, color: "blue", title: "Leave & Time-Off Requests", desc: "Streamlined PTO, sick leave, and vacation approvals" },
+              { icon: DollarSign, color: "green", title: "Expense Approvals", desc: "Receipts, reimbursements, spending controls" },
+              { icon: FileText, color: "purple", title: "Purchase Requests", desc: "Procurement, vendor approvals, PO workflow" },
+              { icon: BarChart3, color: "orange", title: "Budget Approvals", desc: "Department budgets, project spend, forecasts" },
+              { icon: CheckCircle, color: "red", title: "Document Sign-Off", desc: "Contracts, policies, compliance approvals" },
+              { icon: Layers, color: "teal", title: "Custom Workflows", desc: "Any internal process your team needs" }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                className="flex items-start gap-4 p-6 bg-gray-800 rounded-xl"
+                initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05, y: -5, backgroundColor: "#374151" }}
+              >
+                <motion.div 
+                  className={`w-12 h-12 bg-${item.color}-600 rounded-lg flex items-center justify-center shrink-0`}
+                  whileHover={{ rotate: 360, scale: 1.2 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <item.icon className="w-6 h-6 text-white" />
+                </motion.div>
+                <div>
+                  <h3 className="font-semibold mb-1">{item.title}</h3>
+                  <p className="text-gray-400 text-sm">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+          <motion.div 
+            className="text-center"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+            viewport={{ once: true }}
+          >
+            <p className="text-xl text-gray-300">Everything is submitted, tracked, approved, and recorded in one place.</p>
+            <motion.p 
+              className="text-lg text-blue-400 mt-2"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+            >
+              No more guessing. No more lost requests.
+            </motion.p>
+          </motion.div>
         </div>
-      </section>
-
-
+      </motion.section>
 
       {/* Features Section */}
       <section className="container mx-auto px-4 py-20">

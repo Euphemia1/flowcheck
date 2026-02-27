@@ -103,6 +103,48 @@ const MOCK_REQUESTS: ApprovalRequest[] = [
     comments: 1,
     tags: ["software"],
   },
+  {
+    id: "REQ-003",
+    title: "Q4 Financial Report Review",
+    description: "Quarterly financial statements for board approval.",
+    requester: {
+      name: "Lisa Wang",
+      email: "l.wang@company.com",
+      department: "Finance",
+    },
+    workflow: { name: "Financial Review", currentStep: "CFO Approval", totalSteps: 3, stepNumber: 2 },
+    status: "pending",
+    priority: "urgent",
+    amount: 0,
+    category: "Finance",
+    submittedAt: "2024-01-16T09:15:00Z",
+    dueDate: "2024-01-19T17:00:00Z",
+    assignedTo: ["CFO"],
+    attachments: 5,
+    comments: 3,
+    tags: ["quarterly", "finance"],
+  },
+  {
+    id: "REQ-004",
+    title: "New Hire Equipment Request",
+    description: "Laptop and monitor setup for new team members.",
+    requester: {
+      name: "Tom Rodriguez",
+      email: "t.rodriguez@company.com",
+      department: "HR",
+    },
+    workflow: { name: "Equipment Request", currentStep: "HR Approval", totalSteps: 2, stepNumber: 1 },
+    status: "pending",
+    priority: "medium",
+    amount: 3500,
+    category: "Procurement",
+    submittedAt: "2024-01-17T11:00:00Z",
+    dueDate: "2024-01-21T17:00:00Z",
+    assignedTo: ["HR Manager"],
+    attachments: 1,
+    comments: 0,
+    tags: ["equipment", "onboarding"],
+  },
 ]
 
 export default function ApprovalsPage() {
@@ -117,7 +159,11 @@ export default function ApprovalsPage() {
   const [selectedRequests, setSelectedRequests] = useState<string[]>([])
 
   const filteredRequests = requests.filter((request) => {
-    const canSee = isAdmin || (isManager && request.requester.department === user?.department) || request.requester.name === user?.name || request.assignedTo.includes(user?.name || "")
+    // Users can see requests from their own department, their own requests, or requests assigned to them
+    const canSee = isAdmin || 
+                   request.requester.department === user?.department || 
+                   request.requester.name === user?.name || 
+                   request.assignedTo.includes(user?.name || "")
     if (!canSee) return false
     const matchesSearch = request.title.toLowerCase().includes(searchQuery.toLowerCase()) || request.requester.name.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesStatus = statusFilter === "all" || request.status === statusFilter

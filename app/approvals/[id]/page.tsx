@@ -18,14 +18,15 @@ import {
   Forward,
   ChevronRight,
   ShieldAlert,
+  AlertCircle,
+  Plus,
   Calendar,
   DollarSign,
-  History,
-  AlertCircle,
-  Plus
+  History
 } from "lucide-react"
 import Link from "next/link"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
+import { useAuth } from "@/contexts/auth-context"
 
 interface ApprovalRequestDetail {
   id: string
@@ -133,11 +134,39 @@ const MOCK_REQUEST: ApprovalRequestDetail = {
 }
 
 export default function ApprovalRequestDetailPage({ params }: { params: { id: string } }) {
+  const { user } = useAuth()
   const [request] = useState<ApprovalRequestDetail>(MOCK_REQUEST)
   const [comment, setComment] = useState("")
 
   // Use params.id if needed for fetching, for now we log it to avoid lint errors
   console.log("Viewing request:", params.id)
+
+  // Check if user can see this request (same department or admin)
+  const canSee = user?.role === "admin" || 
+                request.requester.department === user?.department || 
+                request.requester.name === user?.name || 
+                request.assignedTo.includes(user?.name || "")
+
+  // If user can't see this request, show access denied
+  if (!canSee) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc]">
+        <DashboardHeader />
+        <main className="container mx-auto px-4 py-20 max-w-4xl">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <ShieldAlert className="w-8 h-8 text-red-600" />
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900 mb-2">Access Denied</h1>
+            <p className="text-slate-600 mb-6">You don't have permission to view this approval request.</p>
+            <Link href="/approvals">
+              <Button>Back to Approvals</Button>
+            </Link>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
   const getPriorityStyle = (priority: string) => {
     switch (priority) {

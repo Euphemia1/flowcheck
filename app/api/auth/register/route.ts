@@ -113,11 +113,30 @@ export async function POST(request: NextRequest) {
     // Try different column name variations to match your schema
     const userRole = organizationName ? "admin" : "employee"
     
+    // Assign department based on role and organization
+    let userDepartment = "Operations" // default for regular employees
+    if (organizationName) {
+      userDepartment = "Management" // org creators get Management department
+    }
+    
+    // You could also add logic for different departments based on email or other criteria
+    // For example:
+    if (emailLower.includes("finance") || emailLower.includes("accounting")) {
+      userDepartment = "Finance"
+    } else if (emailLower.includes("hr") || emailLower.includes("people")) {
+      userDepartment = "HR"
+    } else if (emailLower.includes("it") || emailLower.includes("tech")) {
+      userDepartment = "IT"
+    } else if (emailLower.includes("marketing") || emailLower.includes("sales")) {
+      userDepartment = "Marketing"
+    }
+    
     // Build insert object with flexible column names
     const userData: any = {
       id: userId,
       email: emailLower,
       role: userRole,
+      department: userDepartment,
       created_at: new Date().toISOString(),
     }
     

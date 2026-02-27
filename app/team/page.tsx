@@ -65,14 +65,17 @@ interface TeamMember {
 
 const DEPARTMENTS = [
   "All Departments",
+  "Finance",
+  "HR", 
+  "Operations",
+  "Procurement",
+  "IT",
+  "Marketing",
+  "Management",
   "Engineering",
   "Product",
   "Design",
-  "Marketing",
   "Sales",
-  "Finance",
-  "HR",
-  "Operations",
 ]
 
 const ROLES = [
@@ -263,31 +266,58 @@ export default function TeamPage() {
     }
   }
 
-  const handleAddMember = () => {
+  const handleAddMember = async () => {
     if (!validateForm()) return
 
-    // Check for duplicate email
-    if (team.some((m) => m.email.toLowerCase() === formData.email.toLowerCase())) {
-      setFormErrors({ ...formErrors, email: "This email is already registered" })
-      return
-    }
+    try {
+      const response = await fetch("/api/team/add-member", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim().toLowerCase(),
+          role: formData.role,
+          department: formData.department,
+          organizationId: currentUser?.organizationId,
+          organizationName: currentUser?.organizationName
+        }),
+      })
 
-    const newMember: TeamMember = {
-      id: Date.now().toString(),
-      name: formData.name.trim(),
-      email: formData.email.trim().toLowerCase(),
-      role: formData.role,
-      department: formData.department,
-      status: "pending",
-      joinedDate: new Date().toISOString().split("T")[0],
+      const data = await response.json()
+
+      if (!response.ok) {
+        setFormErrors({ ...formErrors, email: data.message })
+        return
+      }
+
+      // Add to local team state
+      const newMember: TeamMember = {
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+        role: data.user.role,
+        department: data.user.department,
+        status: "pending",
+        joinedDate: new Date().toISOString().split("T")[0],
+      }
+      setTeam([...team, newMember])
+      resetForm()
+      setIsAddDialogOpen(false)
+      
+      toast({
+        title: "Team member added successfully",
+        description: `${newMember.name} has been added. Temporary password: ${data.tempPassword}`,
+      })
+    } catch (error) {
+      console.error('Error adding team member:', error)
+      toast({
+        title: "Error",
+        description: "Failed to add team member. Please try again.",
+        variant: "destructive"
+      })
     }
-    setTeam([...team, newMember])
-    resetForm()
-    setIsAddDialogOpen(false)
-    toast({
-      title: "Member added",
-      description: `${newMember.name} has been invited and will receive an email.`,
-    })
   }
 
   const handleEditMember = () => {

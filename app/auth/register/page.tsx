@@ -23,7 +23,6 @@ export default function RegisterPage() {
     password: "",
     confirmPassword: "",
     organizationName: "",
-    role: "",
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -126,25 +125,11 @@ export default function RegisterPage() {
                 <Label htmlFor="organizationName">Organization Name</Label>
                 <Input
                   id="organizationName"
-                  placeholder="Your Company"
+                  placeholder="Teach Me How"
                   value={formData.organizationName}
                   onChange={(e) => handleInputChange("organizationName", e.target.value)}
+                  required
                 />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="role">Your Role</Label>
-                <Select onValueChange={(value) => handleInputChange("role", value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="admin">Administrator</SelectItem>
-                    <SelectItem value="manager">Manager</SelectItem>
-                    <SelectItem value="employee">Employee</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               <div className="space-y-2">

@@ -81,7 +81,6 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = authData.user.id
-    const emailDomain = emailLower.split("@")[1] || "example.com"
 
     // Create organization if provided
     let organizationId = null
@@ -94,7 +93,7 @@ export async function POST(request: NextRequest) {
         .insert({
           id: orgId,
           name: organizationName,
-          domain: emailDomain,
+          domain: emailLower.split("@")[1] || "example.com",
           settings: {
             allowSelfRegistration: true,
             defaultRole: "employee",
@@ -109,26 +108,85 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create user record in users table
-    // Try different column name variations to match your schema
-    const userRole = organizationName ? "admin" : "employee"
+    // Enhanced department detection based on email patterns
+    let userDepartment = "Operations" // default department
+    let userRole = "employee" // default role
     
-    // Assign department based on role and organization
-    let userDepartment = "Operations" // default for regular employees
+    // Extract username and domain for better analysis
+    const emailUsername = emailLower.split("@")[0] || ""
+    const emailDomain = emailLower.split("@")[1] || "example.com"
+    
+    // Check for organization creator (admin role)
     if (organizationName) {
-      userDepartment = "Management" // org creators get Management department
-    }
-    
-    // You could also add logic for different departments based on email or other criteria
-    // For example:
-    if (emailLower.includes("finance") || emailLower.includes("accounting")) {
-      userDepartment = "Finance"
-    } else if (emailLower.includes("hr") || emailLower.includes("people")) {
-      userDepartment = "HR"
-    } else if (emailLower.includes("it") || emailLower.includes("tech")) {
-      userDepartment = "IT"
-    } else if (emailLower.includes("marketing") || emailLower.includes("sales")) {
-      userDepartment = "Marketing"
+      userRole = "admin"
+      userDepartment = "Management"
+    } else {
+      // Department detection based on email patterns
+      // Pattern 1: Department prefix (finance.john@company.com)
+      if (emailUsername.includes("finance") || emailUsername.includes("accounting") || emailUsername.includes("billing")) {
+        userDepartment = "Finance"
+        userRole = "employee"
+      }
+      // Pattern 2: HR prefix (hr.sarah@company.com)  
+      else if (emailUsername.includes("hr") || emailUsername.includes("people") || emailUsername.includes("recruit")) {
+        userDepartment = "HR"
+        userRole = "employee"
+      }
+      // Pattern 3: IT prefix (it.tech@company.com)
+      else if (emailUsername.includes("it") || emailUsername.includes("tech") || emailUsername.includes("dev")) {
+        userDepartment = "IT"
+        userRole = "employee"
+      }
+      // Pattern 4: Marketing prefix (marketing.team@company.com)
+      else if (emailUsername.includes("marketing") || emailUsername.includes("sales") || emailUsername.includes("growth")) {
+        userDepartment = "Marketing"
+        userRole = "employee"
+      }
+      // Pattern 5: Operations prefix (ops.team@company.com)
+      else if (emailUsername.includes("ops") || emailUsername.includes("operations") || emailUsername.includes("logistics")) {
+        userDepartment = "Operations"
+        userRole = "employee"
+      }
+      // Pattern 6: Procurement prefix (procurement@company.com)
+      else if (emailUsername.includes("procurement") || emailUsername.includes("purchasing") || emailUsername.includes("vendor")) {
+        userDepartment = "Procurement"
+        userRole = "employee"
+      }
+      // Pattern 7: Management detection (manager, director, executive)
+      else if (emailUsername.includes("manager") || emailUsername.includes("director") || emailUsername.includes("exec") || emailUsername.includes("lead")) {
+        userDepartment = "Management"
+        userRole = "manager"
+      }
+      // Pattern 8: Domain-based detection (if using subdomains)
+      else if (emailDomain.includes("finance") || emailDomain.includes("accounting")) {
+        userDepartment = "Finance"
+        userRole = "employee"
+      }
+      else if (emailDomain.includes("hr") || emailDomain.includes("people")) {
+        userDepartment = "HR"
+        userRole = "employee"
+      }
+      else if (emailDomain.includes("it") || emailDomain.includes("tech")) {
+        userDepartment = "IT"
+        userRole = "employee"
+      }
+      else if (emailDomain.includes("marketing") || emailDomain.includes("sales")) {
+        userDepartment = "Marketing"
+        userRole = "employee"
+      }
+      else if (emailDomain.includes("ops") || emailDomain.includes("operations")) {
+        userDepartment = "Operations"
+        userRole = "employee"
+      }
+      else if (emailDomain.includes("procurement") || emailDomain.includes("purchasing")) {
+        userDepartment = "Procurement"
+        userRole = "employee"
+      }
+      // Default: Operations department for general employees
+      else {
+        userDepartment = "Operations"
+        userRole = "employee"
+      }
     }
     
     // Build insert object with flexible column names

@@ -17,7 +17,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const { login } = useAuth()
+  const { login, getDepartmentRoute } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,7 +26,9 @@ export default function LoginPage() {
     try {
       await login(email, password)
       toast.success("Logged in successfully!")
-      router.push("/dashboard")
+      // Redirect to department-specific dashboard
+      const departmentRoute = getDepartmentRoute()
+      router.push(departmentRoute)
     } catch (error) {
       toast.error("Invalid credentials. Please try again.")
       console.error("Login error:", error)

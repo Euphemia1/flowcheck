@@ -90,6 +90,7 @@ export async function POST(request: NextRequest) {
             email: emailLower,
             name: authData.user.user_metadata?.name || userName,
             role: userRole,
+            department: "Operations", // Default department for auto-created users
             organizationId,
             organizationName,
             createdAt: authData.user.created_at || new Date().toISOString(),
@@ -165,6 +166,7 @@ export async function POST(request: NextRequest) {
           email: emailLower,
           name: userName,
           role: userRole as "admin" | "manager" | "employee",
+          department: dbUser.department || "Operations", // Include department from database
           organizationId,
           organizationName: organization.name,
           avatar: dbUser.avatar || undefined,
@@ -219,6 +221,7 @@ export async function POST(request: NextRequest) {
       email: emailLower,
       name: userName,
       role: userRole,
+      department: "Operations", // Default department for demo accounts
       organizationId,
       organizationName,
       createdAt: new Date().toISOString(),

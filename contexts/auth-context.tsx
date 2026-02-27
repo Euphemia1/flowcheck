@@ -37,6 +37,7 @@ interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>
   register: (data: { email: string; password: string; name: string; organizationName?: string }) => Promise<void>
   logout: () => void
+  getDepartmentRoute: () => string
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -153,6 +154,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
   }
 
+  const getDepartmentRoute = () => {
+    if (!authState.user) return "/dashboard"
+    
+    // Admin can access all departments, but default to main dashboard
+    if (authState.user.role === "admin") {
+      return "/dashboard"
+    }
+    
+    // Route to department-specific pages
+    switch (authState.user.department) {
+      case "Finance":
+        return "/finance"
+      case "HR":
+        return "/hr"
+      case "Operations":
+        return "/operations"
+      case "Procurement":
+        return "/procurement"
+      case "Management":
+        return "/management"
+      default:
+        return "/dashboard"
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -160,6 +186,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        getDepartmentRoute,
       }}
     >
       {children}

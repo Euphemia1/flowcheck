@@ -14,10 +14,13 @@ import { Bell, Settings, LogOut, User, Workflow } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
+import { useState } from "react"
+import { NotificationCenter } from "./notification-center"
 
 export function DashboardHeader() {
   const router = useRouter()
   const { user, logout } = useAuth()
+  const [showNotifications, setShowNotifications] = useState(false)
 
   const handleLogout = () => {
     logout()
@@ -48,22 +51,22 @@ export function DashboardHeader() {
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="/dashboard" className="text-gray-700 hover:text-gray-900 font-medium">
+          <Link href="/dashboard" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
             Dashboard
           </Link>
-          <Link href="/workflows" className="text-gray-700 hover:text-gray-900 font-medium">
+          <Link href="/workflows" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
             Workflows
           </Link>
-          <Link href="/approvals" className="text-gray-700 hover:text-gray-900 font-medium">
+          <Link href="/approvals" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
             Approvals
           </Link>
-          <Link href="/team" className="text-gray-700 hover:text-gray-900 font-medium">
+          <Link href="/team" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
             Team
           </Link>
-          <Link href="/analytics" className="text-gray-700 hover:text-gray-900 font-medium">
+          <Link href="/analytics" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
             Analytics
           </Link>
-          <Link href="/audit" className="text-gray-700 hover:text-gray-900 font-medium">
+          <Link href="/audit" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
             Audit Log
           </Link>
         </nav>
@@ -71,41 +74,51 @@ export function DashboardHeader() {
         {/* Right side actions */}
         <div className="flex items-center gap-4">
           {/* Notifications */}
-          <Button variant="ghost" size="sm" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
-              3
-            </span>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="relative h-9 w-9 rounded-full hover:bg-slate-100"
+            onClick={() => setShowNotifications(true)}
+          >
+            <Bell className="h-5 w-5 text-slate-600" />
+            <span className="absolute top-1.5 right-1.5 h-2 w-2 bg-blue-600 rounded-full border-2 border-white" />
           </Button>
+
+          <NotificationCenter
+            open={showNotifications}
+            onOpenChange={setShowNotifications}
+          />
 
           {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-8 w-8 border border-slate-200">
                   <AvatarImage src={user?.avatar || "/avatars/01.png"} alt={user?.name || "User"} />
-                  <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                  <AvatarFallback className="bg-blue-50 text-blue-700 font-bold text-xs">{getUserInitials()}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user?.name || "User"}</p>
+                  <p className="text-sm font-bold leading-none text-slate-900">{user?.name || "User"}</p>
                   <p className="text-xs leading-none text-muted-foreground">{user?.email || "user@example.com"}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer font-medium">
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
+              <DropdownMenuItem className="cursor-pointer font-medium" asChild>
+                <Link href="/settings">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>
+              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer font-medium text-red-600 focus:text-red-600 focus:bg-red-50">
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>
               </DropdownMenuItem>
@@ -116,3 +129,4 @@ export function DashboardHeader() {
     </header>
   )
 }
+

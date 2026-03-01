@@ -66,7 +66,7 @@ interface TeamMember {
 const DEPARTMENTS = [
   "All Departments",
   "Finance",
-  "HR", 
+  "HR",
   "Operations",
   "Procurement",
   "IT",
@@ -85,71 +85,7 @@ const ROLES = [
   { value: "viewer", label: "Viewer", description: "Can view and submit requests only" },
 ]
 
-const MOCK_TEAM: TeamMember[] = [
-  {
-    id: "1",
-    name: "Sarah Johnson",
-    email: "sarah.j@company.com",
-    role: "admin",
-    department: "Engineering",
-    status: "active",
-    joinedDate: "2023-01-15",
-  },
-  {
-    id: "2",
-    name: "Michael Chen",
-    email: "michael.c@company.com",
-    role: "manager",
-    department: "Engineering",
-    status: "active",
-    joinedDate: "2023-02-20",
-  },
-  {
-    id: "3",
-    name: "Emily Davis",
-    email: "emily.d@company.com",
-    role: "editor",
-    department: "Product",
-    status: "active",
-    joinedDate: "2023-03-10",
-  },
-  {
-    id: "4",
-    name: "James Wilson",
-    email: "james.w@company.com",
-    role: "viewer",
-    department: "Marketing",
-    status: "active",
-    joinedDate: "2023-04-05",
-  },
-  {
-    id: "5",
-    name: "Lisa Anderson",
-    email: "lisa.a@company.com",
-    role: "manager",
-    department: "Finance",
-    status: "active",
-    joinedDate: "2023-05-12",
-  },
-  {
-    id: "6",
-    name: "David Brown",
-    email: "david.b@company.com",
-    role: "editor",
-    department: "Design",
-    status: "inactive",
-    joinedDate: "2023-06-01",
-  },
-  {
-    id: "7",
-    name: "Rachel Green",
-    email: "rachel.g@company.com",
-    role: "viewer",
-    department: "Sales",
-    status: "pending",
-    joinedDate: "2024-01-10",
-  },
-]
+const MOCK_TEAM: TeamMember[] = []
 
 export default function TeamPage() {
   const { toast } = useToast()
@@ -169,13 +105,13 @@ export default function TeamPage() {
 
   // Load team from localStorage on mount
   useEffect(() => {
-    const savedTeam = localStorage.getItem("team_members")
+    const savedTeam = localStorage.getItem("flowcheck_team")
     if (savedTeam) {
       setTeam(JSON.parse(savedTeam))
     } else {
       // Initialize with mock data if no saved team
       setTeam(MOCK_TEAM)
-      localStorage.setItem("team_members", JSON.stringify(MOCK_TEAM))
+      localStorage.setItem("flowcheck_team", JSON.stringify(MOCK_TEAM))
     }
     setIsLoading(false)
   }, [])
@@ -183,7 +119,7 @@ export default function TeamPage() {
   // Save team to localStorage whenever it changes
   useEffect(() => {
     if (!isLoading) {
-      localStorage.setItem("team_members", JSON.stringify(team))
+      localStorage.setItem("flowcheck_team", JSON.stringify(team))
     }
   }, [team, isLoading])
 
@@ -195,7 +131,7 @@ export default function TeamPage() {
     department: "Engineering",
   })
   const [formErrors, setFormErrors] = useState<{ name?: string; email?: string }>({})
-  
+
   // Form state for delegation
   const [delegateData, setDelegateData] = useState({
     department: "",
@@ -312,7 +248,7 @@ export default function TeamPage() {
       setTeam([...team, newMember])
       resetForm()
       setIsAddDialogOpen(false)
-      
+
       toast({
         title: "Team member added successfully",
         description: `${newMember.name} has been added. Temporary password: ${data.tempPassword}`,
@@ -374,7 +310,7 @@ export default function TeamPage() {
       // Update local state
       setTeam(team.filter((m) => m.id !== deletingMember.id))
       setDeletingMember(null)
-      
+
       toast({
         title: "Member removed",
         description: `${deletingMember.name} has been removed from the team.`,
@@ -410,7 +346,7 @@ export default function TeamPage() {
             : m
         )
       )
-      
+
       // Call API to update database
       const response = await fetch(`/api/team/update-member/${delegatingMember.id}`, {
         method: "PATCH",
@@ -444,7 +380,7 @@ export default function TeamPage() {
 
   const handleClearMockData = () => {
     setTeam([])
-    localStorage.removeItem("team_members")
+    localStorage.removeItem("flowcheck_team")
     toast({
       title: "Mock data cleared",
       description: "All mock team members have been removed. You can now add real team members.",
@@ -525,82 +461,82 @@ export default function TeamPage() {
                       Invite a new member to your organization
                     </DialogDescription>
                   </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="John Doe"
-                      className={formErrors.name ? "border-red-500" : ""}
-                    />
-                    {formErrors.name && (
-                      <p className="text-xs text-red-500">{formErrors.name}</p>
-                    )}
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Full Name</Label>
+                      <Input
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="John Doe"
+                        className={formErrors.name ? "border-red-500" : ""}
+                      />
+                      {formErrors.name && (
+                        <p className="text-xs text-red-500">{formErrors.name}</p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="john@company.com"
+                        className={formErrors.email ? "border-red-500" : ""}
+                      />
+                      {formErrors.email && (
+                        <p className="text-xs text-red-500">{formErrors.email}</p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="role">Role</Label>
+                      <Select
+                        value={formData.role}
+                        onValueChange={(value) => setFormData({ ...formData, role: value })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {ROLES.map((role) => (
+                            <SelectItem key={role.value} value={role.value}>
+                              {role.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="department">Department</Label>
+                      <Select
+                        value={formData.department}
+                        onValueChange={(value) => setFormData({ ...formData, department: value })}
+                        disabled={isManager && !isAdmin}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {DEPARTMENTS.filter((d) => d !== "All Departments").map((dept) => (
+                            <SelectItem key={dept} value={dept}>
+                              {dept}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="john@company.com"
-                      className={formErrors.email ? "border-red-500" : ""}
-                    />
-                    {formErrors.email && (
-                      <p className="text-xs text-red-500">{formErrors.email}</p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="role">Role</Label>
-                    <Select
-                      value={formData.role}
-                      onValueChange={(value) => setFormData({ ...formData, role: value })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {ROLES.map((role) => (
-                          <SelectItem key={role.value} value={role.value}>
-                            {role.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="department">Department</Label>
-                    <Select
-                      value={formData.department}
-                      onValueChange={(value) => setFormData({ ...formData, department: value })}
-                      disabled={isManager && !isAdmin}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {DEPARTMENTS.filter((d) => d !== "All Departments").map((dept) => (
-                          <SelectItem key={dept} value={dept}>
-                            {dept}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={handleCancelAdd}>
-                    Cancel
-                  </Button>
-                  <Button onClick={handleAddMember} disabled={!formData.name || !formData.email}>
-                    Add Member
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={handleCancelAdd}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleAddMember} disabled={!formData.name || !formData.email}>
+                      Add Member
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
               <Button variant="outline" onClick={handleClearMockData}>
                 <Trash2 className="w-4 h-4 mr-2" />
                 Clear Mock Data
@@ -725,10 +661,8 @@ export default function TeamPage() {
 
                     {canManage && (
                       <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100 rounded-full">
-                            <MoreVertical className="w-4 h-4 text-gray-500" />
-                          </Button>
+                        <DropdownMenuTrigger className="inline-flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 outline-none">
+                          <MoreVertical className="w-4 h-4 text-gray-500" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48">
                           <DropdownMenuItem onSelect={() => setViewingMember(member)}>
@@ -893,8 +827,8 @@ export default function TeamPage() {
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="delegate-department">Department</Label>
-                <Select 
-                  value={delegateData.department} 
+                <Select
+                  value={delegateData.department}
                   onValueChange={(value) => setDelegateData({ ...delegateData, department: value })}
                 >
                   <SelectTrigger id="delegate-department">
@@ -911,8 +845,8 @@ export default function TeamPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="delegate-role">Role</Label>
-                <Select 
-                  value={delegateData.role} 
+                <Select
+                  value={delegateData.role}
                   onValueChange={(value) => setDelegateData({ ...delegateData, role: value })}
                 >
                   <SelectTrigger id="delegate-role">

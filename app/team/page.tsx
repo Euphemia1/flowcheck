@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -48,6 +48,7 @@ import {
   Edit,
   Trash2,
   Filter,
+  RefreshCw,
 } from "lucide-react"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { useAuth } from "@/contexts/auth-context"
@@ -85,8 +86,6 @@ const ROLES = [
   { value: "viewer", label: "Viewer", description: "Can view and submit requests only" },
 ]
 
-const MOCK_TEAM: TeamMember[] = []
-
 export default function TeamPage() {
   const { toast } = useToast()
   const [team, setTeam] = useState<TeamMember[]>([])
@@ -103,25 +102,37 @@ export default function TeamPage() {
   const isManager = currentUser?.role === "manager"
   const canManage = isAdmin || isManager
 
-  // Load team from localStorage on mount
-  useEffect(() => {
-    const savedTeam = localStorage.getItem("flowcheck_team")
-    if (savedTeam) {
-      setTeam(JSON.parse(savedTeam))
-    } else {
-      // Initialize with mock data if no saved team
-      setTeam(MOCK_TEAM)
-      localStorage.setItem("flowcheck_team", JSON.stringify(MOCK_TEAM))
-    }
-    setIsLoading(false)
-  }, [])
+  // Fetch team members from Supabase via API
+  const fetchTeamMembers = useCallback(async () => {
+    try {
+      setIsLoading(true)
+      const params = new URLSearchParams()
+      if (currentUser?.organizationId) {
+        params.set("organizationId", currentUser.organizationId)
+      }
 
-  // Save team to localStorage whenever it changes
-  useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem("flowcheck_team", JSON.stringify(team))
+      const response = await fetch(`/api/team?${params.toString()}`)
+      const data = await response.json()
+
+      if (response.ok && data.members) {
+        setTeam(data.members)
+      } else {
+        console.error("Failed to fetch team members:", data.message)
+        // Fallback to empty array if API fails
+        setTeam([])
+      }
+    } catch (error) {
+      console.error("Error fetching team members:", error)
+      setTeam([])
+    } finally {
+      setIsLoading(false)
     }
-  }, [team, isLoading])
+  }, [currentUser?.organizationId])
+
+  // Load team from Supabase on mount
+  useEffect(() => {
+    fetchTeamMembers()
+  }, [fetchTeamMembers])
 
   // Form state for add/edit
   const [formData, setFormData] = useState({
@@ -235,23 +246,14 @@ export default function TeamPage() {
         return
       }
 
-      // Add to local team state
-      const newMember: TeamMember = {
-        id: data.user.id,
-        name: data.user.name,
-        email: data.user.email,
-        role: data.user.role,
-        department: data.user.department,
-        status: "pending",
-        joinedDate: new Date().toISOString().split("T")[0],
-      }
-      setTeam([...team, newMember])
+      // Re-fetch team from database to stay in sync
+      await fetchTeamMembers()
       resetForm()
       setIsAddDialogOpen(false)
 
       toast({
         title: "Team member added successfully",
-        description: `${newMember.name} has been added. Temporary password: ${data.tempPassword}`,
+        description: `${data.user.name} has been added. Temporary password: ${data.tempPassword}`,
       })
     } catch (error) {
       console.error('Error adding team member:', error)
@@ -263,7 +265,7 @@ export default function TeamPage() {
     }
   }
 
-  const handleEditMember = () => {
+  const handleEditMember = async () => {
     if (!editingMember) return
     if (!validateForm()) return
 
@@ -273,25 +275,36 @@ export default function TeamPage() {
       return
     }
 
-    setTeam(
-      team.map((m) =>
-        m.id === editingMember.id
-          ? {
-            ...m,
-            name: formData.name.trim(),
-            email: formData.email.trim().toLowerCase(),
-            role: formData.role,
-            department: formData.department,
-          }
-          : m
-      )
-    )
-    setEditingMember(null)
-    resetForm()
-    toast({
-      title: "Member updated",
-      description: "Changes have been saved.",
-    })
+    try {
+      const response = await fetch(`/api/team/update-member/${editingMember.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          department: formData.department,
+          role: formData.role,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to update member")
+      }
+
+      // Re-fetch from database
+      await fetchTeamMembers()
+      setEditingMember(null)
+      resetForm()
+      toast({
+        title: "Member updated",
+        description: "Changes have been saved.",
+      })
+    } catch (error) {
+      console.error("Error updating member:", error)
+      toast({
+        title: "Error",
+        description: "Failed to update member. Please try again.",
+        variant: "destructive",
+      })
+    }
   }
 
   const handleDeleteMember = async () => {
@@ -307,8 +320,8 @@ export default function TeamPage() {
         throw new Error("Failed to delete member")
       }
 
-      // Update local state
-      setTeam(team.filter((m) => m.id !== deletingMember.id))
+      // Re-fetch from database to stay in sync
+      await fetchTeamMembers()
       setDeletingMember(null)
 
       toast({
@@ -338,15 +351,6 @@ export default function TeamPage() {
     if (!delegatingMember) return
 
     try {
-      // Update local state
-      setTeam(
-        team.map((m) =>
-          m.id === delegatingMember.id
-            ? { ...m, department: delegateData.department, role: delegateData.role }
-            : m
-        )
-      )
-
       // Call API to update database
       const response = await fetch(`/api/team/update-member/${delegatingMember.id}`, {
         method: "PATCH",
@@ -363,6 +367,8 @@ export default function TeamPage() {
         throw new Error("Failed to update member")
       }
 
+      // Re-fetch from database
+      await fetchTeamMembers()
       setDelegatingMember(null)
       toast({
         title: "Member delegated",
@@ -376,15 +382,6 @@ export default function TeamPage() {
         variant: "destructive",
       })
     }
-  }
-
-  const handleClearMockData = () => {
-    setTeam([])
-    localStorage.removeItem("flowcheck_team")
-    toast({
-      title: "Mock data cleared",
-      description: "All mock team members have been removed. You can now add real team members.",
-    })
   }
 
   const handleToggleStatus = (member: TeamMember) => {
@@ -537,9 +534,9 @@ export default function TeamPage() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-              <Button variant="outline" onClick={handleClearMockData}>
-                <Trash2 className="w-4 h-4 mr-2" />
-                Clear Mock Data
+              <Button variant="outline" onClick={fetchTeamMembers} disabled={isLoading}>
+                <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? "animate-spin" : ""}`} />
+                Refresh
               </Button>
             </div>
           )}
@@ -629,85 +626,101 @@ export default function TeamPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {filteredTeam.map((member) => (
-                <div
-                  key={member.id}
-                  className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                      <User className="w-5 h-5 text-gray-600" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900">{member.name}</h4>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <Mail className="w-3 h-3" />
-                        {member.email}
+              {isLoading ? (
+                <div className="space-y-3 py-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-center gap-4 p-4 rounded-lg border border-gray-100 animate-pulse">
+                      <div className="w-10 h-10 rounded-full bg-gray-200" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-gray-200 rounded w-1/4" />
+                        <div className="h-3 bg-gray-100 rounded w-1/3" />
                       </div>
                     </div>
-                  </div>
-
-                  <div className="flex items-center gap-6">
-                    <div className="hidden sm:flex items-center gap-4">
-                      <div className="flex items-center gap-1 text-sm text-gray-600">
-                        <Building className="w-4 h-4" />
-                        {member.department}
+                  ))}
+                </div>
+              ) : (
+                <>
+                  {filteredTeam.map((member) => (
+                    <div
+                      key={member.id}
+                      className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                          <User className="w-5 h-5 text-gray-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-gray-900">{member.name}</h4>
+                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <Mail className="w-3 h-3" />
+                            {member.email}
+                          </div>
+                        </div>
                       </div>
-                      <Badge variant="outline" className={member.role === "admin" ? "bg-blue-50 text-blue-700 border-blue-200" : "border-gray-300"}>
-                        {member.role === "admin" ? "Super Admin" : getRoleLabel(member.role)}
-                      </Badge>
-                      {getStatusBadge(member.status)}
+
+                      <div className="flex items-center gap-6">
+                        <div className="hidden sm:flex items-center gap-4">
+                          <div className="flex items-center gap-1 text-sm text-gray-600">
+                            <Building className="w-4 h-4" />
+                            {member.department}
+                          </div>
+                          <Badge variant="outline" className={member.role === "admin" ? "bg-blue-50 text-blue-700 border-blue-200" : "border-gray-300"}>
+                            {member.role === "admin" ? "Super Admin" : getRoleLabel(member.role)}
+                          </Badge>
+                          {getStatusBadge(member.status)}
+                        </div>
+
+                        {canManage && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger className="inline-flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 outline-none">
+                              <MoreVertical className="w-4 h-4 text-gray-500" />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48">
+                              <DropdownMenuItem onSelect={() => setViewingMember(member)}>
+                                <User className="w-4 h-4 mr-2" />
+                                View Profile
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onSelect={() => openEditDialog(member)}>
+                                <Edit className="w-4 h-4 mr-2" />
+                                Edit Permissions
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onSelect={() => handleToggleStatus(member)}
+                              >
+                                <Shield className="w-4 h-4 mr-2" />
+                                {member.status === "active" ? "Deactivate User" : "Activate User"}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onSelect={() => openDelegateDialog(member)}>
+                                <Building className="w-4 h-4 mr-2" />
+                                Delegate Department
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                                onSelect={() => setDeletingMember(member)}
+                                disabled={member.id === currentUser?.id}
+                              >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Remove from Team
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </div>
                     </div>
+                  ))}
 
-                    {canManage && (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger className="inline-flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 outline-none">
-                          <MoreVertical className="w-4 h-4 text-gray-500" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48">
-                          <DropdownMenuItem onSelect={() => setViewingMember(member)}>
-                            <User className="w-4 h-4 mr-2" />
-                            View Profile
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onSelect={() => openEditDialog(member)}>
-                            <Edit className="w-4 h-4 mr-2" />
-                            Edit Permissions
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onSelect={() => handleToggleStatus(member)}
-                          >
-                            <Shield className="w-4 h-4 mr-2" />
-                            {member.status === "active" ? "Deactivate User" : "Activate User"}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onSelect={() => openDelegateDialog(member)}>
-                            <Building className="w-4 h-4 mr-2" />
-                            Delegate Department
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="text-red-600 focus:text-red-600 focus:bg-red-50"
-                            onSelect={() => setDeletingMember(member)}
-                            disabled={member.id === currentUser?.id}
-                          >
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            Remove from Team
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
-                  </div>
-                </div>
-              ))}
-
-              {filteredTeam.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <Users className="w-6 h-6 text-gray-400" />
-                  </div>
-                  <h3 className="font-medium text-gray-900 mb-1">No members found</h3>
-                  <p className="text-sm text-gray-500">
-                    Try adjusting your search or filters
-                  </p>
-                </div>
+                  {filteredTeam.length === 0 && (
+                    <div className="text-center py-12">
+                      <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <Users className="w-6 h-6 text-gray-400" />
+                      </div>
+                      <h3 className="font-medium text-gray-900 mb-1">No members found</h3>
+                      <p className="text-sm text-gray-500">
+                        Try adjusting your search or filters
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </CardContent>

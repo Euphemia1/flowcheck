@@ -34,10 +34,10 @@ interface AuthState {
 }
 
 interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<void>
+  login: (email: string, password: string) => Promise<User>
   register: (data: { email: string; password: string; name: string; organizationName?: string }) => Promise<void>
   logout: () => void
-  getDepartmentRoute: () => string
+  getDepartmentRoute: (userOverride?: User) => string
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -88,7 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<User> => {
     const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -113,6 +113,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isLoading: false,
       isAuthenticated: true,
     })
+
+    return user
   }
 
   const register = async (data: { email: string; password: string; name: string; organizationName?: string }) => {
@@ -154,16 +156,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
   }
 
-  const getDepartmentRoute = () => {
-    if (!authState.user) return "/dashboard"
-    
+  const getDepartmentRoute = (userOverride?: User) => {
+    const currentUser = userOverride || authState.user
+    if (!currentUser) return "/dashboard"
+
     // Admin can access all departments, but default to main dashboard
-    if (authState.user.role === "admin") {
+    if (currentUser.role === "admin") {
       return "/dashboard"
     }
-    
+
     // Route to department-specific pages
-    switch (authState.user.department) {
+    switch (currentUser.department) {
       case "Finance":
         return "/finance"
       case "HR":

@@ -24,10 +24,10 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      await login(email, password)
+      const loggedInUser = await login(email, password)
       toast.success("Logged in successfully!")
-      // Redirect to department-specific dashboard
-      const departmentRoute = getDepartmentRoute()
+      // Redirect to department-specific dashboard using the freshly returned user
+      const departmentRoute = getDepartmentRoute(loggedInUser)
       router.push(departmentRoute)
     } catch (error) {
       toast.error("Invalid credentials. Please try again.")

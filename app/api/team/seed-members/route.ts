@@ -75,20 +75,22 @@ export async function POST(request: NextRequest) {
                     continue
                 }
 
-                // Create user in Supabase Auth with a test password
-                const tempPassword = `${member.email.split("@")[0]}123!`
-                const { data: authData, error: authError } =
-                    await supabase.auth.admin.createUser({
-                        email: member.email,
-                        password: tempPassword,
-                        email_confirm: true,
-                        user_metadata: {
+                // Create user using signUp (works with anon key, no service role needed)
+                const firstName = member.name.split(" ")[0].toLowerCase()
+                const tempPassword = `${firstName}2026!`
+
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email: member.email,
+                    password: tempPassword,
+                    options: {
+                        data: {
                             name: member.name,
                             department: member.department,
                             role: member.role,
                             added_by_admin: true,
                         },
-                    })
+                    },
+                })
 
                 if (authError || !authData.user) {
                     console.error(`Error creating auth user ${member.email}:`, authError)
@@ -99,6 +101,8 @@ export async function POST(request: NextRequest) {
                         status: "auth_error",
                         error: authError?.message || "Failed to create auth user",
                     })
+                    // Wait 3 seconds to avoid rate limiting
+                    await new Promise((resolve) => setTimeout(resolve, 3000))
                     continue
                 }
 
@@ -115,12 +119,7 @@ export async function POST(request: NextRequest) {
                 })
 
                 if (insertError) {
-                    console.error(
-                        `Error inserting user ${member.email}:`,
-                        insertError
-                    )
-                    // Clean up auth user
-                    await supabase.auth.admin.deleteUser(authData.user.id)
+                    console.error(`Error inserting user ${member.email}:`, insertError)
                     results.push({
                         name: member.name,
                         email: member.email,
@@ -128,6 +127,8 @@ export async function POST(request: NextRequest) {
                         status: "db_error",
                         error: insertError.message,
                     })
+                    // Wait before next iteration
+                    await new Promise((resolve) => setTimeout(resolve, 3000))
                     continue
                 }
 
@@ -138,6 +139,9 @@ export async function POST(request: NextRequest) {
                     status: "created",
                     tempPassword,
                 })
+
+                // Wait 3 seconds between each signUp to avoid Supabase rate limiting
+                await new Promise((resolve) => setTimeout(resolve, 3000))
             } catch (err) {
                 console.error(`Unexpected error for ${member.email}:`, err)
                 results.push({

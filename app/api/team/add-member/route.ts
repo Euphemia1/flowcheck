@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     const emailLower = email.toLowerCase()
 
-    // Check if user already exists
+    // Check if user already exists in users table
     const { data: existingUser } = await supabase
       .from("users")
       .select("id, email")
@@ -38,22 +38,49 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create user in Supabase Auth with temporary password
-    const tempPassword = Math.random().toString(36).slice(-8) + "!"
-    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+    // Generate a readable temporary password: firstname + "2026!"
+    const firstName = name.split(" ")[0].toLowerCase()
+    const tempPassword = `${firstName}2026!`
+
+    // Create user in Supabase Auth using signUp (works with anon key)
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email: emailLower,
       password: tempPassword,
-      email_confirm: emailLower,
-      user_metadata: {
-        name: name,
-        department: department,
-        role: role,
-        added_by_admin: true
-      }
+      options: {
+        data: {
+          name: name,
+          department: department,
+          role: role,
+          added_by_admin: true,
+        },
+      },
     })
 
     if (authError || !authData.user) {
       console.error("Error creating user:", authError)
+
+      // Check for rate limiting
+      if (authError?.message?.includes("seconds")) {
+        return NextResponse.json(
+          {
+            message: "Too many requests. Please wait a moment and try again.",
+            error: authError.message,
+          },
+          { status: 429 }
+        )
+      }
+
+      // Check if user already exists in auth
+      if (
+        authError?.message?.includes("already") ||
+        authError?.message?.includes("exists")
+      ) {
+        return NextResponse.json(
+          { message: "An account with this email already exists in authentication." },
+          { status: 409 }
+        )
+      }
+
       return NextResponse.json(
         { message: "Failed to create user account", error: authError?.message },
         { status: 500 }
@@ -82,23 +109,22 @@ export async function POST(request: NextRequest) {
 
     if (userInsertError) {
       console.error("Error inserting user:", userInsertError)
-      // Clean up auth user if database insert fails
-      await supabase.auth.admin.deleteUser(userId)
       return NextResponse.json(
         { message: "Failed to create user profile", error: userInsertError.message },
         { status: 500 }
       )
     }
 
-    // Send invitation email (you'll need to implement email service)
-    // For now, return the temporary password so admin can share it
-    return NextResponse.json({
-      message: "Team member added successfully",
-      user: insertedUser,
-      tempPassword: tempPassword,
-      success: true
-    }, { status: 201 })
-
+    // Return success with the temp password so admin can share it
+    return NextResponse.json(
+      {
+        message: "Team member added successfully",
+        user: insertedUser,
+        tempPassword: tempPassword,
+        success: true,
+      },
+      { status: 201 }
+    )
   } catch (error) {
     console.error("Add team member error:", error)
     return NextResponse.json(

@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
         // Build the query
         let query = supabase
             .from("users")
-            .select("id, email, name, role, department, organization_id, organization_name, created_at")
+            .select("id, email, name, role, department, position, organization_id, organization_name, created_at")
             .order("created_at", { ascending: false })
 
         // Filter by organization if provided
@@ -34,7 +34,8 @@ export async function GET(request: NextRequest) {
             email: user.email,
             role: user.role || "viewer",
             department: user.department || "Operations",
-            status: "active" as const, // All DB users are considered active
+            position: user.position || "Team Member",
+            status: "active" as const,
             joinedDate: user.created_at ? user.created_at.split("T")[0] : new Date().toISOString().split("T")[0],
         }))
 
@@ -43,10 +44,13 @@ export async function GET(request: NextRequest) {
             total: teamMembers.length,
             success: true,
         })
-    } catch (error) {
-        console.error("Fetch team error:", error)
+    } catch (error: any) {
+        console.error("Fetch team error:", error?.message || error)
         return NextResponse.json(
-            { message: "Internal server error" },
+            { 
+                message: "Internal server error",
+                error: error?.message,
+            },
             { status: 500 }
         )
     }

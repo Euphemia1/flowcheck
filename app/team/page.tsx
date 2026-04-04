@@ -59,6 +59,7 @@ interface TeamMember {
   email: string
   role: string
   department: string
+  position: string
   status: "active" | "inactive" | "pending"
   joinedDate: string
   avatar?: string
@@ -111,6 +112,7 @@ export default function TeamPage() {
         params.set("organizationId", currentUser.organizationId)
       }
 
+<<<<<<< HEAD
       const response = await fetch(`/api/team?${params.toString()}`)
       const data = await response.json()
 
@@ -119,15 +121,47 @@ export default function TeamPage() {
       } else {
         console.error("Failed to fetch team members:", data.message)
         // Fallback to empty array if API fails
+=======
+      console.log("Fetching team members with URL:", `/api/team?${params.toString()}`)
+      
+      const response = await fetch(`/api/team?${params.toString()}`)
+      const data = await response.json()
+
+      console.log("Team fetch response:", { status: response.status, data })
+
+      if (response.ok && data.members) {
+        console.log("Team members loaded:", data.members.length)
+        setTeam(data.members)
+      } else {
+        console.error("Failed to fetch team members:", data.message)
+        // Show a toast error
+        toast({
+          title: "Failed to load team members",
+          description: data.message || "Could not fetch team data",
+          variant: "destructive",
+        })
+>>>>>>> 4fa1024292913d7b11d1658387f05d51e9f740d1
         setTeam([])
       }
     } catch (error) {
       console.error("Error fetching team members:", error)
+<<<<<<< HEAD
+=======
+      toast({
+        title: "Error",
+        description: "Failed to fetch team members",
+        variant: "destructive",
+      })
+>>>>>>> 4fa1024292913d7b11d1658387f05d51e9f740d1
       setTeam([])
     } finally {
       setIsLoading(false)
     }
+<<<<<<< HEAD
   }, [currentUser?.organizationId])
+=======
+  }, [currentUser?.organizationId, toast])
+>>>>>>> 4fa1024292913d7b11d1658387f05d51e9f740d1
 
   // Load team from Supabase on mount
   useEffect(() => {
@@ -178,8 +212,13 @@ export default function TeamPage() {
   }
 
   const filteredTeam = team.filter((member) => {
+<<<<<<< HEAD
     // Visibility logic: Admins see all, Managers see their department
     const isVisible = isAdmin || (isManager && member.department === currentUser?.department)
+=======
+    // Visibility logic: Admins and Managers (any department) see all team members
+    const isVisible = isAdmin || isManager
+>>>>>>> 4fa1024292913d7b11d1658387f05d51e9f740d1
     if (!isVisible) return false
 
     const matchesSearch =
@@ -439,7 +478,13 @@ export default function TeamPage() {
             <p className="text-slate-500 font-medium">
               {isAdmin
                 ? "Manage members and permissions across the organization."
+<<<<<<< HEAD
                 : `Manage members within the ${currentUser?.department} department.`}
+=======
+                : isManager
+                ? "View and manage all team members across the organization."
+                : "View team members"}
+>>>>>>> 4fa1024292913d7b11d1658387f05d51e9f740d1
             </p>
           </div>
           {canManage && (
@@ -651,7 +696,12 @@ export default function TeamPage() {
                         </div>
                         <div>
                           <h4 className="font-medium text-gray-900">{member.name}</h4>
+<<<<<<< HEAD
                           <div className="flex items-center gap-2 text-sm text-gray-500">
+=======
+                          <p className="text-sm text-gray-600">{member.position}</p>
+                          <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
+>>>>>>> 4fa1024292913d7b11d1658387f05d51e9f740d1
                             <Mail className="w-3 h-3" />
                             {member.email}
                           </div>

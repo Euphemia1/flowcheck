@@ -112,23 +112,38 @@ export default function TeamPage() {
         params.set("organizationId", currentUser.organizationId)
       }
 
+      console.log("Fetching team members with URL:", `/api/team?${params.toString()}`)
+      
       const response = await fetch(`/api/team?${params.toString()}`)
       const data = await response.json()
 
+      console.log("Team fetch response:", { status: response.status, data })
+
       if (response.ok && data.members) {
+        console.log("Team members loaded:", data.members.length)
         setTeam(data.members)
       } else {
         console.error("Failed to fetch team members:", data.message)
-        // Fallback to empty array if API fails
+        // Show a toast error
+        toast({
+          title: "Failed to load team members",
+          description: data.message || "Could not fetch team data",
+          variant: "destructive",
+        })
         setTeam([])
       }
     } catch (error) {
       console.error("Error fetching team members:", error)
+      toast({
+        title: "Error",
+        description: "Failed to fetch team members",
+        variant: "destructive",
+      })
       setTeam([])
     } finally {
       setIsLoading(false)
     }
-  }, [currentUser?.organizationId])
+  }, [currentUser?.organizationId, toast])
 
   // Load team from Supabase on mount
   useEffect(() => {

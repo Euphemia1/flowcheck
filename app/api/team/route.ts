@@ -6,18 +6,13 @@ export async function GET(request: NextRequest) {
         const { searchParams } = new URL(request.url)
         const organizationId = searchParams.get("organizationId")
 
-        // Build the query
-        let query = supabase
+        console.log("Fetching team members with organizationId:", organizationId)
+
+        // Build the query - fetch all users
+        const { data: users, error } = await supabase
             .from("users")
             .select("id, email, name, role, department, position, organization_id, organization_name, created_at")
             .order("created_at", { ascending: false })
-
-        // Filter by organization if provided
-        if (organizationId) {
-            query = query.eq("organization_id", organizationId)
-        }
-
-        const { data: users, error } = await query
 
         if (error) {
             console.error("Error fetching team members:", error)
@@ -26,6 +21,8 @@ export async function GET(request: NextRequest) {
                 { status: 500 }
             )
         }
+
+        console.log("Fetched users count:", users?.length)
 
         // Map database fields to the TeamMember format expected by the frontend
         const teamMembers = (users || []).map((user: any) => ({

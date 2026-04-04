@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
         // Build the query
         let query = supabase
             .from("users")
-            .select("id, email, name, role, department, organization_id, organization_name, created_at")
+            .select("id, email, name, role, department, position, organization_id, organization_name, created_at")
             .order("created_at", { ascending: false })
 
         // Filter by organization if provided
@@ -34,6 +34,7 @@ export async function GET(request: NextRequest) {
             email: user.email,
             role: user.role || "viewer",
             department: user.department || "Operations",
+            position: user.position || "Team Member", // Include position from DB
             status: "active" as const, // All DB users are considered active
             joinedDate: user.created_at ? user.created_at.split("T")[0] : new Date().toISOString().split("T")[0],
         }))

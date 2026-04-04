@@ -47,3 +47,4 @@ END $$;
 
 -- Verify the users were created
 SELECT email, name, role, department, hierarchy_level FROM users ORDER BY department, hierarchy_level;
+

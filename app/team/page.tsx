@@ -59,6 +59,7 @@ interface TeamMember {
   email: string
   role: string
   department: string
+  position: string  // NEW: Position from database
   status: "active" | "inactive" | "pending"
   joinedDate: string
   avatar?: string
@@ -178,8 +179,8 @@ export default function TeamPage() {
   }
 
   const filteredTeam = team.filter((member) => {
-    // Visibility logic: Admins see all, Managers see their department
-    const isVisible = isAdmin || (isManager && member.department === currentUser?.department)
+    // Visibility logic: Admins and Managers (any department) see all team members
+    const isVisible = isAdmin || isManager
     if (!isVisible) return false
 
     const matchesSearch =
@@ -439,7 +440,9 @@ export default function TeamPage() {
             <p className="text-slate-500 font-medium">
               {isAdmin
                 ? "Manage members and permissions across the organization."
-                : `Manage members within the ${currentUser?.department} department.`}
+                : isManager
+                ? "View and manage all team members across the organization."
+                : "View team members"}
             </p>
           </div>
           {canManage && (
@@ -651,7 +654,8 @@ export default function TeamPage() {
                         </div>
                         <div>
                           <h4 className="font-medium text-gray-900">{member.name}</h4>
-                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <p className="text-sm text-gray-600">{member.position}</p>
+                          <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
                             <Mail className="w-3 h-3" />
                             {member.email}
                           </div>

@@ -54,13 +54,13 @@ export function ProcurementDashboard() {
                     </CardContent>
                 </Card>
 
-                <Card className="border-none shadow-xl shadow-slate-200/50 bg-gray-100 text-black">
+                <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-bold uppercase opacity-80">Cycle Time</CardTitle>
-                        <Clock className="h-4 w-4 text-black" />
+                        <CardTitle className="text-sm font-bold text-slate-500 uppercase">Cycle Time</CardTitle>
+                        <Clock className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-3xl font-extrabold">2.4d</div>
+                        <div className="text-3xl font-extrabold text-slate-900">2.4d</div>
                         <p className="text-xs font-bold mt-1 text-gray-600">Target: 2.0 days</p>
                     </CardContent>
                 </Card>

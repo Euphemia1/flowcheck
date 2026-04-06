@@ -54,13 +54,13 @@ export function OperationsDashboard() {
                     </CardContent>
                 </Card>
 
-                <Card className="border-none shadow-xl shadow-slate-200/50 bg-gray-100 text-black">
+                <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-bold uppercase opacity-80">Flows Active</CardTitle>
-                        <Workflow className="h-4 w-4 text-black" />
+                        <CardTitle className="text-sm font-bold text-slate-500 uppercase">Flows Active</CardTitle>
+                        <Workflow className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-3xl font-extrabold">18</div>
+                        <div className="text-3xl font-extrabold text-slate-900">18</div>
                         <p className="text-xs font-bold mt-1 text-gray-600">Across 6 departments</p>
                     </CardContent>
                 </Card>

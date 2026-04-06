@@ -1,4 +1,5 @@
 "use client"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -11,12 +12,54 @@ import {
     ArrowRight,
     TrendingUp,
     History,
-    UserPlus
+    UserPlus,
+    Mail,
+    Users,
+    Loader
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
+interface TeamMember {
+    id: string
+    name: string
+    email: string
+    role: string
+    department: string
+    position: string
+    status: "active" | "inactive" | "pending"
+    joinedDate: string
+}
+
 export function ProcurementDashboard() {
+    const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchTeamMembers = async () => {
+            try {
+                setIsLoading(true)
+                const response = await fetch("/api/team")
+                const data = await response.json()
+                if (response.ok && data.members) {
+                    // Filter team members with procurement emails
+                    const procurementMembers = data.members.filter((member: TeamMember) =>
+                        member.email.toLowerCase().includes("procurement")
+                    )
+                    setTeamMembers(procurementMembers)
+                } else {
+                    setTeamMembers([])
+                }
+            } catch (error) {
+                console.error("Error fetching team members:", error)
+                setTeamMembers([])
+            } finally {
+                setIsLoading(false)
+            }
+        }
+
+        fetchTeamMembers()
+    }, [])
     return (
         <div className="space-y-8">
             {/* Procurement Overview */}
@@ -88,6 +131,73 @@ export function ProcurementDashboard() {
                             </Button>
                         </div>
                     </div>
+                </CardContent>
+            </Card>
+
+            {/* Procurement Team Members */}
+            <Card className="border-none shadow-2xl shadow-slate-200/40 bg-white">
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                        <CardTitle className="text-xl font-bold flex items-center gap-2">
+                            <Users className="w-5 h-5 text-slate-600" />
+                            Procurement Team Members
+                        </CardTitle>
+                        <CardDescription>All team members in the Procurement department</CardDescription>
+                    </div>
+                    <Link href="/team">
+                        <Button size="sm" variant="outline" className="h-8 border-slate-200 text-slate-600 font-bold">
+                            Manage Team
+                        </Button>
+                    </Link>
+                </CardHeader>
+                <CardContent className="p-0">
+                    {isLoading ? (
+                        <div className="flex items-center justify-center py-8">
+                            <Loader className="w-6 h-6 text-slate-400 animate-spin" />
+                        </div>
+                    ) : teamMembers.length === 0 ? (
+                        <div className="py-8 text-center">
+                            <p className="text-sm text-slate-500">No team members found for Procurement department</p>
+                        </div>
+                    ) : (
+                        <div className="divide-y divide-slate-100">
+                            {teamMembers.map((member) => (
+                                <div key={member.id} className="p-4 hover:bg-slate-50 transition-colors">
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <h4 className="text-sm font-bold text-slate-900 truncate">{member.name}</h4>
+                                                <Badge variant="outline" className="text-[10px] h-5 px-2 bg-slate-100 text-slate-700 border-slate-200 whitespace-nowrap">
+                                                    {member.position || "Team Member"}
+                                                </Badge>
+                                            </div>
+                                            <div className="flex items-center gap-1 text-xs text-slate-600">
+                                                <Mail className="w-3 h-3" />
+                                                <a href={`mailto:${member.email}`} className="hover:text-slate-900 hover:underline truncate">
+                                                    {member.email}
+                                                </a>
+                                            </div>
+                                            <div className="mt-1 text-xs text-slate-500">
+                                                Role: <span className="font-medium text-slate-600">{member.role}</span>
+                                            </div>
+                                        </div>
+                                        <Badge 
+                                            variant="outline" 
+                                            className={`text-[10px] h-5 px-2 whitespace-nowrap ${
+                                                member.status === "active" 
+                                                    ? "bg-green-50 text-green-700 border-green-200" 
+                                                    : member.status === "inactive"
+                                                    ? "bg-slate-100 text-slate-600 border-slate-200"
+                                                    : "bg-yellow-50 text-yellow-700 border-yellow-200"
+                                            }`}
+                                        >
+                                            {member.status.charAt(0).toUpperCase() + member.status.slice(1)}
+                                        </Badge>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </CardContent>
             </Card>
 

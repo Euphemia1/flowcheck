@@ -23,29 +23,29 @@ export function HRDashboard() {
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Pending Leave</CardTitle>
-                        <Calendar className="h-4 w-4 text-blue-600" />
+                        <Calendar className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">8</div>
-                        <p className="text-xs text-orange-600 font-bold mt-1">3 require immediate review</p>
+                        <p className="text-xs text-gray-600 font-bold mt-1">3 require immediate review</p>
                     </CardContent>
                 </Card>
 
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Hiring Approvals</CardTitle>
-                        <UserPlus className="h-4 w-4 text-emerald-600" />
+                        <UserPlus className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">4</div>
-                        <p className="text-xs text-emerald-600 font-bold mt-1">+2 from last week</p>
+                        <p className="text-xs text-gray-600 font-bold mt-1">+2 from last week</p>
                     </CardContent>
                 </Card>
 
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">On Leave Today</CardTitle>
-                        <Users className="h-4 w-4 text-indigo-600" />
+                        <Users className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">12</div>
@@ -56,11 +56,11 @@ export function HRDashboard() {
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Policy Compliance</CardTitle>
-                        <FileCheck className="h-4 w-4 text-purple-600" />
+                        <FileCheck className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">95%</div>
-                        <p className="text-xs text-emerald-600 font-bold mt-1">Top Score: Engineering</p>
+                        <p className="text-xs text-gray-600 font-bold mt-1">Top Score: Engineering</p>
                     </CardContent>
                 </Card>
             </div>
@@ -101,7 +101,7 @@ export function HRDashboard() {
                             <CardDescription>Review and balance team time-off</CardDescription>
                         </div>
                         <Link href="/approvals?category=HR">
-                            <Button variant="ghost" size="sm" className="text-blue-600 font-bold">View All</Button>
+                            <Button variant="ghost" size="sm" className="text-gray-600 font-bold">View All</Button>
                         </Link>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -119,10 +119,10 @@ export function HRDashboard() {
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Badge variant="outline" className={request.status === 'urgent' ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-slate-50 text-slate-600 border-slate-200'}>
+                                    <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-200">
                                         {request.status}
                                     </Badge>
-                                    <Button size="sm" className="h-8 rounded-lg bg-blue-600 hover:bg-blue-700 font-bold text-xs">Approve</Button>
+                                    <Button size="sm" className="h-8 rounded-lg bg-gray-600 hover:bg-gray-700 font-bold text-xs">Approve</Button>
                                 </div>
                             </div>
                         ))}
@@ -140,10 +140,10 @@ export function HRDashboard() {
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between text-sm">
                                     <span className="text-slate-700 font-bold">Senior Product Designer</span>
-                                    <Badge className="bg-emerald-500">Step 3/4</Badge>
+                                    <Badge className="bg-gray-500">Step 3/4</Badge>
                                 </div>
                                 <div className="w-full bg-slate-100 rounded-full h-2">
-                                    <div className="bg-blue-600 h-2 rounded-full w-[75%]" />
+                                    <div className="bg-gray-600 h-2 rounded-full w-[75%]" />
                                 </div>
                                 <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Awaiting: CEO Sign-off</p>
                             </div>
@@ -161,7 +161,7 @@ export function HRDashboard() {
                                     <FileText className="w-4 h-4 text-slate-400" />
                                     <span className="text-xs font-bold text-slate-700">Remote Work Policy 2024</span>
                                 </div>
-                                <span className="text-xs font-bold text-emerald-600">88% Signed</span>
+                                <span className="text-xs font-bold text-gray-600">88% Signed</span>
                             </div>
                             <Button variant="outline" className="w-full h-9 text-xs font-bold border-slate-200 text-slate-600">
                                 Send Reminders (12 Pending)

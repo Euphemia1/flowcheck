@@ -24,44 +24,44 @@ export function OperationsDashboard() {
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Live Requests</CardTitle>
-                        <Activity className="h-4 w-4 text-blue-600" />
+                        <Activity className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">42</div>
-                        <p className="text-xs text-blue-600 font-bold mt-1">SLA Health: 98.4%</p>
+                        <p className="text-xs text-gray-600 font-bold mt-1">SLA Health: 98.4%</p>
                     </CardContent>
                 </Card>
 
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Avg Response</CardTitle>
-                        <Timer className="h-4 w-4 text-indigo-600" />
+                        <Timer className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">2.4h</div>
-                        <p className="text-xs text-indigo-600 font-bold mt-1">-15m from last week</p>
+                        <p className="text-xs text-gray-600 font-bold mt-1">-15m from last week</p>
                     </CardContent>
                 </Card>
 
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Bottlenecks</CardTitle>
-                        <AlertCircle className="h-4 w-4 text-rose-600" />
+                        <AlertCircle className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">3</div>
-                        <p className="text-xs text-rose-600 font-bold mt-1">Requires re-routing</p>
+                        <p className="text-xs text-gray-600 font-bold mt-1">Requires re-routing</p>
                     </CardContent>
                 </Card>
 
-                <Card className="border-none shadow-xl shadow-slate-200/50 bg-blue-600 text-white">
+                <Card className="border-none shadow-xl shadow-slate-200/50 bg-gray-100 text-black">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold uppercase opacity-80">Flows Active</CardTitle>
-                        <Workflow className="h-4 w-4 text-white" />
+                        <Workflow className="h-4 w-4 text-black" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold">18</div>
-                        <p className="text-xs font-bold mt-1 text-blue-100">Across 6 departments</p>
+                        <p className="text-xs font-bold mt-1 text-gray-600">Across 6 departments</p>
                     </CardContent>
                 </Card>
             </div>
@@ -115,7 +115,7 @@ export function OperationsDashboard() {
                             <div key={idx} className="p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition-all space-y-3">
                                 <div className="flex items-center justify-between">
                                     <h4 className="text-sm font-bold text-slate-800">{flow.name}</h4>
-                                    <Badge className={flow.status === 'at-risk' ? 'bg-rose-500' : 'bg-emerald-500'}>
+                                    <Badge className={flow.status === 'at-risk' ? 'bg-gray-300 text-black' : 'bg-gray-500 text-white'}>
                                         {flow.health}% Health
                                     </Badge>
                                 </div>
@@ -124,7 +124,7 @@ export function OperationsDashboard() {
                                     <span>SLA Status: {flow.status === 'at-risk' ? 'Alert Triggered' : 'Healthy'}</span>
                                 </div>
                                 <div className="w-full bg-slate-100 rounded-full h-1.5">
-                                    <div className={`h-1.5 rounded-full ${flow.status === 'at-risk' ? 'bg-rose-500' : 'bg-blue-600'}`} style={{ width: `${flow.health}%` }} />
+                                    <div className={`h-1.5 rounded-full ${flow.status === 'at-risk' ? 'bg-gray-400' : 'bg-gray-600'}`} style={{ width: `${flow.health}%` }} />
                                 </div>
                             </div>
                         ))}
@@ -139,29 +139,29 @@ export function OperationsDashboard() {
                             <CardDescription>Where approvals are getting stuck</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4 pt-4">
-                            <div className="flex items-center gap-4 p-4 bg-rose-50/50 border border-rose-100/50 rounded-2xl">
-                                <div className="p-2 bg-rose-100 rounded-xl">
-                                    <Timer className="w-6 h-6 text-rose-600" />
+                            <div className="flex items-center gap-4 p-4 bg-gray-50 border border-gray-200 rounded-2xl">
+                                <div className="p-2 bg-gray-200 rounded-xl">
+                                    <Timer className="w-6 h-6 text-gray-600" />
                                 </div>
                                 <div>
                                     <h4 className="text-sm font-bold text-slate-900">Legal Review Layer</h4>
                                     <p className="text-xs text-slate-500">Wait time exceeded 4.5 days (SLA: 2 days). Suggested: Add parallel reviewer.</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-4 p-4 bg-amber-50/50 border border-amber-100/50 rounded-2xl">
-                                <div className="p-2 bg-amber-100 rounded-xl">
-                                    <AlertCircle className="w-6 h-6 text-amber-600" />
+                            <div className="flex items-center gap-4 p-4 bg-gray-50 border border-gray-200 rounded-2xl">
+                                <div className="p-2 bg-gray-200 rounded-xl">
+                                    <AlertCircle className="w-6 h-6 text-gray-600" />
                                 </div>
                                 <div>
                                     <h4 className="text-sm font-bold text-slate-900">Position Approval Flow</h4>
                                     <p className="text-xs text-slate-500">2 requests pending for over 1 week. Check: Budgeting Step #2.</p>
                                 </div>
                             </div>
-                            <Button variant="ghost" className="w-full text-blue-600 font-bold text-xs">View Full System Diagnostics</Button>
+                            <Button variant="ghost" className="w-full text-gray-600 font-bold text-xs">View Full System Diagnostics</Button>
                         </CardContent>
                     </Card>
 
-                    <Card className="border-none shadow-2xl shadow-slate-200/40 bg-gradient-to-br from-indigo-600 to-indigo-800 text-white overflow-hidden relative group">
+                    <Card className="border-none shadow-2xl shadow-slate-200/40 bg-gray-800 text-white overflow-hidden relative group">
                         <div className="absolute -bottom-4 -right-4 p-8 opacity-20 transition-transform group-hover:scale-110">
                             <Zap className="w-32 h-32" />
                         </div>
@@ -170,7 +170,7 @@ export function OperationsDashboard() {
                         </CardHeader>
                         <CardContent>
                             <p className="text-xs opacity-75 mb-4 leading-relaxed font-medium">We found that 40% of your Finance approvals can be fully automated using threshold rules.</p>
-                            <Button className="h-9 bg-white text-indigo-700 hover:bg-slate-100 rounded-xl font-bold text-xs px-6">
+                            <Button className="h-9 bg-white text-black hover:bg-slate-100 rounded-xl font-bold text-xs px-6">
                                 Enable Smart Rules
                             </Button>
                         </CardContent>

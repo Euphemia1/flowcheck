@@ -25,29 +25,29 @@ export function AdminDashboard() {
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Org Efficiency</CardTitle>
-                        <Activity className="h-4 w-4 text-blue-600" />
+                        <Activity className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">92%</div>
-                        <p className="text-xs text-emerald-600 font-bold mt-1">+4% this month</p>
+                        <p className="text-xs text-gray-600 font-bold mt-1">+4% this month</p>
                     </CardContent>
                 </Card>
 
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Avg. Approval Time</CardTitle>
-                        <Clock className="h-4 w-4 text-indigo-600" />
+                        <Clock className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">1.8h</div>
-                        <p className="text-xs text-indigo-600 font-bold mt-1">Goal: {"<"} 2h</p>
+                        <p className="text-xs text-gray-600 font-bold mt-1">Goal: {"<"} 2h</p>
                     </CardContent>
                 </Card>
 
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Compliance Rate</CardTitle>
-                        <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                        <ShieldCheck className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">100%</div>
@@ -55,14 +55,14 @@ export function AdminDashboard() {
                     </CardContent>
                 </Card>
 
-                <Card className="border-none shadow-xl shadow-slate-200/50 bg-rose-600 text-white">
+                <Card className="border-none shadow-xl shadow-slate-200/50 bg-gray-100 text-black">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold uppercase opacity-80">Budget Alerts</CardTitle>
-                        <AlertTriangle className="h-4 w-4 text-white" />
+                        <AlertTriangle className="h-4 w-4 text-black" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold">3</div>
-                        <p className="text-xs font-bold mt-1 text-rose-100">Pending escalations</p>
+                        <p className="text-xs font-bold mt-1 text-gray-600">Pending escalations</p>
                     </CardContent>
                 </Card>
             </div>
@@ -103,10 +103,10 @@ export function AdminDashboard() {
                     </CardHeader>
                     <CardContent className="space-y-6">
                         {[
-                            { name: "Finance", score: 98, time: "0.8h", color: "bg-emerald-500" },
-                            { name: "Operations", score: 85, time: "2.1h", color: "bg-blue-500" },
-                            { name: "HR", score: 72, time: "4.5h", color: "bg-amber-500" },
-                            { name: "Procurement", score: 64, time: "6.2h", color: "bg-rose-500" },
+                            { name: "Finance", score: 98, time: "0.8h", color: "bg-gray-600" },
+                            { name: "Operations", score: 85, time: "2.1h", color: "bg-gray-600" },
+                            { name: "HR", score: 72, time: "4.5h", color: "bg-gray-500" },
+                            { name: "Procurement", score: 64, time: "6.2h", color: "bg-gray-400" },
                         ].map((dept) => (
                             <div key={dept.name} className="space-y-2">
                                 <div className="flex justify-between text-sm font-bold">
@@ -128,22 +128,22 @@ export function AdminDashboard() {
                         <CardDescription>Identifying friction in the approval chain</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <div className="p-4 bg-orange-50 border border-orange-100 rounded-xl flex items-start gap-3">
-                            <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5" />
+                        <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl flex items-start gap-3">
+                            <AlertTriangle className="w-5 h-5 text-gray-600 mt-0.5" />
                             <div>
-                                <h4 className="font-bold text-orange-900 text-sm">Procurement Slowdown</h4>
-                                <p className="text-xs text-orange-700">Vendor approvals are taking 30% longer than average. Suggested action: Add a secondary reviewer layer.</p>
+                                <h4 className="font-bold text-gray-900 text-sm">Procurement Slowdown</h4>
+                                <p className="text-xs text-gray-700">Vendor approvals are taking 30% longer than average. Suggested action: Add a secondary reviewer layer.</p>
                             </div>
                         </div>
-                        <div className="p-4 bg-blue-50 border border-blue-100 rounded-xl flex items-start gap-3">
-                            <TrendingUp className="w-5 h-5 text-blue-600 mt-0.5" />
+                        <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl flex items-start gap-3">
+                            <TrendingUp className="w-5 h-5 text-gray-600 mt-0.5" />
                             <div>
-                                <h4 className="font-bold text-blue-900 text-sm">Finance Velocity High</h4>
-                                <p className="text-xs text-blue-700">Expense approvals are at an all-time high speed. Consider automating low-value ({"<"}$100) requests.</p>
+                                <h4 className="font-bold text-gray-900 text-sm">Finance Velocity High</h4>
+                                <p className="text-xs text-gray-700">Expense approvals are at an all-time high speed. Consider automating low-value ({"<"}$100) requests.</p>
                             </div>
                         </div>
                         <Link href="/analytics" className="block mt-4">
-                            <Button variant="outline" className="w-full border-slate-200 text-slate-600 group">
+                            <Button variant="outline" className="w-full border-slate-200 text-gray-600 group">
                                 Full Efficiency Report
                                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </Button>
@@ -159,7 +159,7 @@ export function AdminDashboard() {
                         <CardTitle className="text-xl font-bold">Organization-Wide Active Flows</CardTitle>
                         <CardDescription>Real-time oversight across all departments</CardDescription>
                     </div>
-                    <Badge className="bg-blue-600">LIVE</Badge>
+                    <Badge className="bg-gray-600">LIVE</Badge>
                 </CardHeader>
                 <CardContent>
                     <div className="overflow-x-auto">
@@ -187,12 +187,12 @@ export function AdminDashboard() {
                                         </td>
                                         <td className="py-4 text-sm text-slate-600">{flow.count} pending</td>
                                         <td className="py-4">
-                                            <span className={`text-xs font-bold ${flow.status === 'Healthy' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                            <span className={`text-xs font-bold ${flow.status === 'Healthy' ? 'text-gray-600' : 'text-gray-500'}`}>
                                                 {flow.status}
                                             </span>
                                         </td>
                                         <td className="py-4 text-right">
-                                            <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 h-8 font-bold">
+                                            <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-700 h-8 font-bold">
                                                 Oversee
                                             </Button>
                                         </td>

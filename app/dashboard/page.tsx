@@ -37,8 +37,8 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <Workflow className="w-6 h-6 text-white animate-pulse" />
+          <div className="w-10 h-10 bg-gray-300 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <Workflow className="w-6 h-6 text-black animate-pulse" />
           </div>
           <p className="text-gray-600">Loading your workspace...</p>
         </div>
@@ -81,7 +81,7 @@ export default function DashboardPage() {
         <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 uppercase font-bold text-[10px]">
+              <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-200 uppercase font-bold text-[10px]">
                 {user.role === 'admin' ? 'Organization Admin' : `${user.department || 'Team'} Workspace`}
               </Badge>
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{user.organizationName}</span>
@@ -116,34 +116,34 @@ function DefaultEmployeeView({ user }: { user: any }) {
       <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-bold text-slate-500 uppercase tracking-tight">My Pending Approvals</CardTitle>
-          <div className="p-2 bg-orange-50 rounded-lg">
-            <Clock className="h-4 w-4 text-orange-600" />
+          <div className="p-2 bg-gray-100 rounded-lg">
+            <Clock className="h-4 w-4 text-gray-400" />
           </div>
         </CardHeader>
         <CardContent>
           <div className="text-3xl font-extrabold text-slate-900 tracking-tighter">12</div>
-          <p className="text-xs text-orange-600 font-bold mt-1">4 urgent requests</p>
+          <p className="text-xs text-gray-600 font-bold mt-1">4 urgent requests</p>
         </CardContent>
       </Card>
 
       <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-bold text-slate-500 uppercase tracking-tight">Completed Today</CardTitle>
-          <div className="p-2 bg-emerald-50 rounded-lg">
-            <CheckCircle className="h-4 w-4 text-emerald-600" />
+          <div className="p-2 bg-gray-100 rounded-lg">
+            <CheckCircle className="h-4 w-4 text-gray-400" />
           </div>
         </CardHeader>
         <CardContent>
           <div className="text-3xl font-extrabold text-slate-900 tracking-tighter">24</div>
-          <p className="text-xs text-emerald-600 font-bold mt-1">+12% from yesterday</p>
+          <p className="text-xs text-gray-600 font-bold mt-1">+12% from yesterday</p>
         </CardContent>
       </Card>
 
       <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-bold text-slate-500 uppercase tracking-tight">Active Workflows</CardTitle>
-          <div className="p-2 bg-blue-50 rounded-lg">
-            <Workflow className="h-4 w-4 text-blue-600" />
+          <div className="p-2 bg-gray-100 rounded-lg">
+            <Workflow className="h-4 w-4 text-gray-400" />
           </div>
         </CardHeader>
         <CardContent>
@@ -152,11 +152,11 @@ function DefaultEmployeeView({ user }: { user: any }) {
         </CardContent>
       </Card>
 
-      <Card className="border-none shadow-xl shadow-slate-200/50 bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
+      <Card className="border-none shadow-xl shadow-slate-200/50 bg-gray-200 text-black">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-bold uppercase tracking-tight opacity-80">Paper Saved</CardTitle>
-          <div className="p-2 bg-white/10 rounded-lg">
-            <TrendingUp className="h-4 w-4 text-white" />
+          <div className="p-2 bg-gray-300 rounded-lg">
+            <TrendingUp className="h-4 w-4 text-black" />
           </div>
         </CardHeader>
         <CardContent>

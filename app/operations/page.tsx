@@ -28,8 +28,8 @@ export default function OperationsPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center mx-auto mb-4 animate-pulse">
-            <span className="text-white font-bold">⚙</span>
+          <div className="w-10 h-10 bg-gray-300 rounded-lg flex items-center justify-center mx-auto mb-4 animate-pulse">
+            <span className="text-black font-bold">⚙</span>
           </div>
           <p className="text-gray-600">Loading Operations Dashboard...</p>
         </div>
@@ -50,8 +50,8 @@ export default function OperationsPage() {
         {/* Operations-specific header */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">⚙</span>
+            <div className="w-8 h-8 bg-gray-300 rounded-lg flex items-center justify-center">
+              <span className="text-black font-bold text-sm">⚙</span>
             </div>
             <h1 className="text-3xl font-bold text-gray-900">Operations</h1>
             <span className="text-sm text-gray-500 ml-2">• Process & Workflow Management</span>

@@ -24,29 +24,29 @@ export function FinanceDashboard() {
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Pending Expenses</CardTitle>
-                        <CreditCard className="h-4 w-4 text-blue-600" />
+                        <CreditCard className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">$4,250</div>
-                        <p className="text-xs text-orange-600 font-bold mt-1">12 claims awaiting review</p>
+                        <p className="text-xs text-gray-600 font-bold mt-1">12 claims awaiting review</p>
                     </CardContent>
                 </Card>
 
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Budget Utilized</CardTitle>
-                        <PieChart className="h-4 w-4 text-emerald-600" />
+                        <PieChart className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">68%</div>
-                        <p className="text-xs text-emerald-600 font-bold mt-1">Ahead of plan by 4%</p>
+                        <p className="text-xs text-gray-600 font-bold mt-1">Ahead of plan by 4%</p>
                     </CardContent>
                 </Card>
 
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Purchase Requests</CardTitle>
-                        <FileText className="h-4 w-4 text-indigo-600" />
+                        <FileText className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">15</div>
@@ -54,14 +54,14 @@ export function FinanceDashboard() {
                     </CardContent>
                 </Card>
 
-                <Card className="border-none shadow-xl shadow-slate-200/50 bg-rose-600 text-white">
+                <Card className="border-none shadow-xl shadow-slate-200/50 bg-gray-100 text-black">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold uppercase opacity-80">Policy Flags</CardTitle>
-                        <AlertTriangle className="h-4 w-4 text-white" />
+                        <AlertTriangle className="h-4 w-4 text-black" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold">2</div>
-                        <p className="text-xs font-bold mt-1 text-rose-100">Unjustified spend detected</p>
+                        <p className="text-xs font-bold mt-1 text-gray-600">Unjustified spend detected</p>
                     </CardContent>
                 </Card>
             </div>
@@ -118,14 +118,14 @@ export function FinanceDashboard() {
                                     </div>
                                     <div className="text-right">
                                         <p className="text-sm font-extrabold text-slate-900">${claim.amount}</p>
-                                        <Badge variant="outline" className={`text-[10px] uppercase font-bold px-1.5 h-4 ${claim.status === 'Escalated' ? 'bg-rose-50 text-rose-600 border-rose-100' : 'bg-slate-50 text-slate-500 border-slate-200'
+                                        <Badge variant="outline" className={`text-[10px] uppercase font-bold px-1.5 h-4 ${claim.status === 'Escalated' ? 'bg-gray-100 text-black border-gray-200' : 'bg-gray-50 text-gray-600 border-gray-200'
                                             }`}>
                                             {claim.status}
                                         </Badge>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2 pt-1">
-                                    <Button size="sm" className="h-8 rounded-lg bg-blue-600 hover:bg-blue-700 font-bold text-xs flex-1">Approve</Button>
+                                    <Button size="sm" className="h-8 rounded-lg bg-gray-600 hover:bg-gray-700 font-bold text-xs flex-1">Approve</Button>
                                     <Button size="sm" variant="outline" className="h-8 rounded-lg border-slate-200 text-slate-600 font-bold text-xs flex-1">Reject</Button>
                                 </div>
                             </div>
@@ -153,7 +153,7 @@ export function FinanceDashboard() {
                                     </div>
                                     <div className="w-full bg-slate-100 rounded-full h-2">
                                         <div
-                                            className={`h-2 rounded-full ${budget.spent / budget.total > 0.9 ? 'bg-rose-500' : 'bg-blue-600'}`}
+                                            className={`h-2 rounded-full ${budget.spent / budget.total > 0.9 ? 'bg-gray-300' : 'bg-gray-600'}`}
                                             style={{ width: `${(budget.spent / budget.total) * 100}%` }}
                                         />
                                     </div>
@@ -162,7 +162,7 @@ export function FinanceDashboard() {
                         </CardContent>
                     </Card>
 
-                    <Card className="border-none shadow-2xl shadow-slate-200/40 bg-slate-900 text-white overflow-hidden relative">
+                    <Card className="border-none shadow-2xl shadow-slate-200/40 bg-gray-800 text-white overflow-hidden relative">
                         <div className="absolute top-0 right-0 p-6 opacity-10">
                             <TrendingUp className="w-24 h-24" />
                         </div>
@@ -173,7 +173,7 @@ export function FinanceDashboard() {
                             <p className="text-xs text-slate-400 mb-4 font-medium">Predicted spend for Q1 based on current approval velocity.</p>
                             <div className="text-2xl font-extrabold">$245,000</div>
                             <div className="flex items-center gap-2 mt-2">
-                                <Badge className="bg-emerald-500 text-[10px] h-4">ON TARGET</Badge>
+                                <Badge className="bg-gray-500 text-[10px] h-4">ON TARGET</Badge>
                                 <span className="text-[10px] text-slate-500 font-bold">Estimated 1.2% variance</span>
                             </div>
                         </CardContent>

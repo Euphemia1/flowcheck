@@ -81,7 +81,7 @@ export function DashboardHeader() {
             onClick={() => setShowNotifications(true)}
           >
             <Bell className="h-5 w-5 text-slate-600" />
-            <span className="absolute top-1.5 right-1.5 h-2 w-2 bg-blue-600 rounded-full border-2 border-white" />
+            <span className="absolute top-1.5 right-1.5 h-2 w-2 bg-gray-400 rounded-full border-2 border-white" />
           </Button>
 
           <NotificationCenter
@@ -95,7 +95,7 @@ export function DashboardHeader() {
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8 border border-slate-200">
                   <AvatarImage src={user?.avatar || "/avatars/01.png"} alt={user?.name || "User"} />
-                  <AvatarFallback className="bg-blue-50 text-blue-700 font-bold text-xs">{getUserInitials()}</AvatarFallback>
+                  <AvatarFallback className="bg-gray-200 text-gray-800 font-bold text-xs">{getUserInitials()}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>

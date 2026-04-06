@@ -24,7 +24,7 @@ export function ManagerDashboard() {
                 <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">My Team's Requests</CardTitle>
-                        <Users className="h-4 w-4 text-blue-600" />
+                        <Users className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">7</div>
@@ -32,25 +32,25 @@ export function ManagerDashboard() {
                     </CardContent>
                 </Card>
 
-                <Card className="border-none shadow-xl shadow-slate-200/50 bg-white border-l-4 border-orange-500">
+                <Card className="border-none shadow-xl shadow-slate-200/50 bg-white border-l-4 border-gray-300">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Awaiting My Action</CardTitle>
-                        <Clock className="h-4 w-4 text-orange-600" />
+                        <Clock className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">5</div>
-                        <p className="text-xs text-orange-600 font-bold mt-1">2 are past SLA deadline</p>
+                        <p className="text-xs text-gray-600 font-bold mt-1">2 are past SLA deadline</p>
                     </CardContent>
                 </Card>
 
-                <Card className="border-none shadow-xl shadow-slate-200/50 bg-white border-l-4 border-emerald-500">
+                <Card className="border-none shadow-xl shadow-slate-200/50 bg-white border-l-4 border-gray-300">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-bold text-slate-500 uppercase">Team Leave Balance</CardTitle>
-                        <UserCheck className="h-4 w-4 text-emerald-600" />
+                        <UserCheck className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-extrabold text-slate-900">85%</div>
-                        <p className="text-xs text-emerald-600 font-bold mt-1">Team availability high</p>
+                        <p className="text-xs text-gray-600 font-bold mt-1">Team availability high</p>
                     </CardContent>
                 </Card>
             </div>
@@ -90,7 +90,7 @@ export function ManagerDashboard() {
                             <CardTitle className="text-xl font-bold">Inbox: Approvals Needed</CardTitle>
                             <CardDescription>Items waiting for your sign-off</CardDescription>
                         </div>
-                        <Badge className="bg-orange-600">{5} Pending</Badge>
+                        <Badge className="bg-gray-600">{5} Pending</Badge>
                     </CardHeader>
                     <CardContent className="p-0">
                         <div className="divide-y divide-slate-50">
@@ -103,8 +103,8 @@ export function ManagerDashboard() {
                                 <div key={idx} className="p-4 sm:p-6 flex items-center justify-between hover:bg-slate-50/80 transition-all group">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <h4 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors text-sm">{item.title}</h4>
-                                            {item.priority === 'urgent' && <Badge className="bg-rose-500 text-[10px] h-4">URGENT</Badge>}
+                                            <h4 className="font-bold text-slate-900 group-hover:text-gray-600 transition-colors text-sm">{item.title}</h4>
+                                            {item.priority === 'urgent' && <Badge className="bg-gray-500 text-[10px] h-4">URGENT</Badge>}
                                         </div>
                                         <div className="flex items-center gap-2 text-xs text-slate-500 font-medium tracking-tight">
                                             <span>{item.requester}</span>
@@ -115,10 +115,10 @@ export function ManagerDashboard() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Button variant="outline" size="sm" className="h-8 w-8 p-0 rounded-full border-slate-200 text-rose-600 hover:bg-rose-50 transition-colors">
+                                        <Button variant="outline" size="sm" className="h-8 w-8 p-0 rounded-full border-slate-200 text-gray-600 hover:bg-gray-50 transition-colors">
                                             <X className="h-4 w-4" />
                                         </Button>
-                                        <Button size="sm" className="h-8 rounded-full bg-emerald-600 hover:bg-emerald-700 font-bold px-4 text-xs transition-transform active:scale-95">
+                                        <Button size="sm" className="h-8 rounded-full bg-gray-600 hover:bg-gray-700 font-bold px-4 text-xs transition-transform active:scale-95">
                                             <Check className="h-4 w-4 mr-1.5" />
                                             Approve
                                         </Button>
@@ -128,7 +128,7 @@ export function ManagerDashboard() {
                         </div>
                     </CardContent>
                     <div className="p-4 border-t border-slate-50 text-center">
-                        <Link href="/approvals" className="text-xs font-bold text-blue-600 hover:underline">
+                        <Link href="/approvals" className="text-xs font-bold text-gray-600 hover:underline">
                             View full approval pipeline
                         </Link>
                     </div>
@@ -143,20 +143,20 @@ export function ManagerDashboard() {
                         <CardContent className="space-y-4">
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-slate-500">Active Requests</span>
-                                <span className="font-bold px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full text-xs">12</span>
+                                <span className="font-bold px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs">12</span>
                             </div>
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-slate-500">Approval Rate</span>
-                                <span className="font-bold px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-xs">94.5%</span>
+                                <span className="font-bold px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs">94.5%</span>
                             </div>
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-slate-500">Avg. My Speed</span>
-                                <span className="font-bold px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-full text-xs">1.5h</span>
+                                <span className="font-bold px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs">1.5h</span>
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card className="border-none shadow-2xl shadow-slate-200/40 bg-gradient-to-br from-slate-800 to-slate-950 text-white overflow-hidden relative">
+                    <Card className="border-none shadow-2xl shadow-slate-200/40 bg-gray-800 text-white overflow-hidden relative">
                         <CardHeader>
                             <CardTitle className="text-lg font-bold">Direct Message</CardTitle>
                             <CardDescription className="text-slate-400">Ask your team for clarification</CardDescription>
@@ -167,7 +167,7 @@ export function ManagerDashboard() {
                                 Latest Chat on REQ-042
                             </div>
                             <p className="text-xs text-slate-300 italic">"Sarah, please attach the receipt for the team lunch."</p>
-                            <Button className="w-full bg-blue-600 hover:bg-blue-700 h-9 font-bold text-xs mt-2 transition-all shadow-lg shadow-blue-900/40">
+                            <Button className="w-full bg-gray-600 hover:bg-gray-700 h-9 font-bold text-xs mt-2 transition-all shadow-lg shadow-gray-900/40">
                                 Reply Now
                             </Button>
                         </CardContent>

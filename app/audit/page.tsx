@@ -109,7 +109,7 @@ export default function AuditLogPage() {
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <Clock className="w-8 h-8 text-blue-600 animate-spin" />
+                <Clock className="w-8 h-8 text-gray-400 animate-spin" />
             </div>
         )
     }
@@ -120,7 +120,7 @@ export default function AuditLogPage() {
                 <DashboardHeader />
                 <main className="container mx-auto px-4 py-20 text-center">
                     <div className="max-w-md mx-auto p-8 bg-white rounded-2xl shadow-xl border border-slate-100">
-                        <ShieldCheck className="w-16 h-16 text-rose-500 mx-auto mb-4 opacity-20" />
+                        <ShieldCheck className="w-16 h-16 text-gray-400 mx-auto mb-4 opacity-20" />
                         <h1 className="text-2xl font-bold text-slate-900 mb-2">Access Restricted</h1>
                         <p className="text-slate-600 mb-6">You do not have the necessary permissions to view the Audit Log. Please contact your organization administrator.</p>
                         <Button variant="outline" onClick={() => window.history.back()}>Go Back</Button>
@@ -142,20 +142,20 @@ export default function AuditLogPage() {
 
     const getStatusBadge = (status: string) => {
         switch (status) {
-            case "success": return <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">Success</Badge>
-            case "warning": return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">Warning</Badge>
-            case "error": return <Badge variant="outline" className="bg-rose-50 text-rose-700 border-rose-200">Issue</Badge>
+            case "success": return <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-200">Success</Badge>
+            case "warning": return <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-200">Warning</Badge>
+            case "error": return <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-200">Issue</Badge>
             default: return <Badge variant="outline">Logged</Badge>
         }
     }
 
     const getCategoryIcon = (category: string) => {
         switch (category) {
-            case "HR": return <User className="w-4 h-4 text-blue-500" />
-            case "Finance": return <Building2 className="w-4 h-4 text-emerald-500" />
-            case "Operations": return <ShieldCheck className="w-4 h-4 text-orange-500" />
-            case "System": return <ShieldCheck className="w-4 h-4 text-rose-500" />
-            case "Workflow": return <History className="w-4 h-4 text-indigo-500" />
+            case "HR": return <User className="w-4 h-4 text-gray-400" />
+            case "Finance": return <Building2 className="w-4 h-4 text-gray-400" />
+            case "Operations": return <ShieldCheck className="w-4 h-4 text-gray-400" />
+            case "System": return <ShieldCheck className="w-4 h-4 text-gray-400" />
+            case "Workflow": return <History className="w-4 h-4 text-gray-400" />
             default: return <FileText className="w-4 h-4" />
         }
     }
@@ -192,14 +192,14 @@ export default function AuditLogPage() {
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                                 <Input
                                     placeholder="Search by action, user, or entity..."
-                                    className="pl-10 h-10 border-slate-200 bg-white shadow-none focus-visible:ring-blue-500"
+                                    className="pl-10 h-10 border-slate-200 bg-white shadow-none focus-visible:ring-gray-500"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                             </div>
                             <div className="flex gap-2 w-full md:w-auto">
                                 <select
-                                    className="h-10 px-3 py-2 border border-slate-200 rounded-md bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium"
+                                    className="h-10 px-3 py-2 border border-slate-200 rounded-md bg-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all font-medium"
                                     value={categoryFilter}
                                     onChange={(e) => setCategoryFilter(e.target.value)}
                                 >
@@ -217,11 +217,11 @@ export default function AuditLogPage() {
                         </CardContent>
                     </Card>
 
-                    <Card className="border-none shadow-xl shadow-slate-200/50 bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
+                    <Card className="border-none shadow-xl shadow-slate-200/50 bg-gray-100 text-black">
                         <CardContent className="p-4 flex flex-col justify-between h-full">
                             <div className="flex items-center justify-between mb-2">
                                 <ShieldCheck className="w-5 h-5 opacity-80" />
-                                <Badge variant="outline" className="border-white/20 text-white/90 bg-white/10">Active</Badge>
+                                <Badge variant="outline" className="border-gray-400 text-gray-800 bg-gray-200">Active</Badge>
                             </div>
                             <div>
                                 <div className="text-2xl font-bold">100%</div>

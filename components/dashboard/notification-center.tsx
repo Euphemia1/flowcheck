@@ -105,9 +105,9 @@ export function NotificationCenter({ open, onOpenChange }: NotificationCenterPro
 
     const getIcon = (type: Notification["type"]) => {
         switch (type) {
-            case "approval": return <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            case "alert": return <AlertCircle className="w-4 h-4 text-rose-600" />
-            case "message": return <MessageSquare className="w-4 h-4 text-blue-600" />
+            case "approval": return <CheckCircle2 className="w-4 h-4 text-gray-600" />
+            case "alert": return <AlertCircle className="w-4 h-4 text-gray-600" />
+            case "message": return <MessageSquare className="w-4 h-4 text-gray-600" />
             default: return <Workflow className="w-4 h-4 text-slate-600" />
         }
     }
@@ -130,7 +130,7 @@ export function NotificationCenter({ open, onOpenChange }: NotificationCenterPro
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className="text-xs font-bold text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                className="text-xs font-bold text-gray-600 hover:text-gray-700 hover:bg-gray-100"
                                 onClick={markAllAsRead}
                             >
                                 Mark all as read
@@ -145,7 +145,7 @@ export function NotificationCenter({ open, onOpenChange }: NotificationCenterPro
                             {notifications.map((notification) => (
                                 <div
                                     key={notification.id}
-                                    className={`p-4 sm:p-6 transition-all hover:bg-white relative group ${notification.status === 'unread' ? 'bg-blue-50/40' : ''
+                                    className={`p-4 sm:p-6 transition-all hover:bg-white relative group ${notification.status === 'unread' ? 'bg-gray-50/40' : ''
                                         }`}
                                     onClick={() => markAsRead(notification.id)}
                                 >
@@ -186,7 +186,7 @@ export function NotificationCenter({ open, onOpenChange }: NotificationCenterPro
                                             </div>
                                         </div>
                                         {notification.status === 'unread' && (
-                                            <div className="mt-2 h-2 w-2 rounded-full bg-blue-600 flex-shrink-0" />
+                                            <div className="mt-2 h-2 w-2 rounded-full bg-gray-600 flex-shrink-0" />
                                         )}
                                     </div>
                                 </div>

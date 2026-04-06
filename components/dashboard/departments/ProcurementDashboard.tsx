@@ -154,16 +154,16 @@ export function ProcurementDashboard() {
                         </CardContent>
                     </Card>
 
-                    <Card className="border-none shadow-2xl shadow-slate-200/40 bg-gray-800 text-white overflow-hidden relative">
-                        <div className="absolute top-0 right-0 p-6 opacity-20">
-                            <ShoppingCart className="w-24 h-24" />
+                    <Card className="border-none shadow-2xl shadow-slate-200/40 bg-white overflow-hidden relative">
+                        <div className="absolute top-0 right-0 p-6 opacity-10">
+                            <ShoppingCart className="w-24 h-24 text-slate-900" />
                         </div>
                         <CardHeader>
-                            <CardTitle className="text-lg font-bold">PO Generator</CardTitle>
+                            <CardTitle className="text-lg font-bold text-slate-900">PO Generator</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-xs opacity-90 mb-4 font-medium leading-relaxed">Instantly generate a purchase order from an approved request.</p>
-                            <Button className="w-full bg-white text-black hover:bg-slate-100 h-9 font-bold text-xs rounded-xl shadow-lg">
+                            <p className="text-xs text-gray-600 mb-4 font-medium leading-relaxed">Instantly generate a purchase order from an approved request.</p>
+                            <Button className="w-full bg-slate-100 text-slate-900 hover:bg-slate-200 h-9 font-bold text-xs rounded-xl shadow-lg border border-slate-200">
                                 Generate PO #8442
                             </Button>
                         </CardContent>

@@ -1,7 +1,6 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
+import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -16,11 +15,8 @@ import {
   X,
   FileText,
   DollarSign,
-  Calendar,
-  Users,
-  ShoppingCart,
-  ShieldCheck,
-  Zap,
+  Plus,
+  Trash2,
   CheckCircle2,
   Clock
 
@@ -28,59 +24,127 @@ import {
 import Link from "next/link"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { Separator } from "@/components/ui/separator"
+import { useAuth } from "@/contexts/auth-context"
 
-interface RequestForm {
-  workflow: string
-  title: string
+interface ProcurementItem {
+  item_name: string
   description: string
-  priority: string
-  amount?: number
-  dueDate: string
+  quantity: number
+  unit_price: number
   category: string
-  tags: string[]
-  attachments: File[]
-  customFields: Record<string, string>
+  specifications: Record<string, any>
 }
 
-const WORKFLOWS = [
-  { id: "expense", name: "Expense Approval", category: "Finance", icon: DollarSign, color: "text-emerald-600", bg: "bg-emerald-50", fields: ["amount", "receiptType", "department"] },
-  { id: "purchase", name: "Purchase Order", category: "Procurement", icon: ShoppingCart, color: "text-blue-600", bg: "bg-blue-50", fields: ["amount", "vendorName", "budgetLine"] },
-  { id: "leave", name: "Leave Request", category: "HR", icon: Calendar, color: "text-orange-600", bg: "bg-orange-50", fields: ["startDate", "endDate", "leaveType"] },
-  { id: "audit", name: "Audit Access", category: "Compliance", icon: ShieldCheck, color: "text-indigo-600", bg: "bg-indigo-50", fields: ["recordType", "reason", "accessLevel"] },
-  { id: "inventory", name: "Asset Request", category: "Operations", icon: Zap, color: "text-amber-600", bg: "bg-amber-50", fields: ["itemDescription", "quantity", "location"] },
-  { id: "hiring", name: "Personnel Request", category: "HR", icon: Users, color: "text-rose-600", bg: "bg-rose-50", fields: ["positionTitle", "reason", "budgetScale"] },
+interface RequestForm {
+  title: string
+  description: string
+  urgency_level: string
+  expected_delivery_date: string
+  items: ProcurementItem[]
+}
+
+const CATEGORIES = [
+  "IT Equipment",
+  "Office Supplies", 
+  "Software Licenses",
+  "Professional Services",
+  "Marketing Materials",
+  "Facilities",
+  "Travel & Entertainment",
+  "Training & Development",
+  "Other"
 ]
 
 export default function NewRequestPage() {
+  const { user } = useAuth()
   const [form, setForm] = useState<RequestForm>({
-    workflow: "",
     title: "",
     description: "",
-    priority: "medium",
-    dueDate: "",
-    category: "",
-    tags: [],
-    attachments: [],
-    customFields: {},
+    urgency_level: "medium",
+    expected_delivery_date: "",
+    items: [
+      {
+        item_name: "",
+        description: "",
+        quantity: 1,
+        unit_price: 0,
+        category: "",
+        specifications: {}
+      }
+    ]
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const selectedWorkflow = WORKFLOWS.find((w) => w.id === form.workflow)
+
+  const calculateTotal = () => {
+    return form.items.reduce((total: number, item: ProcurementItem) => total + (item.quantity * item.unit_price), 0)
+  }
+
+  const addItem = () => {
+    setForm((prev: RequestForm) => ({
+      ...prev,
+      items: [...prev.items, {
+        item_name: "",
+        description: "",
+        quantity: 1,
+        unit_price: 0,
+        category: "",
+        specifications: {}
+      }]
+    }))
+  }
+
+  const removeItem = (index: number) => {
+    if (form.items.length > 1) {
+      setForm((prev: RequestForm) => ({
+        ...prev,
+        items: prev.items.filter((_: any, i: number) => i !== index)
+      }))
+    }
+  }
+
+  const updateItem = (index: number, field: keyof ProcurementItem, value: any) => {
+    setForm((prev: RequestForm) => ({
+      ...prev,
+      items: prev.items.map((item: ProcurementItem, i: number) => 
+        i === index ? { ...item, [field]: value } : item
+      )
+    }))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    window.location.href = "/approvals"
-  }
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
-    setForm((prev) => ({ ...prev, attachments: [...prev.attachments, ...files] }))
-  }
+    try {
+      const response = await fetch("/api/procurement/requests", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: form.title,
+          description: form.description,
+          requester_id: user?.id,
+          urgency_level: form.urgency_level,
+          expected_delivery_date: form.expected_delivery_date || null,
+          items: form.items.filter((item: ProcurementItem) => item.item_name && item.quantity > 0 && item.unit_price > 0)
+        }),
+      })
 
-  const removeAttachment = (index: number) => {
-    setForm((prev) => ({ ...prev, attachments: prev.attachments.filter((_, i) => i !== index) }))
+      if (response.ok) {
+        const data = await response.json()
+        window.location.href = `/requests/${data.request.id}`
+      } else {
+        const error = await response.json()
+        alert(error.message || "Failed to create request")
+      }
+    } catch (error) {
+      console.error("Error creating request:", error)
+      alert("Failed to create request")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -90,231 +154,209 @@ export default function NewRequestPage() {
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
           <div className="space-y-2">
-            <Link href="/approvals" className="inline-flex items-center text-sm font-bold text-slate-500 hover:text-blue-600 transition-colors mb-2">
+            <Link href="/dashboard" className="inline-flex items-center text-sm font-bold text-slate-500 hover:text-blue-600 transition-colors mb-2">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Approvals
+              Back to Dashboard
             </Link>
-            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Create Request</h1>
-            <p className="text-slate-500 font-medium">Standardize your organizational workflows with intelligent routing.</p>
+            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Create Procurement Request</h1>
+            <p className="text-slate-500 font-medium">Submit a request for goods or services that require approval.</p>
           </div>
 
           <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-100">
-            <div className="px-4 py-2 border-r border-slate-100">
-              <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Selected Workflow</p>
-              <p className="text-xs font-bold text-slate-900">{selectedWorkflow?.name || 'Incomplete'}</p>
-            </div>
             <div className="px-4 py-2">
+              <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Total Items</p>
+              <p className="text-xs font-bold text-slate-900">{form.items.length}</p>
+            </div>
+            <div className="px-4 py-2 border-l border-slate-100">
+              <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Total Value</p>
+              <p className="text-xs font-bold text-slate-900">${calculateTotal().toLocaleString()}</p>
+            </div>
+            <div className="px-4 py-2 border-l border-slate-100">
               <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Priority</p>
-              <Badge className="bg-blue-600 text-[10px] uppercase">{form.priority}</Badge>
+              <Badge className="bg-blue-600 text-[10px] uppercase">{form.urgency_level}</Badge>
             </div>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-4 gap-10">
-          <div className="lg:col-span-2.5 space-y-10">
-            {/* Workflow Picking Component - Visual Cards */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-slate-900">What are you requesting?</h3>
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Step 1 of 3</span>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {WORKFLOWS.map((w) => (
-                  <div
-                    key={w.id}
-                    onClick={() => setForm(prev => ({ ...prev, workflow: w.id, category: w.category }))}
-                    className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative group ${form.workflow === w.id
-                      ? "border-blue-600 bg-white shadow-xl shadow-blue-100/50"
-                      : "border-slate-100 bg-white hover:border-slate-200 hover:shadow-lg"
-                      }`}
-                  >
-                    <div className="flex gap-4">
-                      <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${w.bg} ${w.color}`}>
-                        <w.icon className="w-6 h-6" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <h4 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{w.name}</h4>
-                          {form.workflow === w.id && <CheckCircle2 className="w-4 h-4 text-blue-600" />}
-                        </div>
-                        <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">{w.category}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Core Details Form */}
-            <Card className={`border-none shadow-2xl shadow-slate-200/50 transition-opacity ${!form.workflow ? 'opacity-50 pointer-events-none' : ''}`}>
+          <div className="lg:col-span-3 space-y-8">
+            {/* Request Details */}
+            <Card className="border-none shadow-2xl shadow-slate-200/50">
               <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-xl font-bold">Request Content</CardTitle>
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Step 2 of 3</span>
-                </div>
-                <CardDescription>Provide the fundamental details for the approvers.</CardDescription>
+                <CardTitle className="text-xl font-bold">Request Details</CardTitle>
+                <CardDescription>Provide the fundamental details for your procurement request.</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-8 pt-6">
+              <CardContent className="space-y-6 pt-6">
                 <div className="space-y-3">
-                  <Label className="text-sm font-bold text-slate-700">Request Title</Label>
+                  <Label className="text-sm font-bold text-slate-700">Request Title *</Label>
                   <Input
                     className="h-12 rounded-xl text-lg font-medium border-slate-200 focus:ring-blue-500"
-                    placeholder="e.g., Marketing Assets for Q4 Campaign"
+                    placeholder="e.g., New Laptops for Development Team"
                     value={form.title}
-                    onChange={e => setForm(prev => ({ ...prev, title: e.target.value }))}
+                    onChange={(e: any) => setForm((prev: RequestForm) => ({ ...prev, title: e.target.value }))}
                     required
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-3">
                     <Label className="text-sm font-bold text-slate-700">Urgency Level</Label>
-                    <Select value={form.priority} onValueChange={v => setForm(prev => ({ ...prev, priority: v }))}>
+                    <Select value={form.urgency_level} onValueChange={(v: string) => setForm((prev: RequestForm) => ({ ...prev, urgency_level: v }))}>
                       <SelectTrigger className="h-11 rounded-xl border-slate-200 bg-slate-50/30">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="low">Standard</SelectItem>
-                        <SelectItem value="medium">Important</SelectItem>
-                        <SelectItem value="high">Urgent</SelectItem>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                        <SelectItem value="critical">Critical</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-3">
-                    <Label className="text-sm font-bold text-slate-700">Target Resolution (Optional)</Label>
+                    <Label className="text-sm font-bold text-slate-700">Expected Delivery Date</Label>
                     <div className="relative">
                       <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <Input
                         type="date"
                         className="pl-10 h-11 rounded-xl border-slate-200"
-                        value={form.dueDate}
-                        onChange={e => setForm(prev => ({ ...prev, dueDate: e.target.value }))}
+                        value={form.expected_delivery_date}
+                        onChange={(e: any) => setForm((prev: RequestForm) => ({ ...prev, expected_delivery_date: e.target.value }))}
                       />
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-3">
-                  <Label className="text-sm font-bold text-slate-700">Detailed Context</Label>
+                  <Label className="text-sm font-bold text-slate-700">Description</Label>
                   <Textarea
                     className="rounded-xl border-slate-200 min-h-[120px]"
-                    placeholder="Why is this request necessary? Include any relevant project codes or references."
+                    placeholder="Provide a detailed description of why this procurement is necessary..."
                     value={form.description}
-                    onChange={e => setForm(prev => ({ ...prev, description: e.target.value }))}
+                    onChange={(e: any) => setForm((prev: RequestForm) => ({ ...prev, description: e.target.value }))}
                   />
                 </div>
               </CardContent>
             </Card>
 
-            {/* Smart Conditional Fields */}
-            {selectedWorkflow && (
-              <Card className="border-none shadow-2xl shadow-slate-200/50 border-t-4 border-blue-600 overflow-hidden animate-in fade-in slide-in-from-bottom-2">
-                <CardHeader className="bg-slate-50/50 border-b border-slate-100">
-                  <CardTitle className="text-lg font-bold flex items-center gap-2">
-                    <Zap className="w-5 h-5 text-blue-600" />
-                    {selectedWorkflow.name} Details
-                  </CardTitle>
-                  <CardDescription>Intelligent fields required for this specific process.</CardDescription>
-                </CardHeader>
-                <CardContent className="p-8 space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {selectedWorkflow.fields.includes('amount') && (
-                      <div className="space-y-3 col-span-2">
-                        <Label className="text-sm font-bold text-blue-900 uppercase tracking-wider">Requested Amount</Label>
-                        <div className="relative">
-                          <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</span>
-                          <Input
-                            type="number"
-                            className="pl-8 h-12 text-xl font-bold rounded-2xl border-blue-100 bg-blue-50/30"
-                            placeholder="0.00"
-                            onChange={e => setForm(prev => ({ ...prev, amount: Number(e.target.value) }))}
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {selectedWorkflow.fields.map((field) => (
-                      field !== 'amount' && (
-                        <div key={field} className="space-y-3">
-                          <Label className="text-sm font-bold text-slate-700 capitalize">
-                            {field.replace(/([A-Z])/g, " $1").trim()}
-                          </Label>
-                          <Input
-                            className="h-11 rounded-xl border-slate-200"
-                            placeholder={`Enter ${field.toLowerCase()}...`}
-                            onChange={e => setForm(prev => ({
-                              ...prev,
-                              customFields: { ...prev.customFields, [field]: e.target.value }
-                            }))}
-                          />
-                        </div>
-                      )
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Attachment System */}
+            {/* Items Section */}
             <Card className="border-none shadow-2xl shadow-slate-200/50">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-xl font-bold">Documentation</CardTitle>
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Step 3 of 3</span>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <div>
+                  <CardTitle className="text-xl font-bold">Items</CardTitle>
+                  <CardDescription>Add the items you need to procure</CardDescription>
                 </div>
+                <Button type="button" onClick={addItem} variant="outline" className="border-blue-200 text-blue-700 hover:bg-blue-50">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Item
+                </Button>
               </CardHeader>
               <CardContent className="space-y-6 pt-6">
-                <div className="border-2 border-dashed border-slate-100 rounded-3xl p-10 text-center hover:bg-slate-50/50 hover:border-blue-200 transition-all cursor-pointer group" onClick={() => document.getElementById('file-upload')?.click()}>
-                  <div className="h-16 w-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                    <Upload className="w-8 h-8 text-blue-600" />
-                  </div>
-                  <p className="font-bold text-slate-900">Upload internal documentation</p>
-                  <p className="text-xs text-slate-500 font-medium mt-1">PDF, Excel, or high-res images up to 50MB</p>
-                  <input type="file" multiple id="file-upload" className="hidden" onChange={handleFileUpload} />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {form.attachments.map((file, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl shadow-sm">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 bg-slate-50 rounded-xl flex items-center justify-center">
-                          <FileText className="w-5 h-5 text-slate-400" />
+                {form.items.map((item: ProcurementItem, index: number) => (
+                  <Card key={index} className="border border-slate-200 rounded-xl">
+                    <CardContent className="p-6 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium text-slate-900">Item {index + 1}</h4>
+                        {form.items.length > 1 && (
+                          <Button type="button" onClick={() => removeItem(index)} variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-sm font-medium text-slate-700">Item Name *</Label>
+                          <Input
+                            placeholder="e.g., Dell Latitude Laptop"
+                            value={item.item_name}
+                            onChange={(e: any) => updateItem(index, 'item_name', e.target.value)}
+                            required
+                          />
                         </div>
-                        <div className="overflow-hidden">
-                          <p className="text-xs font-bold text-slate-900 truncate max-w-[120px]">{file.name}</p>
-                          <p className="text-[10px] text-slate-500 font-bold uppercase">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                        <div className="space-y-2">
+                          <Label className="text-sm font-medium text-slate-700">Category</Label>
+                          <Select value={item.category} onValueChange={(v: string) => updateItem(index, 'category', v)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {CATEGORIES.map(category => (
+                                <SelectItem key={category} value={category}>{category}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
                       </div>
-                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); removeAttachment(idx); }}>
-                        <X className="w-4 h-4 text-slate-400" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-slate-700">Description</Label>
+                        <Textarea
+                          placeholder="Additional details about this item..."
+                          value={item.description}
+                          onChange={(e: any) => updateItem(index, 'description', e.target.value)}
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-sm font-medium text-slate-700">Quantity *</Label>
+                          <Input
+                            type="number"
+                            min="1"
+                            placeholder="1"
+                            value={item.quantity}
+                            onChange={(e: any) => updateItem(index, 'quantity', Number(e.target.value))}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-sm font-medium text-slate-700">Unit Price ($) *</Label>
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            placeholder="0.00"
+                            value={item.unit_price}
+                            onChange={(e: any) => updateItem(index, 'unit_price', Number(e.target.value))}
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="text-sm text-slate-600">Item Total: </span>
+                        <span className="text-lg font-bold text-slate-900">
+                          ${(item.quantity * item.unit_price).toLocaleString()}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </CardContent>
             </Card>
           </div>
 
-          <div className="lg:col-span-1.5 space-y-6">
+          <div className="lg:col-span-1 space-y-6">
             <div className="sticky top-24">
               <Card className="border-none shadow-2xl shadow-slate-200/50 overflow-hidden bg-slate-900 text-white">
                 <CardHeader className="bg-white/5 border-b border-white/5 pb-4">
                   <CardTitle className="text-lg font-bold">Request Summary</CardTitle>
-                  <CardDescription className="text-slate-400">Live preview of your submission</CardDescription>
+                  <CardDescription className="text-slate-400">Review your submission</CardDescription>
                 </CardHeader>
                 <CardContent className="pt-8 space-y-6">
                   <div className="space-y-4">
                     <div className="flex justify-between items-start">
-                      <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Type</span>
-                      <span className="text-sm font-bold text-right">{selectedWorkflow?.name || '---'}</span>
-                    </div>
-                    <div className="flex justify-between items-start">
-                      <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Title</span>
-                      <p className="text-sm font-bold text-right max-w-[120px] truncate">{form.title || '---'}</p>
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Items</span>
+                      <span className="text-sm font-bold text-right">{form.items.length}</span>
                     </div>
                     <div className="flex justify-between items-start">
                       <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Total Value</span>
-                      <span className="text-xl font-extrabold text-blue-400">{form.amount ? `$${form.amount.toLocaleString()}` : '$0'}</span>
+                      <span className="text-xl font-extrabold text-blue-400">${calculateTotal().toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-start">
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Urgency</span>
+                      <Badge className="bg-blue-600 text-[10px] uppercase">{form.urgency_level}</Badge>
                     </div>
                   </div>
 
@@ -325,20 +367,20 @@ export default function NewRequestPage() {
                       <div className="h-6 w-6 rounded-full bg-emerald-500/20 flex items-center justify-center">
                         <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                       </div>
-                      <p className="text-xs font-bold text-slate-300">Intelligent Routing Ready</p>
+                      <p className="text-xs font-bold text-slate-300">Ready for submission</p>
                     </div>
                   </div>
 
                   <Button
                     type="submit"
-                    onClick={handleSubmit}
-                    disabled={!form.workflow || !form.title || isSubmitting}
-                    className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-xl shadow-blue-500/20 group"
+                    disabled={!form.title || form.items.some((item: ProcurementItem) => !item.item_name || item.quantity <= 0 || item.unit_price <= 0) || isSubmitting}
+                    className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-xl shadow-blue-500/20"
                   >
-                    {isSubmitting ? "Finalizing..." : "Submit for Approval"}
-                    <ArrowLeft className="w-4 h-4 ml-2 rotate-180 group-hover:translate-x-1 transition-transform" />
+                    {isSubmitting ? "Submitting..." : "Submit Request"}
                   </Button>
-                  <p className="text-[10px] text-center text-slate-500 font-bold uppercase tracking-widest">Signed digitally as {form.title || 'User'}</p>
+                  <p className="text-[10px] text-center text-slate-500 font-bold uppercase tracking-widest">
+                    Submitted by {user?.name || 'User'}
+                  </p>
                 </CardContent>
               </Card>
 
@@ -347,8 +389,10 @@ export default function NewRequestPage() {
                   <CheckCircle2 className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                  <h5 className="text-xs font-extrabold text-blue-900 uppercase">Pro Tip</h5>
-                  <p className="text-xs text-blue-700 font-medium leading-relaxed mt-1">Attachments increase approval speed by 40% on average.</p>
+                  <h5 className="text-xs font-extrabold text-blue-900 uppercase">Approval Workflow</h5>
+                  <p className="text-xs text-blue-700 font-medium leading-relaxed mt-1">
+                    Requests under $500 are auto-approved. Higher amounts require manager and finance approval.
+                  </p>
                 </div>
               </div>
             </div>

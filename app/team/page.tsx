@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -187,14 +187,9 @@ export default function TeamPage() {
     setFormErrors({})
   }
 
-  const filteredTeam = team.filter((member) => {
-<<<<<<< HEAD
+  const filteredTeam = team.filter((member: TeamMember) => {
     // Visibility logic: Admins see all, Managers see their department
     const isVisible = isAdmin || (isManager && member.department === currentUser?.department)
-=======
-    // Visibility logic: Admins and Managers (any department) see all team members
-    const isVisible = isAdmin || isManager
->>>>>>> 4fa1024292913d7b11d1658387f05d51e9f740d1
     if (!isVisible) return false
 
     const matchesSearch =
@@ -285,7 +280,7 @@ export default function TeamPage() {
     if (!validateForm()) return
 
     // Check for duplicate email (excluding current member)
-    if (team.some((m) => m.id !== editingMember.id && m.email.toLowerCase() === formData.email.toLowerCase())) {
+    if (team.some((m: TeamMember) => m.id !== editingMember.id && m.email.toLowerCase() === formData.email.toLowerCase())) {
       setFormErrors({ ...formErrors, email: "This email is already registered" })
       return
     }
@@ -402,7 +397,7 @@ export default function TeamPage() {
   const handleToggleStatus = (member: TeamMember) => {
     const newStatus = member.status === "active" ? "inactive" : "active"
     setTeam(
-      team.map((m) =>
+      team.map((m: TeamMember) =>
         m.id === member.id ? { ...m, status: newStatus } : m
       )
     )
@@ -435,9 +430,9 @@ export default function TeamPage() {
 
   const stats = {
     total: team.length,
-    active: team.filter((m) => m.status === "active").length,
-    pending: team.filter((m) => m.status === "pending").length,
-    admins: team.filter((m) => m.role === "admin").length,
+    active: team.filter((m: TeamMember) => m.status === "active").length,
+    pending: team.filter((m: TeamMember) => m.status === "pending").length,
+    admins: team.filter((m: TeamMember) => m.role === "admin").length,
   }
 
   return (
@@ -454,13 +449,7 @@ export default function TeamPage() {
             <p className="text-slate-500 font-medium">
               {isAdmin
                 ? "Manage members and permissions across the organization."
-<<<<<<< HEAD
                 : `Manage members within the ${currentUser?.department} department.`}
-=======
-                : isManager
-                ? "View and manage all team members across the organization."
-                : "View team members"}
->>>>>>> 4fa1024292913d7b11d1658387f05d51e9f740d1
             </p>
           </div>
           {canManage && (
@@ -485,7 +474,7 @@ export default function TeamPage() {
                       <Input
                         id="name"
                         value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="John Doe"
                         className={formErrors.name ? "border-red-500" : ""}
                       />
@@ -499,7 +488,7 @@ export default function TeamPage() {
                         id="email"
                         type="email"
                         value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="john@company.com"
                         className={formErrors.email ? "border-red-500" : ""}
                       />
@@ -511,7 +500,7 @@ export default function TeamPage() {
                       <Label htmlFor="role">Role</Label>
                       <Select
                         value={formData.role}
-                        onValueChange={(value) => setFormData({ ...formData, role: value })}
+                        onValueChange={(value: string) => setFormData({ ...formData, role: value })}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -529,7 +518,7 @@ export default function TeamPage() {
                       <Label htmlFor="department">Department</Label>
                       <Select
                         value={formData.department}
-                        onValueChange={(value) => setFormData({ ...formData, department: value })}
+                        onValueChange={(value: string) => setFormData({ ...formData, department: value })}
                         disabled={isManager && !isAdmin}
                       >
                         <SelectTrigger>
@@ -608,7 +597,7 @@ export default function TeamPage() {
                 <Input
                   placeholder="Search by name or email..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                   className="pl-10"
                 />
               </div>
@@ -672,12 +661,7 @@ export default function TeamPage() {
                         </div>
                         <div>
                           <h4 className="font-medium text-gray-900">{member.name}</h4>
-<<<<<<< HEAD
                           <div className="flex items-center gap-2 text-sm text-gray-500">
-=======
-                          <p className="text-sm text-gray-600">{member.position}</p>
-                          <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
->>>>>>> 4fa1024292913d7b11d1658387f05d51e9f740d1
                             <Mail className="w-3 h-3" />
                             {member.email}
                           </div>
@@ -770,7 +754,7 @@ export default function TeamPage() {
                 <Input
                   id="edit-name"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
                   className={formErrors.name ? "border-red-500" : ""}
                 />
                 {formErrors.name && (
@@ -783,7 +767,7 @@ export default function TeamPage() {
                   id="edit-email"
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
                   className={formErrors.email ? "border-red-500" : ""}
                 />
                 {formErrors.email && (
@@ -794,7 +778,7 @@ export default function TeamPage() {
                 <Label htmlFor="edit-role">Role</Label>
                 <Select
                   value={formData.role}
-                  onValueChange={(value) => setFormData({ ...formData, role: value })}
+                  onValueChange={(value: string) => setFormData({ ...formData, role: value })}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -812,7 +796,7 @@ export default function TeamPage() {
                 <Label htmlFor="edit-department">Department</Label>
                 <Select
                   value={formData.department}
-                  onValueChange={(value) => setFormData({ ...formData, department: value })}
+                  onValueChange={(value: string) => setFormData({ ...formData, department: value })}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -868,7 +852,7 @@ export default function TeamPage() {
                 <Label htmlFor="delegate-department">Department</Label>
                 <Select
                   value={delegateData.department}
-                  onValueChange={(value) => setDelegateData({ ...delegateData, department: value })}
+                  onValueChange={(value: string) => setDelegateData({ ...delegateData, department: value })}
                 >
                   <SelectTrigger id="delegate-department">
                     <SelectValue placeholder="Select department" />
@@ -886,7 +870,7 @@ export default function TeamPage() {
                 <Label htmlFor="delegate-role">Role</Label>
                 <Select
                   value={delegateData.role}
-                  onValueChange={(value) => setDelegateData({ ...delegateData, role: value })}
+                  onValueChange={(value: string) => setDelegateData({ ...delegateData, role: value })}
                 >
                   <SelectTrigger id="delegate-role">
                     <SelectValue placeholder="Select role" />

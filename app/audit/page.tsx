@@ -26,7 +26,7 @@ import { useAuth } from "@/contexts/auth-context"
 interface AuditEntry {
     id: string
     action: string
-    category: "HR" | "Finance" | "Operations" | "System" | "Workflow"
+    category: "Procurement" | "Finance" | "Vendor" | "Purchase Order" | "System"
     user: {
         name: string
         role: string
@@ -42,58 +42,80 @@ interface AuditEntry {
 const MOCK_AUDIT_LOG: AuditEntry[] = [
     {
         id: "LOG-001",
-        action: "Approval Processed",
-        category: "Finance",
-        user: { name: "John Admin", role: "Finance Director" },
-        entity: "REQ-001 (Marketing Budget)",
-        details: "Approved budget increase from $12k to $15k",
+        action: "Purchase Order Created",
+        category: "Purchase Order",
+        user: { name: "John Admin", role: "Procurement Manager" },
+        entity: "PO-2024-001",
+        details: "Created PO for Marketing Campaign Materials - Creative Edge Agency",
         timestamp: "2024-01-16T10:45:00Z",
         status: "success",
         ipAddress: "192.168.1.45"
     },
     {
         id: "LOG-002",
-        action: "Workflow Modified",
-        category: "Workflow",
-        user: { name: "Sarah Manager", role: "HR Head" },
-        entity: "Employee Onboarding",
-        details: "Added 'IT Setup' step to the sequence",
+        action: "Vendor Added",
+        category: "Vendor",
+        user: { name: "Sarah Manager", role: "Procurement Director" },
+        entity: "Creative Edge Agency",
+        details: "New vendor registered with payment terms NET 30",
         timestamp: "2024-01-16T09:20:00Z",
         status: "success",
         ipAddress: "192.168.1.12"
     },
     {
         id: "LOG-003",
-        action: "Leave Request Submitted",
-        category: "HR",
-        user: { name: "Alex Developer", role: "Senior Engineer" },
-        entity: "REQ-005 (Vacation)",
-        details: "Requested 10 days for PTO in February",
+        action: "Purchase Order Approved",
+        category: "Finance",
+        user: { name: "Mike Chen", role: "Finance Director" },
+        entity: "PO-2024-002",
+        details: "Approved Adobe Software License renewal for $2,400",
         timestamp: "2024-01-15T14:30:00Z",
         status: "success",
         ipAddress: "192.168.1.88"
     },
     {
         id: "LOG-004",
-        action: "Unusual Login Activity",
+        action: "Procurement Threshold Alert",
         category: "System",
-        user: { name: "Mike Chen", role: "IT Lead" },
-        entity: "User Account",
-        details: "Login attempt from unrecognized location: Lagos, Nigeria",
+        user: { name: "System", role: "Automated Monitor" },
+        entity: "PO-2024-003",
+        details: "PO amount $35,000 exceeds department threshold of $25,000",
         timestamp: "2024-01-15T11:15:00Z",
         status: "warning",
-        ipAddress: "41.58.10.156"
+        ipAddress: "Internal"
     },
     {
         id: "LOG-005",
         action: "Policy Violation",
-        category: "Operations",
+        category: "Procurement",
         user: { name: "System", role: "Automated Audit" },
-        entity: "PO-442 Procurement",
-        details: "Amount exceeds department threshold without second signature",
+        entity: "PO-2024-004",
+        details: "Purchase order created without required vendor compliance check",
         timestamp: "2024-01-14T16:45:00Z",
         status: "error",
         ipAddress: "Internal"
+    },
+    {
+        id: "LOG-006",
+        action: "Vendor Payment Processed",
+        category: "Finance",
+        user: { name: "Lisa Wang", role: "Accounts Payable" },
+        entity: "Creative Edge Agency",
+        details: "Payment of $15,000 processed for PO-2024-001",
+        timestamp: "2024-01-14T13:20:00Z",
+        status: "success",
+        ipAddress: "192.168.1.67"
+    },
+    {
+        id: "LOG-007",
+        action: "Purchase Order Modified",
+        category: "Purchase Order",
+        user: { name: "Tom Rodriguez", role: "Procurement Specialist" },
+        entity: "PO-2024-005",
+        details: "Updated delivery date from Jan 30 to Feb 15 due to vendor delay",
+        timestamp: "2024-01-13T16:10:00Z",
+        status: "success",
+        ipAddress: "192.168.1.92"
     }
 ]
 
@@ -151,11 +173,11 @@ export default function AuditLogPage() {
 
     const getCategoryIcon = (category: string) => {
         switch (category) {
-            case "HR": return <User className="w-4 h-4 text-gray-400" />
+            case "Procurement": return <Building2 className="w-4 h-4 text-gray-400" />
             case "Finance": return <Building2 className="w-4 h-4 text-gray-400" />
-            case "Operations": return <ShieldCheck className="w-4 h-4 text-gray-400" />
+            case "Vendor": return <Building2 className="w-4 h-4 text-gray-400" />
+            case "Purchase Order": return <FileText className="w-4 h-4 text-gray-400" />
             case "System": return <ShieldCheck className="w-4 h-4 text-gray-400" />
-            case "Workflow": return <History className="w-4 h-4 text-gray-400" />
             default: return <FileText className="w-4 h-4" />
         }
     }
@@ -169,10 +191,10 @@ export default function AuditLogPage() {
                 <div className="mb-8">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Audit & Trial</h1>
+                            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Procurement Audit Log</h1>
                             <p className="text-slate-600 max-w-2xl">
-                                Comprehensive historical records of every action within your organization.
-                                Ensure transparency and maintain compliance across HR, Finance, and Operations.
+                                Comprehensive historical records of all procurement activities.
+                                Track purchase orders, vendor management, and compliance across your procurement workflow.
                             </p>
                         </div>
                         <div className="flex gap-2">
@@ -204,10 +226,10 @@ export default function AuditLogPage() {
                                     onChange={(e) => setCategoryFilter(e.target.value)}
                                 >
                                     <option value="all">All Categories</option>
-                                    <option value="HR">Human Resources</option>
+                                    <option value="Procurement">Procurement</option>
                                     <option value="Finance">Finance</option>
-                                    <option value="Operations">Operations</option>
-                                    <option value="Workflow">Workflows</option>
+                                    <option value="Vendor">Vendor Management</option>
+                                    <option value="Purchase Order">Purchase Orders</option>
                                     <option value="System">System Security</option>
                                 </select>
                                 <Button variant="ghost" size="icon" className="h-10 w-10 border border-slate-200 bg-white">
@@ -350,9 +372,9 @@ export default function AuditLogPage() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-3xl font-extrabold text-slate-900 tracking-tighter mb-1">Finance</div>
+                            <div className="text-3xl font-extrabold text-slate-900 tracking-tighter mb-1">Procurement</div>
                             <div className="flex items-center gap-1.5 text-xs font-bold text-blue-600">
-                                42% of all logged organizational events
+                                58% of all logged events
                             </div>
                         </CardContent>
                     </Card>

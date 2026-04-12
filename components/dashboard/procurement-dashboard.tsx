@@ -113,54 +113,54 @@ export function ProcurementDashboard() {
     <div className="space-y-6">
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
+        <Card className="border border-gray-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-bold text-slate-500 uppercase tracking-tight">My Requests</CardTitle>
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <FileText className="h-4 w-4 text-blue-600" />
+            <CardTitle className="text-sm font-bold text-gray-500 uppercase tracking-tight">My Requests</CardTitle>
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <FileText className="h-4 w-4 text-gray-600" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-extrabold text-slate-900 tracking-tighter">{stats.myRequests}</div>
+            <div className="text-3xl font-extrabold text-gray-900 tracking-tighter">{stats.myRequests}</div>
             <p className="text-xs text-gray-600 font-bold mt-1">Total requests submitted</p>
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
+        <Card className="border border-gray-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-bold text-slate-500 uppercase tracking-tight">Pending Approvals</CardTitle>
-            <div className="p-2 bg-yellow-100 rounded-lg">
-              <Clock className="h-4 w-4 text-yellow-600" />
+            <CardTitle className="text-sm font-bold text-gray-500 uppercase tracking-tight">Pending Approvals</CardTitle>
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <Clock className="h-4 w-4 text-gray-600" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-extrabold text-slate-900 tracking-tighter">{stats.pendingApprovals}</div>
+            <div className="text-3xl font-extrabold text-gray-900 tracking-tighter">{stats.pendingApprovals}</div>
             <p className="text-xs text-gray-600 font-bold mt-1">Awaiting your action</p>
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
+        <Card className="border border-gray-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-bold text-slate-500 uppercase tracking-tight">Approved Requests</CardTitle>
-            <div className="p-2 bg-green-100 rounded-lg">
-              <CheckCircle className="h-4 w-4 text-green-600" />
+            <CardTitle className="text-sm font-bold text-gray-500 uppercase tracking-tight">Approved Requests</CardTitle>
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <CheckCircle className="h-4 w-4 text-gray-600" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-extrabold text-slate-900 tracking-tighter">{stats.approvedRequests}</div>
+            <div className="text-3xl font-extrabold text-gray-900 tracking-tighter">{stats.approvedRequests}</div>
             <p className="text-xs text-gray-600 font-bold mt-1">Successfully processed</p>
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-xl shadow-slate-200/50 bg-white">
+        <Card className="border border-gray-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-bold text-slate-500 uppercase tracking-tight">Total Value</CardTitle>
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <DollarSign className="h-4 w-4 text-purple-600" />
+            <CardTitle className="text-sm font-bold text-gray-500 uppercase tracking-tight">Total Value</CardTitle>
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <DollarSign className="h-4 w-4 text-gray-600" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-extrabold text-slate-900 tracking-tighter">
+            <div className="text-3xl font-extrabold text-gray-900 tracking-tighter">
               ${stats.totalValue.toLocaleString()}
             </div>
             <p className="text-xs text-gray-600 font-bold mt-1">In approved requests</p>
@@ -171,21 +171,21 @@ export function ProcurementDashboard() {
       {/* Quick Actions */}
       <div className="flex flex-wrap gap-4">
         <Link href="/requests/new">
-          <Button className="bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-lg shadow-slate-200">
+          <Button className="bg-gray-900 hover:bg-gray-800 text-white font-bold rounded-xl">
             <Plus className="w-4 h-4 mr-2" />
             New Request
           </Button>
         </Link>
         {stats.pendingApprovals > 0 && (
           <Link href="/approvals">
-            <Button variant="outline" className="border-yellow-200 text-yellow-700 hover:bg-yellow-50 font-bold rounded-xl">
+            <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 font-bold rounded-xl">
               <AlertCircle className="w-4 h-4 mr-2" />
               Review Pending Approvals ({stats.pendingApprovals})
             </Button>
           </Link>
         )}
         <Link href="/purchase-orders">
-          <Button variant="outline" className="border-blue-200 text-blue-700 hover:bg-blue-50 font-bold rounded-xl">
+          <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 font-bold rounded-xl">
             <ShoppingCart className="w-4 h-4 mr-2" />
             View Purchase Orders
           </Button>
@@ -194,7 +194,7 @@ export function ProcurementDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Requests */}
-        <Card className="border-none shadow-2xl shadow-slate-200/40">
+        <Card className="border border-gray-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>My Recent Requests</CardTitle>
@@ -244,7 +244,7 @@ export function ProcurementDashboard() {
         </Card>
 
         {/* Pending Approvals */}
-        <Card className="border-none shadow-2xl shadow-slate-200/40">
+        <Card className="border border-gray-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>Pending Your Approval</CardTitle>
@@ -278,7 +278,7 @@ export function ProcurementDashboard() {
                       </p>
                     </div>
                     <Link href={`/approvals/${approval.id}`}>
-                      <Button size="sm" className="bg-yellow-600 hover:bg-yellow-700">
+                      <Button size="sm" className="bg-gray-700 hover:bg-gray-800">
                         Review
                       </Button>
                     </Link>

@@ -10,9 +10,9 @@ import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "FlowCheck - Streamline Your Organization's Approval Process",
+  title: "FlowCheck - Streamline Your Procurement Process",
   description:
-    "Professional SaaS platform for managing organizational approval workflows with real-time tracking, role-based access, and comprehensive analytics.",
+    "Professional SaaS platform for managing procurement workflows, purchase orders, and vendor relationships with real-time tracking and comprehensive analytics.",
   generator: "v0.app",
 }
 

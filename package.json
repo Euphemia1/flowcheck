@@ -40,7 +40,7 @@
     "@remix-run/react": "latest",
     "@supabase/supabase-js": "^2.86.0",
     "@sveltejs/kit": "latest",
-    "@vercel/analytics": "latest",
+    "@vercel/analytics": "^2.0.1",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

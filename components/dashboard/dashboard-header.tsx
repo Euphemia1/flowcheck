@@ -54,17 +54,14 @@ export function DashboardHeader() {
           <Link href="/dashboard" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
             Dashboard
           </Link>
-          <Link href="/workflows" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
-            Workflows
+          <Link href="/requests" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
+            Requests
           </Link>
           <Link href="/approvals" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
             Approvals
           </Link>
-          <Link href="/team" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
-            Team
-          </Link>
-          <Link href="/analytics" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
-            Analytics
+          <Link href="/purchase-orders" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
+            Purchase Orders
           </Link>
           <Link href="/audit" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
             Audit Log

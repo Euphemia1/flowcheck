@@ -81,7 +81,7 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
               >
-                Stop Chasing Approvals. <br /><span className="text-blue-600">Start Getting Work Done.</span>
+                Streamline Procurement. <br /><span className="text-blue-600">Control Spending. Scale Confidence.</span>
               </motion.h1>
               <motion.p
                 className="text-xl text-slate-600 mb-8 leading-relaxed max-w-xl"
@@ -89,8 +89,8 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.2 }}
               >
-                Automate your internal approval workflows in minutes.
-                FlowCheck helps growing teams move faster by bringing structure to every request, decision, and sign-off.
+                Automate your procurement workflows in minutes.
+                FlowCheck helps growing teams manage purchasing, vendor relationships, and spend control.
               </motion.p>
               <motion.div
                 className="flex flex-col sm:flex-row gap-4 mb-8"
@@ -166,7 +166,7 @@ export default function HomePage() {
                 >
                   <div className="flex items-center justify-between pb-4 border-b">
                     <div>
-                      <h3 className="font-semibold text-gray-900">Leave Request</h3>
+                      <h3 className="font-semibold text-gray-900">Purchase Request</h3>
                       <p className="text-sm text-gray-500">From: Sarah Johnson</p>
                     </div>
                     <motion.div
@@ -222,8 +222,8 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">One Central Hub for All Your Approvals</h2>
-            <p className="text-xl text-gray-400">FlowCheck replaces scattered approvals with a clear, automated system.</p>
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4">Complete Procurement Management</h2>
+            <p className="text-xl text-gray-400">FlowCheck replaces scattered procurement processes with a unified system.</p>
           </motion.div>
           <motion.div 
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12"
@@ -233,12 +233,12 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             {[
-              { icon: Calendar, color: "blue", title: "Leave & Time-Off Requests", desc: "Streamlined PTO, sick leave, and vacation approvals" },
-              { icon: DollarSign, color: "green", title: "Expense Approvals", desc: "Receipts, reimbursements, spending controls" },
               { icon: FileText, color: "purple", title: "Purchase Requests", desc: "Procurement, vendor approvals, PO workflow" },
-              { icon: BarChart3, color: "orange", title: "Budget Approvals", desc: "Department budgets, project spend, forecasts" },
-              { icon: CheckCircle, color: "red", title: "Document Sign-Off", desc: "Contracts, policies, compliance approvals" },
-              { icon: Layers, color: "teal", title: "Custom Workflows", desc: "Any internal process your team needs" }
+              { icon: DollarSign, color: "green", title: "Budget Approvals", desc: "Department budgets, project spend, forecasts" },
+              { icon: CheckCircle, color: "red", title: "Contract Management", desc: "Vendor contracts, compliance approvals" },
+              { icon: BarChart3, color: "orange", title: "Spend Analytics", desc: "Procurement insights, cost analysis" },
+              { icon: Layers, color: "teal", title: "Vendor Management", desc: "Supplier relationships, performance tracking" },
+              { icon: Shield, color: "blue", title: "Compliance & Audit", desc: "Procurement compliance, audit trails" }
             ].map((item, index) => (
               <motion.div
                 key={index}
@@ -270,13 +270,13 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 1.2 }}
             viewport={{ once: true }}
           >
-            <p className="text-xl text-gray-300">Everything is submitted, tracked, approved, and recorded in one place.</p>
+            <p className="text-xl text-gray-300">Every purchase request, PO, and vendor interaction is tracked, approved, and recorded in one place.</p>
             <motion.p 
               className="text-lg text-blue-400 mt-2"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              No more guessing. No more lost requests.
+              No more manual tracking. Complete procurement visibility.
             </motion.p>
           </motion.div>
         </div>
@@ -285,8 +285,8 @@ export default function HomePage() {
       {/* Features Section */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Powerful Workflow Automation — Made Simple</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">Everything you need to streamline approvals</p>
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Powerful Procurement Automation — Made Simple</h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">Everything you need to streamline purchasing and vendor management</p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           <div className="p-6">

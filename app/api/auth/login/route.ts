@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase"
+import { isSupabaseConfigured, supabase } from "@/lib/supabase"
 
 // Predefined demo accounts (fallback only)
 const DEMO_ACCOUNTS: Record<string, { name: string; role: "admin" | "employee" }> = {
@@ -9,6 +9,16 @@ const DEMO_ACCOUNTS: Record<string, { name: string; role: "admin" | "employee" }
 
 export async function POST(request: NextRequest) {
   try {
+    if (!isSupabaseConfigured) {
+      return NextResponse.json(
+        {
+          message:
+            "Supabase is not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY in your deployment environment.",
+        },
+        { status: 500 }
+      )
+    }
+
     const body = await request.json()
     const { email, password } = body
 

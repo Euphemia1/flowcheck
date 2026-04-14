@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase"
+import {
+  isSupabaseAdminConfigured,
+  isSupabaseConfigured,
+  supabase,
+  supabaseAdmin,
+} from "@/lib/supabase"
 
 /**
  * POST /api/auth/seed-users
@@ -10,6 +15,23 @@ import { supabase } from "@/lib/supabase"
 
 export async function POST(request: NextRequest) {
   try {
+    if (!isSupabaseConfigured) {
+      return NextResponse.json(
+        { message: "Supabase is not configured. Check deployment environment variables." },
+        { status: 500 }
+      )
+    }
+
+    if (!isSupabaseAdminConfigured) {
+      return NextResponse.json(
+        {
+          message:
+            "SUPABASE_SERVICE_ROLE_KEY is required for seeding auth users. Add it to server environment variables.",
+        },
+        { status: 500 }
+      )
+    }
+
     // Get all users from the users table that need auth accounts
     const { data: dbUsers, error: dbError } = await supabase
       .from("users")
@@ -44,7 +66,7 @@ export async function POST(request: NextRequest) {
     for (const user of dbUsers) {
       try {
         // Check if user already exists in auth
-        const { data: existingAuth } = await supabase.auth.admin.getUserById(
+        const { data: existingAuth } = await supabaseAdmin.auth.admin.getUserById(
           user.id
         )
 
@@ -58,7 +80,7 @@ export async function POST(request: NextRequest) {
 
         // Create user in Supabase Auth
         const { data: authUser, error: authError } =
-          await supabase.auth.admin.createUser({
+          await supabaseAdmin.auth.admin.createUser({
             id: user.id,
             email: user.email,
             password: defaultPassword,

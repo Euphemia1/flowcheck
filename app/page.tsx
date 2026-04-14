@@ -6,10 +6,30 @@ import { Badge } from "@/components/ui/badge"
 import { CheckCircle, Users, Workflow, BarChart3, Shield, Clock, ArrowRight, Star, Zap, Lock, MessageSquare, FileText, Calendar, DollarSign, ChevronRight, PlayCircle, Check, Layers, TrendingUp, UserCheck, Bell } from "lucide-react"
 import Link from "next/link"
 import { motion, useScroll, useTransform, useInView } from "framer-motion"
+import { useEffect } from "react"
 
 export default function HomePage() {
   const { scrollY } = useScroll()
   const heroY = useTransform(scrollY, [0, 300], [0, -50])
+
+  // Track visitor and send notifications
+  useEffect(() => {
+    const trackVisitor = async () => {
+      try {
+        await fetch('/api/visitors', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      } catch (error) {
+        console.error('Failed to track visitor:', error)
+      }
+    }
+
+    // Track visitor when page loads
+    trackVisitor()
+  }, [])
 
   return (
     <div className="min-h-screen bg-white overflow-hidden">
@@ -167,7 +187,7 @@ export default function HomePage() {
                   <div className="flex items-center justify-between pb-4 border-b">
                     <div>
                       <h3 className="font-semibold text-gray-900">Purchase Request</h3>
-                      <p className="text-sm text-gray-500">From: Sarah Johnson</p>
+                      <p className="text-sm text-gray-500">From: Euphemia Chikungulu</p>
                     </div>
                     <motion.div
                       animate={{ scale: [1, 1.1, 1] }}
@@ -177,7 +197,7 @@ export default function HomePage() {
                     </motion.div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-semibold text-blue-600">SJ</div>
+                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-semibold text-blue-600">EC</div>
                     <div className="flex-1">
                       <div className="h-2 bg-gray-100 rounded-full">
                         <motion.div

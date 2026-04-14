@@ -73,10 +73,12 @@ export function ManagerDashboard() {
                                     New Flow Request
                                 </Button>
                             </Link>
-                            <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
-                                <TrendingUp className="w-4 h-4" />
-                                Team Analytics
-                            </Button>
+                            <Link href="/analytics">
+                                <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                    <TrendingUp className="w-4 h-4" />
+                                    Team Analytics
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </CardContent>
@@ -115,13 +117,17 @@ export function ManagerDashboard() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Button variant="outline" size="sm" className="h-8 w-8 p-0 rounded-full border-slate-200 text-gray-600 hover:bg-gray-50 transition-colors">
-                                            <X className="h-4 w-4" />
-                                        </Button>
-                                        <Button size="sm" className="h-8 rounded-full bg-gray-600 hover:bg-gray-700 font-bold px-4 text-xs transition-transform active:scale-95">
-                                            <Check className="h-4 w-4 mr-1.5" />
-                                            Approve
-                                        </Button>
+                                        <Link href="/approvals">
+                                            <Button variant="outline" size="sm" className="h-8 w-8 p-0 rounded-full border-slate-200 text-gray-600 hover:bg-gray-50 transition-colors">
+                                                <X className="h-4 w-4" />
+                                            </Button>
+                                        </Link>
+                                        <Link href="/approvals">
+                                            <Button size="sm" className="h-8 rounded-full bg-gray-600 hover:bg-gray-700 font-bold px-4 text-xs transition-transform active:scale-95">
+                                                <Check className="h-4 w-4 mr-1.5" />
+                                                Approve
+                                            </Button>
+                                        </Link>
                                     </div>
                                 </div>
                             ))}
@@ -167,9 +173,11 @@ export function ManagerDashboard() {
                                 Latest Chat on REQ-042
                             </div>
                             <p className="text-xs text-slate-300 italic">"Sarah, please attach the receipt for the team lunch."</p>
-                            <Button className="w-full bg-gray-600 hover:bg-gray-700 h-9 font-bold text-xs mt-2 transition-all shadow-lg shadow-gray-900/40">
-                                Reply Now
-                            </Button>
+                            <Link href="/approvals">
+                                <Button className="w-full bg-gray-600 hover:bg-gray-700 h-9 font-bold text-xs mt-2 transition-all shadow-lg shadow-gray-900/40">
+                                    Reply Now
+                                </Button>
+                            </Link>
                         </CardContent>
                     </Card>
                 </div>

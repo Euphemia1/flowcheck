@@ -46,7 +46,7 @@ export function DashboardHeader() {
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <Workflow className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl font-bold font-bold"><span className="text-blue-600">Flow</span><span className="text-gray-900">Check</span></span>
+          <span className="text-xl font-bold"><span className="text-blue-600">Flow</span><span className="text-gray-900">Check</span></span>
         </Link>
 
         {/* Navigation */}
@@ -104,12 +104,14 @@ export function DashboardHeader() {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer font-medium">
-                <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
+              <DropdownMenuItem className="cursor-pointer font-medium" asChild>
+                <Link href="/settings/organization">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer font-medium" asChild>
-                <Link href="/settings">
+                <Link href="/settings/organization">
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                 </Link>

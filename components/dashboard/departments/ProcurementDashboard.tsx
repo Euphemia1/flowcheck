@@ -121,14 +121,18 @@ export function ProcurementDashboard() {
                                     Add/Manage Procurement Team
                                 </Button>
                             </Link>
-                            <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
-                                <Building2 className="w-4 h-4" />
-                                Vendor Registry
-                            </Button>
-                            <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
-                                <TrendingUp className="w-4 h-4" />
-                                Spend Insights
-                            </Button>
+                            <Link href="/team">
+                                <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                    <Building2 className="w-4 h-4" />
+                                    Vendor Registry
+                                </Button>
+                            </Link>
+                            <Link href="/analytics">
+                                <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                    <TrendingUp className="w-4 h-4" />
+                                    Spend Insights
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </CardContent>
@@ -181,15 +185,9 @@ export function ProcurementDashboard() {
                                                 Role: <span className="font-medium text-slate-600">{member.role}</span>
                                             </div>
                                         </div>
-                                        <Badge 
-                                            variant="outline" 
-                                            className={`text-[10px] h-5 px-2 whitespace-nowrap ${
-                                                member.status === "active" 
-                                                    ? "bg-green-50 text-green-700 border-green-200" 
-                                                    : member.status === "inactive"
-                                                    ? "bg-slate-100 text-slate-600 border-slate-200"
-                                                    : "bg-yellow-50 text-yellow-700 border-yellow-200"
-                                            }`}
+                                        <Badge
+                                            variant="outline"
+                                            className="text-[10px] h-5 px-2 whitespace-nowrap bg-slate-100 text-slate-600 border-slate-200"
                                         >
                                             {member.status.charAt(0).toUpperCase() + member.status.slice(1)}
                                         </Badge>
@@ -209,7 +207,9 @@ export function ProcurementDashboard() {
                             <CardTitle className="text-xl font-bold">Vendor Management</CardTitle>
                             <CardDescription>Onboard and monitor supply partners</CardDescription>
                         </div>
-                        <Button size="sm" className="bg-gray-600 font-bold text-xs h-8">Add Vendor</Button>
+                        <Link href="/team">
+                            <Button size="sm" className="bg-gray-600 font-bold text-xs h-8">Add Vendor</Button>
+                        </Link>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {[
@@ -273,9 +273,11 @@ export function ProcurementDashboard() {
                         </CardHeader>
                         <CardContent>
                             <p className="text-xs text-gray-600 mb-4 font-medium leading-relaxed">Instantly generate a purchase order from an approved request.</p>
-                            <Button className="w-full bg-slate-100 text-slate-900 hover:bg-slate-200 h-9 font-bold text-xs rounded-xl shadow-lg border border-slate-200">
-                                Generate PO #8442
-                            </Button>
+                            <Link href="/purchase-orders">
+                                <Button className="w-full bg-slate-100 text-slate-900 hover:bg-slate-200 h-9 font-bold text-xs rounded-xl shadow-lg border border-slate-200">
+                                    Generate PO #8442
+                                </Button>
+                            </Link>
                         </CardContent>
                     </Card>
                 </div>

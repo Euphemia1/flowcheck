@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
 import { ManagerDashboard } from "@/components/dashboard/departments/ManagerDashboard"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
+import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar"
 
 export default function ManagementPage() {
   const { user, isAuthenticated, isLoading } = useAuth()
@@ -47,19 +48,22 @@ export default function ManagementPage() {
       <DashboardHeader />
       
       <main className="container mx-auto px-4 py-8">
-        {/* Management-specific header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">👔</span>
+        <div className="flex gap-6">
+          <DashboardSidebar />
+          <section className="min-w-0 flex-1">
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 bg-gray-300 rounded-lg flex items-center justify-center">
+                  <span className="text-black font-bold text-sm">👔</span>
+                </div>
+                <h1 className="text-3xl font-bold text-gray-900">Management</h1>
+                <span className="text-sm text-gray-500 ml-2">• Leadership & Oversight</span>
+              </div>
+              <p className="text-gray-600">Oversee team performance, strategic initiatives, and cross-departmental workflows.</p>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">Management</h1>
-            <span className="text-sm text-gray-500 ml-2">• Leadership & Oversight</span>
-          </div>
-          <p className="text-gray-600">Oversee team performance, strategic initiatives, and cross-departmental workflows.</p>
+            <ManagerDashboard />
+          </section>
         </div>
-
-        <ManagerDashboard />
       </main>
     </div>
   )

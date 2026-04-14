@@ -20,6 +20,7 @@ import {
 import Link from "next/link"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { useAuth } from "@/contexts/auth-context"
+import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar"
 
 interface Request {
   id: string
@@ -31,7 +32,7 @@ interface Request {
     department: string
   }
   status: "pending" | "approved" | "rejected" | "draft"
-  priority: "low" | "medium" | "high" | "urgent"
+  priority: "low" | "medium" | "high" | "critical"
   amount?: number
   category: string
   submittedAt: string
@@ -44,81 +45,6 @@ interface Request {
   }
 }
 
-const MOCK_REQUESTS: Request[] = [
-  {
-    id: "REQ-001",
-    title: "Marketing Campaign Budget Q1 2024",
-    description: "Budget approval for digital marketing campaigns including social media ads.",
-    requester: {
-      name: "Sarah Johnson",
-      email: "s.johnson@company.com",
-      department: "Marketing",
-    },
-    status: "pending",
-    priority: "high",
-    amount: 15000,
-    category: "Marketing",
-    submittedAt: "2024-01-15T10:30:00Z",
-    updatedAt: "2024-01-15T10:30:00Z",
-    items: 3,
-    workflow: { currentStep: "Manager Review", totalSteps: 3, stepNumber: 1 }
-  },
-  {
-    id: "REQ-002",
-    title: "Software License Renewal - Adobe",
-    description: "Annual renewal of Adobe Creative Suite licenses for design team.",
-    requester: {
-      name: "Mike Chen",
-      email: "m.chen@company.com",
-      department: "IT",
-    },
-    status: "approved",
-    priority: "medium",
-    amount: 2400,
-    category: "Software",
-    submittedAt: "2024-01-14T14:20:00Z",
-    updatedAt: "2024-01-15T09:15:00Z",
-    items: 2,
-    workflow: { currentStep: "Completed", totalSteps: 2, stepNumber: 2 }
-  },
-  {
-    id: "REQ-003",
-    title: "New Office Furniture",
-    description: "Ergonomic chairs and desks for the new hires in the development team.",
-    requester: {
-      name: "Lisa Wang",
-      email: "l.wang@company.com",
-      department: "HR",
-    },
-    status: "draft",
-    priority: "low",
-    amount: 3500,
-    category: "Office Supplies",
-    submittedAt: "2024-01-16T11:00:00Z",
-    updatedAt: "2024-01-16T11:00:00Z",
-    items: 5,
-    workflow: { currentStep: "Draft", totalSteps: 3, stepNumber: 0 }
-  },
-  {
-    id: "REQ-004",
-    title: "Q4 Financial Report Review",
-    description: "Quarterly financial statements for board approval.",
-    requester: {
-      name: "Tom Rodriguez",
-      email: "t.rodriguez@company.com",
-      department: "Finance",
-    },
-    status: "pending",
-    priority: "urgent",
-    amount: 0,
-    category: "Finance",
-    submittedAt: "2024-01-17T09:15:00Z",
-    updatedAt: "2024-01-17T09:15:00Z",
-    items: 1,
-    workflow: { currentStep: "CFO Review", totalSteps: 3, stepNumber: 2 }
-  }
-]
-
 export default function RequestsPage() {
   const { user } = useAuth()
   const [requests, setRequests] = useState<Request[]>([])
@@ -128,27 +54,57 @@ export default function RequestsPage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Simulate loading requests
     const loadRequests = async () => {
       setIsLoading(true)
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Filter requests based on user role and department
-      let filteredRequests = MOCK_REQUESTS
-      
-      if (user?.role !== "admin") {
-        filteredRequests = MOCK_REQUESTS.filter(request => 
-          request.requester.department === user?.department || 
-          request.requester.name === user?.name
-        )
+      try {
+        const query = new URLSearchParams()
+        if (user?.role !== "admin" && user?.id) {
+          query.set("requester_id", user.id)
+        }
+
+        const response = await fetch(`/api/procurement/requests?${query.toString()}`)
+        const data = await response.json()
+        const apiRequests = data?.requests || []
+
+        const mappedRequests: Request[] = apiRequests.map((request: any) => {
+          const sortedSteps = (request.approval_steps || []).sort((a: any, b: any) => a.step_order - b.step_order)
+          const completedSteps = sortedSteps.filter((step: any) => step.status === "approved").length
+          const currentStep = sortedSteps.find((step: any) => step.status === "pending")
+
+          return {
+            id: request.id,
+            title: request.title,
+            description: request.description || "",
+            requester: {
+              name: request.requester?.name || "Unknown",
+              email: request.requester?.email || "",
+              department: request.requester?.department || "General",
+            },
+            status: request.status,
+            priority: request.urgency_level || "medium",
+            amount: Number(request.total_amount || 0),
+            category: request.items?.[0]?.category || "General",
+            submittedAt: request.created_at,
+            updatedAt: request.updated_at,
+            items: request.items?.length || 0,
+            workflow: {
+              currentStep: currentStep?.approver_role || (request.status === "approved" ? "Completed" : "Draft"),
+              totalSteps: sortedSteps.length || 1,
+              stepNumber: request.status === "approved" ? sortedSteps.length : completedSteps + (currentStep ? 1 : 0),
+            },
+          }
+        })
+
+        setRequests(mappedRequests)
+      } catch (error) {
+        console.error("Failed to load requests:", error)
+        setRequests([])
+      } finally {
+        setIsLoading(false)
       }
-      
-      setRequests(filteredRequests)
-      setIsLoading(false)
     }
 
-    loadRequests()
+    if (user?.id) loadRequests()
   }, [user])
 
   const filteredRequests = requests.filter((request) => {
@@ -180,8 +136,39 @@ export default function RequestsPage() {
 
   const handleDeleteRequest = async (requestId: string) => {
     if (confirm("Are you sure you want to delete this request?")) {
-      setRequests(prev => prev.filter(req => req.id !== requestId))
+      try {
+        await fetch(`/api/procurement/requests/${requestId}?user_id=${user?.id || ""}`, {
+          method: "DELETE",
+        })
+        setRequests(prev => prev.filter(req => req.id !== requestId))
+      } catch (error) {
+        console.error("Failed to delete request:", error)
+      }
     }
+  }
+
+  const handleExportCsv = () => {
+    const headers = ["Title", "Requester", "Department", "Status", "Priority", "Amount"]
+    const rows = filteredRequests.map((request) => [
+      request.title,
+      request.requester.name,
+      request.requester.department,
+      request.status,
+      request.priority,
+      request.amount || 0,
+    ])
+    const csv = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+      .join("\n")
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.href = url
+    link.setAttribute("download", "requests.csv")
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
   }
 
   if (isLoading) {
@@ -206,7 +193,10 @@ export default function RequestsPage() {
     <div className="min-h-screen bg-[#f8fafc]">
       <DashboardHeader />
 
-      <main className="container mx-auto px-4 py-10 max-w-6xl">
+      <main className="container mx-auto px-4 py-10 max-w-7xl">
+        <div className="flex gap-6">
+          <DashboardSidebar />
+          <section className="min-w-0 flex-1">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div>
             <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Requests</h1>
@@ -256,9 +246,9 @@ export default function RequestsPage() {
                 onChange={e => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button variant="outline" className="h-12 border-slate-200 rounded-xl font-bold bg-white px-6">
+            <Button variant="outline" onClick={() => { setSearchQuery(""); setStatusFilter("all"); setPriorityFilter("all") }} className="h-12 border-slate-200 rounded-xl font-bold bg-white px-6">
               <Filter className="w-4 h-4 mr-2" />
-              Filters
+              Reset Filters
             </Button>
           </div>
 
@@ -376,13 +366,15 @@ export default function RequestsPage() {
 
             <div className="flex items-center justify-between text-[10px] font-extrabold text-slate-400 uppercase tracking-widest px-4 pt-4">
               <p>Showing {filteredRequests.length} of {requests.length} requests</p>
-              <div className="flex gap-4 cursor-pointer hover:text-slate-600">
-                <span>Export CSV</span>
+              <div className="flex gap-4">
+                <button type="button" onClick={handleExportCsv} className="hover:text-slate-600">Export CSV</button>
                 <span>•</span>
-                <span>Print Report</span>
+                <button type="button" onClick={() => window.print()} className="hover:text-slate-600">Print Report</button>
               </div>
             </div>
           </div>
+        </div>
+          </section>
         </div>
       </main>
     </div>

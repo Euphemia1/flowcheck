@@ -21,7 +21,11 @@ export async function GET(request: NextRequest) {
         request:procurement_requests(
           *,
           requester:users(id, name, email, department),
-          items:procurement_request_items(*)
+          items:procurement_request_items(*),
+          approval_steps:approval_steps(
+            *,
+            approver:users(id, name, email)
+          )
         ),
         approver:users(id, name, email)
       `, { count: 'exact' })
@@ -93,7 +97,11 @@ export async function POST(req: NextRequest) {
         request:procurement_requests(
           *,
           requester:users(id, name, email, department),
-          items:procurement_request_items(*)
+          items:procurement_request_items(*),
+          approval_steps:approval_steps(
+            *,
+            approver:users(id, name, email)
+          )
         ),
         approver:users(id, name, email)
       `)
@@ -108,6 +116,23 @@ export async function POST(req: NextRequest) {
     if (approvalStep.status !== "pending") {
       return NextResponse.json(
         { message: "This approval step has already been processed" },
+        { status: 400 }
+      )
+    }
+
+    // Enforce strict sequence: only the lowest pending step can be actioned.
+    const { data: earliestPendingStep } = await supabase
+      .from("approval_steps")
+      .select("id")
+      .eq("request_id", (approvalStep.request as any).id)
+      .eq("status", "pending")
+      .order("step_order", { ascending: true })
+      .limit(1)
+      .single()
+
+    if (earliestPendingStep && earliestPendingStep.id !== approval_step_id) {
+      return NextResponse.json(
+        { message: "This request must be approved in sequence by earlier approvers first" },
         { status: 400 }
       )
     }
@@ -179,7 +204,7 @@ export async function POST(req: NextRequest) {
       .insert({
         entity_type: "approval_step",
         entity_id: approval_step_id,
-        action: `approved_by_${approvalStep.approver_role}`,
+        action: `${action}d_by_${approvalStep.approver_role}`,
         new_values: {
           status: action === "approve" ? "approved" : "rejected",
           comments,

@@ -7,6 +7,7 @@ import { CheckCircle, Clock, Users, FileText, TrendingUp, Plus, Workflow, Histor
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
+import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar"
 import { useAuth } from "@/contexts/auth-context"
 import { ProcurementDashboard } from "@/components/dashboard/procurement-dashboard"
 
@@ -56,33 +57,34 @@ export default function DashboardPage() {
       <DashboardHeader />
 
       <main className="container mx-auto px-4 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-200 uppercase font-bold text-[10px]">
-                {user.role === 'admin' ? 'Procurement Admin' : 'Procurement Workspace'}
-              </Badge>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{user.organizationName}</span>
+        <div className="flex gap-6">
+          <DashboardSidebar />
+          <section className="min-w-0 flex-1">
+            <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-200 uppercase font-bold text-[10px]">
+                    {user.role === "admin" ? "Procurement Admin" : "Procurement Workspace"}
+                  </Badge>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{user.organizationName}</span>
+                </div>
+                <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+                  Welcome back, {getFirstName(user?.name)}
+                </h1>
+                <p className="text-slate-500 font-medium mt-1">Here&apos;s your procurement workflow overview.</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <Link href="/requests/new">
+                  <Button className="bg-gray-900 hover:bg-gray-800 text-white font-bold rounded-xl">
+                    <Plus className="w-4 h-4 mr-2" />
+                    New Request
+                  </Button>
+                </Link>
+              </div>
             </div>
-            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
-              Welcome back, {getFirstName(user?.name)}
-            </h1>
-            <p className="text-slate-500 font-medium mt-1">Here's your procurement workflow overview.</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/requests/new">
-              <Button className="bg-gray-900 hover:bg-gray-800 text-white font-bold rounded-xl">
-                <Plus className="w-4 h-4 mr-2" />
-                New Request
-              </Button>
-            </Link>
-          </div>
+            {renderDashboard()}
+          </section>
         </div>
-
-        {/* Dynamic Dashboard Content */}
-        {renderDashboard()}
-
       </main>
     </div>
   )

@@ -78,14 +78,18 @@ export function FinanceDashboard() {
                                     Add/Manage Finance Team
                                 </Button>
                             </Link>
-                            <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
-                                <DollarSign className="w-4 h-4" />
-                                Budget Summary
-                            </Button>
-                            <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
-                                <PieChart className="w-4 h-4" />
-                                Spend Analysis
-                            </Button>
+                            <Link href="/analytics">
+                                <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                    <DollarSign className="w-4 h-4" />
+                                    Budget Summary
+                                </Button>
+                            </Link>
+                            <Link href="/analytics">
+                                <Button size="sm" variant="outline" className="h-9 border-slate-200 text-slate-600 font-bold gap-2">
+                                    <PieChart className="w-4 h-4" />
+                                    Spend Analysis
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </CardContent>
@@ -99,7 +103,7 @@ export function FinanceDashboard() {
                             <CardTitle className="text-xl font-bold">Expense Claims</CardTitle>
                             <CardDescription>Review receipts and policy compliance</CardDescription>
                         </div>
-                        <Button variant="outline" size="sm" className="h-8 rounded-lg border-slate-200 text-slate-600 font-bold gap-2">
+                        <Button variant="outline" size="sm" onClick={() => window.print()} className="h-8 rounded-lg border-slate-200 text-slate-600 font-bold gap-2">
                             <Download className="w-3 h-3" />
                             Export
                         </Button>

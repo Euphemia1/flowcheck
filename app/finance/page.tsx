@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
 import { FinanceDashboard } from "@/components/dashboard/departments/FinanceDashboard"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
+import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar"
 
 export default function FinancePage() {
   const { user, isAuthenticated, isLoading } = useAuth()
@@ -47,19 +48,22 @@ export default function FinancePage() {
       <DashboardHeader />
       
       <main className="container mx-auto px-4 py-8">
-        {/* Finance-specific header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-gray-300 rounded-lg flex items-center justify-center">
-              <span className="text-black font-bold text-sm">$</span>
+        <div className="flex gap-6">
+          <DashboardSidebar />
+          <section className="min-w-0 flex-1">
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 bg-gray-300 rounded-lg flex items-center justify-center">
+                  <span className="text-black font-bold text-sm">$</span>
+                </div>
+                <h1 className="text-3xl font-bold text-gray-900">Finance Department</h1>
+                <span className="text-sm text-gray-500 ml-2">• Budget & Expense Management</span>
+              </div>
+              <p className="text-gray-600">Manage budgets, approve expenses, and track financial workflows.</p>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">Finance Department</h1>
-            <span className="text-sm text-gray-500 ml-2">• Budget & Expense Management</span>
-          </div>
-          <p className="text-gray-600">Manage budgets, approve expenses, and track financial workflows.</p>
+            <FinanceDashboard />
+          </section>
         </div>
-
-        <FinanceDashboard />
       </main>
     </div>
   )

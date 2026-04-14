@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 import { supabase } from "@/lib/supabase"
 
+
+type WorkflowRole = "manager" | "finance" | "director"
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -169,10 +172,12 @@ export async function POST(req: NextRequest) {
 
     // Create approval workflow based on amount
     const approvalSteps = determineApprovalWorkflow(totalAmount)
+    const approversByRole = await findApproversByRole(requester_id)
     const approvalStepsData = approvalSteps.map((step, index) => ({
       request_id: request.id,
       step_order: index + 1,
       approver_role: step.role,
+      approver_id: approversByRole[step.role] || null,
       status: "pending"
     }))
 
@@ -251,7 +256,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-function determineApprovalWorkflow(amount: number): { role: string }[] {
+function determineApprovalWorkflow(amount: number): { role: WorkflowRole }[] {
   // Simple approval workflow based on amount
   if (amount < 500) {
     // Auto-approve for amounts less than $500
@@ -263,11 +268,47 @@ function determineApprovalWorkflow(amount: number): { role: string }[] {
       { role: "finance" }
     ]
   } else {
-    // Manager -> Finance -> Procurement approval
+    // Manager -> Finance -> Director approval
     return [
       { role: "manager" },
       { role: "finance" },
-      { role: "procurement" }
+      { role: "director" }
     ]
   }
+}
+
+async function findApproversByRole(requesterId: string): Promise<Record<WorkflowRole, string | null>> {
+  // Default map so inserts never fail if a role has no user yet.
+  const approverMap: Record<WorkflowRole, string | null> = {
+    manager: null,
+    finance: null,
+    director: null,
+  }
+
+  // Find requester's organization so approval stays inside the same tenant.
+  const { data: requester } = await supabase
+    .from("users")
+    .select("organization_id")
+    .eq("id", requesterId)
+    .single()
+
+  const scopedUsersQuery = supabase
+    .from("users")
+    .select("id, role, department, created_at")
+    .order("created_at", { ascending: true })
+
+  const scopedUsers = requester?.organization_id
+    ? await scopedUsersQuery.eq("organization_id", requester.organization_id)
+    : await scopedUsersQuery
+
+  const users = scopedUsers.data || []
+  const byRole = (role: string) => users.find((user: any) => user.role === role)?.id || null
+  const byDepartment = (department: string) =>
+    users.find((user: any) => (user.department || "").toLowerCase() === department.toLowerCase())?.id || null
+
+  approverMap.manager = byRole("manager") || byRole("admin")
+  approverMap.finance = byRole("finance") || byDepartment("Finance") || byRole("manager") || byRole("admin")
+  approverMap.director = byDepartment("Management") || byRole("admin") || byRole("manager")
+
+  return approverMap
 }

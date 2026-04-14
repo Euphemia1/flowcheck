@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -135,11 +135,95 @@ const MOCK_REQUEST: ApprovalRequestDetail = {
 
 export default function ApprovalRequestDetailPage({ params }: { params: { id: string } }) {
   const { user } = useAuth()
-  const [request] = useState<ApprovalRequestDetail>(MOCK_REQUEST)
+  const [request, setRequest] = useState<ApprovalRequestDetail>(MOCK_REQUEST)
   const [comment, setComment] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [feedback, setFeedback] = useState<string>("")
 
-  // Use params.id if needed for fetching, for now we log it to avoid lint errors
-  console.log("Viewing request:", params.id)
+  useEffect(() => {
+    const loadApproval = async () => {
+      if (!user?.id) return
+      try {
+        const response = await fetch(`/api/procurement/approvals?approver_id=${user.id}`)
+        const data = await response.json()
+        const currentApproval = (data?.approvals || []).find((item: any) => item.id === params.id)
+        if (!currentApproval?.request) return
+
+        const req = currentApproval.request
+        const steps = (req.approval_steps || []).sort((a: any, b: any) => a.step_order - b.step_order)
+        const mapped: ApprovalRequestDetail = {
+          ...MOCK_REQUEST,
+          id: req.id,
+          title: req.title,
+          description: req.description || "",
+          requester: {
+            name: req.requester?.name || "Unknown",
+            email: req.requester?.email || "",
+            department: req.requester?.department || "General",
+            role: "Employee",
+          },
+          workflow: {
+            name: "Procurement Workflow",
+            currentStep: currentApproval.approver_role || "Review",
+            totalSteps: steps.length || 1,
+            stepNumber: steps.filter((step: any) => step.status === "approved").length + 1,
+            steps: steps.map((step: any) => ({
+              name: `Step ${step.step_order}: ${step.approver_role}`,
+              status: step.status === "approved" ? "completed" : step.status === "pending" ? "current" : "pending",
+              assignee: step.approver?.name || step.approver_role,
+              comments: step.comments || "",
+            })),
+          },
+          status: req.status,
+          priority: req.urgency_level || "medium",
+          amount: Number(req.total_amount || 0),
+          category: req.items?.[0]?.category || "General",
+          submittedAt: req.created_at,
+          dueDate: req.expected_delivery_date || req.created_at,
+          attachments: [],
+          comments: [],
+          tags: [],
+          customFields: [],
+          history: [],
+          assignedTo: [currentApproval.approver?.name || user.name],
+        }
+        setRequest(mapped)
+      } catch (error) {
+        console.error("Failed to load approval detail:", error)
+      }
+    }
+
+    loadApproval()
+  }, [params.id, user?.id, user?.name])
+
+  const handleDecision = async (action: "approve" | "reject") => {
+    if (!user?.id || isSubmitting) return
+    setIsSubmitting(true)
+    setFeedback("")
+    try {
+      const response = await fetch("/api/procurement/approvals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          approval_step_id: params.id,
+          action,
+          comments: comment || null,
+          approver_id: user.id,
+        }),
+      })
+      const data = await response.json()
+      if (!response.ok) {
+        setFeedback(data?.message || "Action failed.")
+      } else {
+        setFeedback(`Request ${action}d successfully.`)
+      }
+    } catch (error) {
+      console.error("Failed to submit decision:", error)
+      setFeedback("Could not submit decision.")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   // Check if user can see this request (same department or admin)
   const canSee = user?.role === "admin" || 
@@ -307,11 +391,11 @@ export default function ApprovalRequestDetailPage({ params }: { params: { id: st
               </div>
               <h3 className="text-xl font-black mb-6 relative z-10">Action Required</h3>
               <div className="space-y-4 relative z-10">
-                <Button className="w-full h-14 bg-emerald-500 hover:bg-emerald-600 rounded-2xl font-black text-lg shadow-lg shadow-emerald-500/20">
+                <Button onClick={() => handleDecision("approve")} disabled={isSubmitting} className="w-full h-14 bg-emerald-500 hover:bg-emerald-600 rounded-2xl font-black text-lg shadow-lg shadow-emerald-500/20">
                   <CheckCircle className="w-6 h-6 mr-3" />
                   Approve Request
                 </Button>
-                <Button className="w-full h-14 bg-rose-500 hover:bg-rose-600 rounded-2xl font-black text-lg shadow-lg shadow-rose-500/20">
+                <Button onClick={() => handleDecision("reject")} disabled={isSubmitting} className="w-full h-14 bg-rose-500 hover:bg-rose-600 rounded-2xl font-black text-lg shadow-lg shadow-rose-500/20">
                   <X className="w-6 h-6 mr-3" />
                   Reject
                 </Button>
@@ -323,6 +407,7 @@ export default function ApprovalRequestDetailPage({ params }: { params: { id: st
               <div className="mt-8 pt-8 border-t border-white/10 text-center">
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Current SLA Target</p>
                 <p className="font-bold text-emerald-400">On Track (Due in 3 days)</p>
+                {feedback && <p className="text-xs text-slate-300 mt-3">{feedback}</p>}
               </div>
             </div>
 

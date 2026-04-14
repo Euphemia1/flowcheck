@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -17,6 +17,7 @@ import {
 import Link from "next/link"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { useAuth } from "@/contexts/auth-context"
+import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar"
 
 // Simple checkbox component to avoid RovingFocusGroup issues
 const SimpleCheckbox = ({ checked, onCheckedChange }: { checked?: boolean; onCheckedChange?: (checked: boolean) => void }) => (
@@ -60,103 +61,69 @@ interface ApprovalRequest {
   tags: string[]
 }
 
-const MOCK_REQUESTS: ApprovalRequest[] = [
-  {
-    id: "REQ-001",
-    title: "Marketing Campaign Budget Q1 2024",
-    description: "Budget approval for digital marketing campaigns including social media ads.",
-    requester: {
-      name: "Sarah Johnson",
-      email: "s.johnson@company.com",
-      department: "Marketing",
-    },
-    workflow: { name: "Marketing Campaign", currentStep: "Final Review", totalSteps: 4, stepNumber: 3 },
-    status: "pending",
-    priority: "high",
-    amount: 15000,
-    category: "Finance",
-    submittedAt: "2024-01-15T10:30:00Z",
-    dueDate: "2024-01-18T17:00:00Z",
-    assignedTo: ["John Admin"],
-    attachments: 3,
-    comments: 2,
-    tags: ["budget", "q1"],
-  },
-  {
-    id: "REQ-002",
-    title: "Software License Renewal - Adobe",
-    description: "Annual renewal of Adobe Creative Suite licenses.",
-    requester: {
-      name: "Mike Chen",
-      email: "m.chen@company.com",
-      department: "IT",
-    },
-    workflow: { name: "Purchase Order", currentStep: "Manager Approval", totalSteps: 2, stepNumber: 1 },
-    status: "approved",
-    priority: "medium",
-    amount: 2400,
-    category: "Procurement",
-    submittedAt: "2024-01-14T14:20:00Z",
-    dueDate: "2024-01-20T17:00:00Z",
-    assignedTo: ["IT Manager"],
-    attachments: 2,
-    comments: 1,
-    tags: ["software"],
-  },
-  {
-    id: "REQ-003",
-    title: "Q4 Financial Report Review",
-    description: "Quarterly financial statements for board approval.",
-    requester: {
-      name: "Lisa Wang",
-      email: "l.wang@company.com",
-      department: "Finance",
-    },
-    workflow: { name: "Financial Review", currentStep: "CFO Approval", totalSteps: 3, stepNumber: 2 },
-    status: "pending",
-    priority: "urgent",
-    amount: 0,
-    category: "Finance",
-    submittedAt: "2024-01-16T09:15:00Z",
-    dueDate: "2024-01-19T17:00:00Z",
-    assignedTo: ["CFO"],
-    attachments: 5,
-    comments: 3,
-    tags: ["quarterly", "finance"],
-  },
-  {
-    id: "REQ-004",
-    title: "New Hire Equipment Request",
-    description: "Laptop and monitor setup for new team members.",
-    requester: {
-      name: "Tom Rodriguez",
-      email: "t.rodriguez@company.com",
-      department: "HR",
-    },
-    workflow: { name: "Equipment Request", currentStep: "HR Approval", totalSteps: 2, stepNumber: 1 },
-    status: "pending",
-    priority: "medium",
-    amount: 3500,
-    category: "Procurement",
-    submittedAt: "2024-01-17T11:00:00Z",
-    dueDate: "2024-01-21T17:00:00Z",
-    assignedTo: ["HR Manager"],
-    attachments: 1,
-    comments: 0,
-    tags: ["equipment", "onboarding"],
-  },
-]
-
 export default function ApprovalsPage() {
   const { user } = useAuth()
   const isAdmin = user?.role === "admin"
   const isManager = user?.role === "manager"
 
-  const [requests] = useState<ApprovalRequest[]>(MOCK_REQUESTS)
+  const [requests, setRequests] = useState<ApprovalRequest[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("pending")
   const [priorityFilter, setPriorityFilter] = useState("all")
   const [selectedRequests, setSelectedRequests] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const loadApprovals = async () => {
+      if (!user?.id) return
+      setIsLoading(true)
+      try {
+        const params = new URLSearchParams({ approver_id: user.id })
+        const response = await fetch(`/api/procurement/approvals?${params.toString()}`)
+        const data = await response.json()
+        const approvals = data?.approvals || []
+
+        const mapped: ApprovalRequest[] = approvals.map((step: any) => {
+          const request = step.request || {}
+          const requestSteps = request.approval_steps || []
+          const completedSteps = requestSteps.filter((s: any) => s.status === "approved").length
+          return {
+            id: step.id,
+            title: request.title || "Untitled Request",
+            description: request.description || "",
+            requester: {
+              name: request.requester?.name || "Unknown",
+              email: request.requester?.email || "",
+              department: request.requester?.department || "General",
+            },
+            workflow: {
+              name: "Procurement Workflow",
+              currentStep: step.approver_role || "Review",
+              totalSteps: requestSteps.length || 1,
+              stepNumber: completedSteps + 1,
+            },
+            status: step.status,
+            priority: request.urgency_level || "medium",
+            amount: Number(request.total_amount || 0),
+            category: request.items?.[0]?.category || "General",
+            submittedAt: request.created_at,
+            dueDate: request.expected_delivery_date || request.created_at,
+            assignedTo: [step.approver?.name || user.name],
+            attachments: 0,
+            comments: 0,
+            tags: [],
+          }
+        })
+        setRequests(mapped)
+      } catch (error) {
+        console.error("Failed to load approvals:", error)
+        setRequests([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadApprovals()
+  }, [user?.id, user?.name])
 
   const filteredRequests = requests.filter((request) => {
     // Users can see requests from their own department, their own requests, or requests assigned to them
@@ -190,11 +157,47 @@ export default function ApprovalsPage() {
     }
   }
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc]">
+        <DashboardHeader />
+        <main className="container mx-auto px-4 py-10 max-w-6xl">Loading approvals...</main>
+      </div>
+    )
+  }
+
+  const handleExportCsv = () => {
+    const headers = ["Title", "Requester", "Department", "Status", "Priority", "Amount"]
+    const rows = filteredRequests.map((request) => [
+      request.title,
+      request.requester.name,
+      request.requester.department,
+      request.status,
+      request.priority,
+      request.amount || 0,
+    ])
+    const csv = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+      .join("\n")
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.href = url
+    link.setAttribute("download", "approvals.csv")
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       <DashboardHeader />
 
-      <main className="container mx-auto px-4 py-10 max-w-6xl">
+      <main className="container mx-auto px-4 py-10 max-w-7xl">
+        <div className="flex gap-6">
+          <DashboardSidebar />
+          <section className="min-w-0 flex-1">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div>
             <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Approvals</h1>
@@ -241,9 +244,9 @@ export default function ApprovalsPage() {
                 onChange={e => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button variant="outline" className="h-12 border-slate-200 rounded-xl font-bold bg-white px-6">
+            <Button variant="outline" onClick={() => { setSearchQuery(""); setStatusFilter("pending"); setPriorityFilter("all") }} className="h-12 border-slate-200 rounded-xl font-bold bg-white px-6">
               <Filter className="w-4 h-4 mr-2" />
-              Refine Search
+              Reset Filters
             </Button>
           </div>
 
@@ -329,13 +332,15 @@ export default function ApprovalsPage() {
 
             <div className="flex items-center justify-between text-[10px] font-extrabold text-slate-400 uppercase tracking-widest px-4 pt-4">
               <p>Showing {filteredRequests.length} results</p>
-              <div className="flex gap-4 cursor-pointer hover:text-slate-600">
-                <span>Export CSV</span>
+              <div className="flex gap-4">
+                <button type="button" onClick={handleExportCsv} className="hover:text-slate-600">Export CSV</button>
                 <span>•</span>
-                <span>Print Report</span>
+                <button type="button" onClick={() => window.print()} className="hover:text-slate-600">Print Report</button>
               </div>
             </div>
           </div>
+        </div>
+          </section>
         </div>
       </main>
     </div>

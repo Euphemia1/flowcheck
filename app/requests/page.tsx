@@ -47,6 +47,7 @@ interface Request {
 
 export default function RequestsPage() {
   const { user } = useAuth()
+  const isRequester = user?.role === "requester"
   const [requests, setRequests] = useState<Request[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
@@ -199,8 +200,14 @@ export default function RequestsPage() {
           <section className="min-w-0 flex-1">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div>
-            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Requests</h1>
-            <p className="text-slate-500 mt-2 font-medium">Manage and track all procurement requests.</p>
+            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+              {isRequester ? "My requests" : "Requests"}
+            </h1>
+            <p className="text-slate-500 mt-2 font-medium">
+              {isRequester
+                ? "Everything you have submitted, with status and approval progress."
+                : "Manage and track all procurement requests."}
+            </p>
           </div>
           <Link href="/requests/new">
             <Button className="bg-slate-700 hover:bg-slate-800 h-11 px-6 rounded-xl font-bold shadow-lg shadow-slate-200">
@@ -241,7 +248,7 @@ export default function RequestsPage() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
                 className="pl-11 h-12 rounded-xl border-slate-200 bg-white shadow-sm focus:ring-slate-500"
-                placeholder="Search by title or requester..."
+                placeholder={isRequester ? "Search by title..." : "Search by title or requester..."}
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
               />
@@ -256,17 +263,17 @@ export default function RequestsPage() {
           <div className="space-y-4">
             <div className="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 overflow-hidden">
               <div className="grid grid-cols-12 px-8 py-5 bg-slate-50/50 border-b border-slate-100 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
-                <div className="col-span-4">Request Details</div>
-                <div className="col-span-2">Requester</div>
-                <div className="col-span-2">Status</div>
-                <div className="col-span-2">Value</div>
-                <div className="col-span-2 text-right">Actions</div>
+                <div className={isRequester ? "col-span-5" : "col-span-4"}>Request Details</div>
+                {!isRequester && <div className="col-span-2">Requester</div>}
+                <div className={isRequester ? "col-span-2" : "col-span-2"}>Status</div>
+                <div className={isRequester ? "col-span-2" : "col-span-2"}>Value</div>
+                <div className={isRequester ? "col-span-3 text-right" : "col-span-2 text-right"}>Actions</div>
               </div>
 
               <div className="divide-y divide-slate-100">
                 {filteredRequests.map((request) => (
                   <div key={request.id} className="grid grid-cols-12 px-8 py-6 items-center hover:bg-slate-50 transition-colors group">
-                    <div className="col-span-4">
+                    <div className={isRequester ? "col-span-5" : "col-span-4"}>
                       <div>
                         <h4 className="font-bold text-slate-900 group-hover:text-slate-700 transition-colors cursor-pointer">
                           {request.title}
@@ -292,12 +299,14 @@ export default function RequestsPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="col-span-2">
-                      <div className="text-sm">
-                        <p className="font-bold text-slate-900">{request.requester.name}</p>
-                        <p className="text-[10px] text-slate-500">{request.requester.department}</p>
+                    {!isRequester && (
+                      <div className="col-span-2">
+                        <div className="text-sm">
+                          <p className="font-bold text-slate-900">{request.requester.name}</p>
+                          <p className="text-[10px] text-slate-500">{request.requester.department}</p>
+                        </div>
                       </div>
-                    </div>
+                    )}
                     <div className="col-span-2">
                       <div className="space-y-2">
                         <Badge className={`${getStatusStyles(request.status)} border rounded-full px-3 py-1 text-[10px] font-bold uppercase`}>
@@ -313,7 +322,7 @@ export default function RequestsPage() {
                     <div className="col-span-2 font-black text-slate-900">
                       {request.amount ? `$${request.amount.toLocaleString()}` : '---'}
                     </div>
-                    <div className="col-span-2 text-right">
+                    <div className={isRequester ? "col-span-3 text-right" : "col-span-2 text-right"}>
                       <div className="flex items-center justify-end gap-2">
                         <Link href={`/requests/${request.id}`}>
                           <Button variant="ghost" size="sm" className="rounded-xl font-bold text-slate-600 hover:bg-slate-50">
@@ -366,11 +375,13 @@ export default function RequestsPage() {
 
             <div className="flex items-center justify-between text-[10px] font-extrabold text-slate-400 uppercase tracking-widest px-4 pt-4">
               <p>Showing {filteredRequests.length} of {requests.length} requests</p>
-              <div className="flex gap-4">
-                <button type="button" onClick={handleExportCsv} className="hover:text-slate-600">Export CSV</button>
-                <span>•</span>
-                <button type="button" onClick={() => window.print()} className="hover:text-slate-600">Print Report</button>
-              </div>
+              {!isRequester && (
+                <div className="flex gap-4">
+                  <button type="button" onClick={handleExportCsv} className="hover:text-slate-600">Export CSV</button>
+                  <span>•</span>
+                  <button type="button" onClick={() => window.print()} className="hover:text-slate-600">Print Report</button>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -21,6 +21,7 @@ export function DashboardHeader() {
   const router = useRouter()
   const { user, logout } = useAuth()
   const [showNotifications, setShowNotifications] = useState(false)
+  const isRequester = user?.role === "requester"
 
   const handleLogout = () => {
     logout()
@@ -55,17 +56,21 @@ export function DashboardHeader() {
             Dashboard
           </Link>
           <Link href="/requests" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
-            Requests
+            {isRequester ? "My requests" : "Requests"}
           </Link>
-          <Link href="/approvals" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
-            Approvals
-          </Link>
-          <Link href="/purchase-orders" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
-            Purchase Orders
-          </Link>
-          <Link href="/audit" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
-            Audit Log
-          </Link>
+          {!isRequester && (
+            <>
+              <Link href="/approvals" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
+                Approvals
+              </Link>
+              <Link href="/purchase-orders" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
+                Purchase Orders
+              </Link>
+              <Link href="/audit" className="text-gray-700 hover:text-gray-900 font-medium tracking-tight">
+                Audit Log
+              </Link>
+            </>
+          )}
         </nav>
 
         {/* Right side actions */}

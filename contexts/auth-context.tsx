@@ -6,7 +6,7 @@ interface User {
   id: string
   email: string
   name: string
-  role: "admin" | "manager" | "employee"
+  role: "admin" | "manager" | "employee" | "requester" | "finance" | "procurement"
   department?: "HR" | "Finance" | "Operations" | "Procurement" | "Management"
   organizationId: string
   organizationName: string
@@ -162,6 +162,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Admin can access all departments, but default to main dashboard
     if (currentUser.role === "admin") {
+      return "/dashboard"
+    }
+
+    if (currentUser.role === "requester") {
       return "/dashboard"
     }
 

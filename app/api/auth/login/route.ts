@@ -7,6 +7,28 @@ const DEMO_ACCOUNTS: Record<string, { name: string; role: "admin" | "employee" }
   "user@example.com": { name: "Test User", role: "employee" },
 }
 
+function normalizeAuthErrorMessage(rawMessage?: string) {
+  const message = (rawMessage || "").toLowerCase()
+
+  if (message.includes("email not confirmed")) {
+    return "Email is not confirmed. Please verify your email before logging in."
+  }
+
+  if (message.includes("invalid login credentials")) {
+    return "Invalid email or password"
+  }
+
+  if (message.includes("user not found")) {
+    return "User is not registered in Supabase Auth. Run the auth seeding step first."
+  }
+
+  if (message.includes("database") || message.includes("connection")) {
+    return "Auth service connection failed. Please check Supabase URL/key in this deployment."
+  }
+
+  return "Invalid email or password"
+}
+
 export async function POST(request: NextRequest) {
   try {
     if (!isSupabaseConfigured) {
@@ -198,9 +220,16 @@ export async function POST(request: NextRequest) {
         .single()
 
       if (!dbError && dbUser) {
+        console.error("Supabase Auth login failed for existing DB user", {
+          email: emailLower,
+          authErrorMessage: authError?.message,
+          authErrorStatus: (authError as any)?.status,
+          authErrorCode: (authError as any)?.code,
+        })
+
         // User exists in database but auth failed - return error
         return NextResponse.json(
-          { message: "Invalid email or password" },
+          { message: normalizeAuthErrorMessage(authError?.message) },
           { status: 401 }
         )
       }

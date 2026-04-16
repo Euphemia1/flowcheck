@@ -164,6 +164,7 @@ export async function GET() {
       defaultPassword: "Test@123!",
       byDepartment: grouped,
       instructions: [
+        "0. Optional: run scripts/seed-procurement-demo-users.sql for demo.requester + demo.finance users",
         "1. POST /api/auth/seed-users to create all users in Auth",
         "2. Login with any email and password: Test@123!",
         "3. Each user will be auto-redirected to their department dashboard",

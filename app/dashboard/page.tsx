@@ -10,6 +10,7 @@ import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar"
 import { useAuth } from "@/contexts/auth-context"
 import { ProcurementDashboard } from "@/components/dashboard/procurement-dashboard"
+import { RequesterDashboard } from "@/components/dashboard/requester-dashboard"
 
 export default function DashboardPage() {
   const { user, isAuthenticated, isLoading } = useAuth()
@@ -47,8 +48,10 @@ export default function DashboardPage() {
     return null
   }
 
-  // Always show procurement dashboard
+  const isRequester = user.role === "requester"
+
   const renderDashboard = () => {
+    if (isRequester) return <RequesterDashboard />
     return <ProcurementDashboard />
   }
 
@@ -64,20 +67,24 @@ export default function DashboardPage() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-200 uppercase font-bold text-[10px]">
-                    {user.role === "admin" ? "Procurement Admin" : "Procurement Workspace"}
+                    {isRequester ? "Requester" : user.role === "admin" ? "Procurement Admin" : "Procurement Workspace"}
                   </Badge>
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{user.organizationName}</span>
                 </div>
                 <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
                   Welcome back, {getFirstName(user?.name)}
                 </h1>
-                <p className="text-slate-500 font-medium mt-1">Here&apos;s your procurement workflow overview.</p>
+                <p className="text-slate-500 font-medium mt-1">
+                  {isRequester
+                    ? "Track your requests, details, and approval actions in one place."
+                    : "Here's your procurement workflow overview."}
+                </p>
               </div>
               <div className="flex items-center gap-3">
                 <Link href="/requests/new">
                   <Button className="bg-gray-900 hover:bg-gray-800 text-white font-bold rounded-xl">
                     <Plus className="w-4 h-4 mr-2" />
-                    New Request
+                    {isRequester ? "New request" : "New Request"}
                   </Button>
                 </Link>
               </div>

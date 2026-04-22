@@ -20,15 +20,22 @@ const NOTIFICATION_SETTINGS = {
   cooldownMinutes: 30
 }
 
-const africasTalking = AfricasTalking({
-  apiKey: process.env.AFRICAS_TALKING_API_KEY || '',
-  username: process.env.AFRICAS_TALKING_USERNAME || 'sandbox'
-})
-
-const sms = africasTalking.SMS
-
 async function sendSMSNotification(visitor: VisitorData) {
+  const apiKey = process.env.AFRICAS_TALKING_API_KEY?.trim()
+  const username = process.env.AFRICAS_TALKING_USERNAME?.trim() || 'sandbox'
+
+  if (!apiKey) {
+    console.warn('SMS notifications skipped: AFRICAS_TALKING_API_KEY is missing.')
+    return
+  }
+
+  if (!NOTIFICATION_SETTINGS.phone) {
+    console.warn('SMS notifications skipped: AFRICAS_TALKING_PHONE is missing.')
+    return
+  }
+
   try {
+    const sms = AfricasTalking({ apiKey, username }).SMS
     const message = `FlowCheck visitor alert: ${visitor.path} visited from ${visitor.ip} at ${new Date(visitor.timestamp).toLocaleString()}`
 
     const response = await sms.send({

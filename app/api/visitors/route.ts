@@ -13,6 +13,11 @@ interface VisitorData {
   }
 }
 
+interface NotificationResult {
+  sent: boolean
+  reason?: string
+  providerResponse?: unknown
+}
 const NOTIFICATION_SETTINGS = {
   email: process.env.NOTIFICATION_EMAIL || '',
   phone: process.env.AFRICAS_TALKING_PHONE || '',
@@ -20,18 +25,20 @@ const NOTIFICATION_SETTINGS = {
   cooldownMinutes: 30
 }
 
-async function sendSMSNotification(visitor: VisitorData) {
+async function sendSMSNotification(visitor: VisitorData): Promise<NotificationResult> {
   const apiKey = process.env.AFRICAS_TALKING_API_KEY?.trim()
   const username = process.env.AFRICAS_TALKING_USERNAME?.trim() || 'sandbox'
 
   if (!apiKey) {
-    console.warn('SMS notifications skipped: AFRICAS_TALKING_API_KEY is missing.')
-    return
+    const reason = 'SMS skipped: AFRICAS_TALKING_API_KEY is missing.'
+    console.warn(reason)
+    return { sent: false, reason }
   }
 
   if (!NOTIFICATION_SETTINGS.phone) {
-    console.warn('SMS notifications skipped: AFRICAS_TALKING_PHONE is missing.')
-    return
+    const reason = 'SMS skipped: AFRICAS_TALKING_PHONE is missing.'
+    console.warn(reason)
+    return { sent: false, reason }
   }
 
   try {
@@ -45,8 +52,11 @@ async function sendSMSNotification(visitor: VisitorData) {
     })
 
     console.log('SMS notification sent:', response)
+    return { sent: true, providerResponse: response }
   } catch (error) {
+    const reason = error instanceof Error ? error.message : 'Unknown SMS provider error'
     console.error('Failed to send SMS notification:', error)
+    return { sent: false, reason }
   }
 }
 
@@ -90,14 +100,20 @@ export async function POST(request: NextRequest) {
 
     console.log('Visitor tracked:', visitorData)
 
+    let notification: NotificationResult = {
+      sent: false,
+      reason: 'Notifications are disabled (NOTIFICATIONS_ENABLED is not "true").'
+    }
+
     if (NOTIFICATION_SETTINGS.enabled) {
-      await sendSMSNotification(visitorData)
+      notification = await sendSMSNotification(visitorData)
     }
 
     return NextResponse.json({
       success: true,
       message: 'Visitor tracked successfully',
-      visitor: visitorData
+      visitor: visitorData,
+      notification
     })
   } catch (error) {
     console.error('Error tracking visitor:', error)
